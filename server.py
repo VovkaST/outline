@@ -9,8 +9,8 @@ os.environ.setdefault("SETTINGS_MODULE", "settings.local")
 
 
 @click.group()
-@click.option("--port", default=8000)
-@click.option("--host", default="127.0.0.1")
+@click.option("--host", default="127.0.0.1", help="Адрес хоста для запуска сервера")
+@click.option("--port", default=8000, help="Порт сервера")
 @click.pass_context
 def cli(ctx, port: int, host: str):
     from app_server.config import server_config
@@ -22,7 +22,7 @@ def cli(ctx, port: int, host: str):
     ctx.obj["server_settings"] = server_config
 
 
-@cli.command()
+@cli.command(help="Запуск API-сервера")
 @click.pass_context
 def run(ctx: click.core.Context):
     from app_server.config import ServerAppConfig
