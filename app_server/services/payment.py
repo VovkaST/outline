@@ -1,8 +1,11 @@
 import hashlib
 from copy import copy
 
+from pydantic import BaseModel
+
 from app_server import dtos
 from app_server.config import t_bank_config
+from app_server.exceptions import TokenError
 from root.utils.requests import LoggingClientSession
 
 
@@ -44,6 +47,16 @@ class Payment:
             pair_values.append(value)
         pass_str = "".join(pair_values)
         return hashlib.sha256(pass_str.encode("utf-8")).hexdigest()
+
+    async def check_token(self, payload: dict | type[BaseModel]) -> bool:
+        if isinstance(payload, BaseModel):
+            payload = payload.model_dump(exclude_unset=True)
+        if not payload.get("Token"):
+            raise TokenError("Токен отсутствует")
+        token = await self.make_token(payload)
+        if token != payload["Token"]:
+            raise TokenError("Неверный токен")
+        return True
 
     async def prepare_payment_init(
         self,
