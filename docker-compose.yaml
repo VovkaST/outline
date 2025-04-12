@@ -14,3 +14,15 @@ services:
     ports:
       - '8000:8000'
     command: python -m server run --host 0.0.0.0 --port 8000
+
+  assets:
+    image: node:22.14
+    container_name: outline-assets
+    ports:
+      - "8080:8080"
+      - "5173:5173"
+    volumes:
+      - ./app_server/assets:/app_server/assets
+      - ./static:/static
+    working_dir: /app_server/assets/
+    command: bash -c "npm i && npm run dev"
