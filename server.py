@@ -13,21 +13,30 @@ os.environ.setdefault("SETTINGS_MODULE", "settings.local")
 @click.option("--host", default="127.0.0.1")
 @click.pass_context
 def cli(ctx, port: int, host: str):
+    from app_server.config import server_config
     from root.config import settings
 
     ctx.obj["port"] = port or settings.SERVER_PORT
     ctx.obj["host"] = host
     ctx.obj["settings"] = settings
+    ctx.obj["server_settings"] = server_config
 
 
 @cli.command()
 @click.pass_context
 def run(ctx: click.core.Context):
-    host: str = ctx.obj["host"]
-    port: int = ctx.obj["port"]
-    settings = ctx.obj["settings"]
+    from app_server.config import ServerAppConfig
 
-    app = init_app(service_name=settings.SERVICE_NAME)
+    host = ctx.obj["host"]
+    port = ctx.obj["port"]
+    settings = ctx.obj["settings"]
+    server_settings: ServerAppConfig = ctx.obj["server_settings"]
+
+    app = init_app(
+        service_name=settings.SERVICE_NAME,
+        version=server_settings.VERSION,
+        description=server_settings.DESCRIPTION,
+    )
     # logging.config.dictConfig(ctx.obj["config"]["logging"])
     uvicorn.run(app, host=host, port=port)
 
