@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 
 from app_server.responses import SuccessResponse
+from app_server.services.payment import init_payment
 
 api_routes = APIRouter(tags=["server"], prefix="/api")
 
@@ -13,8 +14,8 @@ async def health(request: Request):
 
 
 @api_routes.get("/get-url")
-async def get_url(request: Request):
-    """Перемещение расписания в статус 'На согласовании'.
-    Доступно только руководителям ГД и из статуса 'Черновик'.
-    """
-    return SuccessResponse("Черновик отправлен на согласование")
+async def get_url(request: Request, task_id: str, customer_key: str):
+    payment = init_payment(task_id, customer_key)
+    if payment.Success:
+        return {"PaymentURL": payment.PaymentURL, "PaymentId": payment.PaymentId}, 200
+    return payment.dump_error(), 400

@@ -10,4 +10,13 @@ class ServerAppConfig(BaseAppConfig):
     DESCRIPTION: str
 
 
+class TBankConfig(BaseAppConfig):
+    PREFIX = "TBANK"
+
+    REST_API_URL: str
+    TERMINAL_ID: str
+    TERMINAL_PASSWORD: str
+
+
 server_config = ServerAppConfig()
+t_bank_config = TBankConfig()
