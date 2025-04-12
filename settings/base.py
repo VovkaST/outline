@@ -10,6 +10,6 @@ SERVER_DESCRIPTION = env.get("SERVER_DESCRIPTION")
 
 
 # Настройки Т-кассы
-TBANK_REST_API_URL = env.get("TBANK_REST_API_URL", default="https://securepay.tinkoff.ru")
+TBANK_REST_API_URL = env.get("TBANK_REST_API_URL", default="https://securepay.tinkoff.ru/v2")
 TBANK_TERMINAL_ID = env.get("TBANK_TERMINAL_ID")
 TBANK_TERMINAL_PASSWORD = env.get("TBANK_TERMINAL_PASSWORD")
