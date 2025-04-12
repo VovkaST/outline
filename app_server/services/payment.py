@@ -1,24 +1,9 @@
 import hashlib
-import logging
 from copy import copy
-
-import aiohttp
 
 from app_server import dtos
 from app_server.config import t_bank_config
-
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger("root")
-logger.setLevel(logging.DEBUG)
-
-
-class LoggingClientSession(aiohttp.ClientSession):
-    async def _request(self, method, url, **kwargs):
-        logger.debug("Starting request <%s %r>", method, self._build_url(url))
-        response = await super()._request(method, url, **kwargs)
-        _json = await response.json()
-        logger.debug(f"Request <{method} {response.real_url}> finished: {response.status} {response.reason} {_json}")
-        return response
+from root.utils.requests import LoggingClientSession
 
 
 class Payment:
