@@ -13,7 +13,7 @@ services:
     restart: on-failure
     ports:
       - '8000:8000'
-    command: python -m server run --host 0.0.0.0 --port 8000
+    command: python -m server --host 0.0.0.0 --port 8000 run
 
   assets:
     image: node:22.14
