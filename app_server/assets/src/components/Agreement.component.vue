@@ -5,9 +5,16 @@ import ButtonComponent from './Button.component.vue';
 
 <template>
   <div class="agreement">
-    <check-box id="offer"> Согласен с условиями оферты </check-box>
-    <check-box id="personal"> Согласен с обработкой персональных данных </check-box>
-    <check-box id="subscription"> Согласен с подпиской </check-box>
+    <check-box id="offer"> Согласен с <a href="/static/Оферта.pdf">условиями оферты</a> </check-box>
+    <check-box id="personal">
+      Согласен с
+      <a href="/static/Согласие_на_обработку_персональных_данных т.pdf">
+        условиями обработки персональных данных
+      </a>
+    </check-box>
+    <check-box id="subscription">
+      Согласен с <a href="/static/Соглашение с подпиской т.pdf">условиями подписки</a>
+    </check-box>
     <div class="text-center">
       <button-component>Оплатить по карте</button-component>
       <button-component>Оплатить по QR</button-component>
