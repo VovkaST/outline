@@ -15,7 +15,6 @@ import Contacts from './Contacts.component.vue';
 <style scoped lang="scss">
 footer {
   margin: 0 auto;
-  width: 50%;
   padding: 10px 10px 30px;
   background-color: #151721e8;
   backdrop-filter: blur(12px);
