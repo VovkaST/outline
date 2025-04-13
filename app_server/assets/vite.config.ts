@@ -13,6 +13,10 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 8080,
   },
+  base: '/',
+  define: {
+    'process.env': {},
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -29,13 +33,11 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['vue'],
+      external: [],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
-        globals: {
-          vue: 'Vue',
-        },
+        globals: {},
       },
     },
   },

@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 
 from app_server.error_handlers import app_error_handler, payment_error_handler, unknown_error_handler
 from app_server.exceptions import AppError, PaymentError
@@ -20,4 +21,5 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
     )
 
     app.include_router(api_routes)
+    app.mount("/", StaticFiles(directory="app_server/assets", html=True, check_dir=True), name="static")
     return app
