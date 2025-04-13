@@ -4,6 +4,10 @@ import Contacts from './Contacts.component.vue';
 
 <template>
   <footer class="d-flex flex-column align-items-center">
+    <div id="cancel-subscription">
+      Для отмены подписки нажмите <a href="#">сюда</a> или свяжитесь с нами по данным из раздела
+      Контакты
+    </div>
     <contacts class="mt-3" />
   </footer>
 </template>

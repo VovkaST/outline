@@ -1,1 +1,15 @@
 @import "./base.css";
+
+body {
+  word-break: break-word;
+  text-rendering: optimizeLegibility;
+  background-image: linear-gradient(140deg, #3e0068 -20%, #13162A 50%, #205f00 150%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  color: aliceblue;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  user-select: none;
+}
