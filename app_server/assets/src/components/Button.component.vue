@@ -18,5 +18,9 @@
   transition: all 250ms ease-in-out;
   cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0);
+
+  &:active {
+    border: 1px solid #ff6c6c;
+  }
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Agreement from './Agreement.component.vue';
+import FooterComponent from './Footer.component.vue';
 import OwnerInfo from './OwnerInfo.component.vue';
 import Receipt from './Receipt.component.vue';
 import SectionTitle from './Title.component.vue';
@@ -19,6 +20,7 @@ import SectionTitle from './Title.component.vue';
     <agreement class="mt-3" />
     <owner-info class="mt-3" />
   </div>
+  <footer-component class="mt-3" />
 </template>
 
 <style scoped lang="scss">
