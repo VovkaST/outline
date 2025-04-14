@@ -25,4 +25,4 @@ services:
       - ./app_server/assets:/app_server/assets
       - ./static:/static
     working_dir: /app_server/assets/
-    command: bash -c "npm i && npm run build-only"
+    command: bash -c "yarn install && yarn schema:generate && yarn run dev"
