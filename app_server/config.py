@@ -18,5 +18,15 @@ class TBankConfig(BaseAppConfig):
     TERMINAL_PASSWORD: str
 
 
+class PlanfixConfig(BaseAppConfig):
+    PREFIX = "PLANFIX"
+
+    API_URL: str
+    ACCOUNT: str
+    TOKEN: str
+    API_KEY: str
+
+
 server_config = ServerAppConfig()
 t_bank_config = TBankConfig()
+planfix_config = PlanfixConfig()

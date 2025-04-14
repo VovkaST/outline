@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.getList">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <pageCurrent>{{ pageCurrent }}</pageCurrent>
+  <pageSize>{{ pageSize }}</pageSize>
+  <target>{{ target }}</target>
+  <company>{{ company }}</company>
+  <search>{{ search }}</search>
+
+  <filters>
+    {% for type, operator, value in filters %}
+      <filter>
+        <type>{{ type }}</type>
+        <operator>{{ operator }}</operator>
+        <value>{{ value }}</value>
+      </filter>
+    {% endfor %}
+  </filters>
+
+  <signature>{{ signature }}</signature>
+</request>

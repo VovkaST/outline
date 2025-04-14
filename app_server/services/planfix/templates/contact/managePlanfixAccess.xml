@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.managePlanfixAccess">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <contact>
+    <id>{{ id }}</id>
+    <email>{{ email }}</email>
+    <havePlanfixAccess>{{ havePlanfixAccess }}</havePlanfixAccess>
+  </contact>
+  <signature>{{ signature }}</signature>
+</request>

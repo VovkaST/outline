@@ -33,7 +33,7 @@ async def unknown_error_handler(request: Request, exc: Exception):
             {
                 "ErrorCode": -1,
                 "Message": "Unhandled error",
-                "Details": str(exc.args[0]),
+                "Details": str(exc),
             }
         ),
     )

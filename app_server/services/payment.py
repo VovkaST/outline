@@ -1,38 +1,24 @@
 import hashlib
-from copy import copy
 
 from pydantic import BaseModel
 
 from app_server import dtos
 from app_server.config import t_bank_config
 from app_server.exceptions import TokenError
-from root.utils.requests import LoggingClientSession
+from app_server.services.base import BaseHTTPService
 
 
-class Payment:
+class Payment(BaseHTTPService):
     urls = {
         "init": "Init",
         "charge": "Charge",
     }
-    DEFAULT_HEADERS = {
-        "Accept": "application/json",
-        "Content-type": "application/json",
-    }
-    REST_API_HOST = copy(t_bank_config.REST_API_URL)
+    API_HOST = t_bank_config.REST_API_URL
 
-    def __init__(self, terminal_id: str, terminal_password: str):
+    def __init__(self, terminal_id: str, terminal_password: str, **kwargs):
         self.terminal_id = terminal_id
         self.terminal_password = terminal_password
-        self._session = None
-
-    @property
-    def session(self) -> LoggingClientSession:
-        if not self._session:
-            if not self.REST_API_HOST.endswith("/"):
-                self.REST_API_HOST += "/"
-
-            self._session = LoggingClientSession(self.REST_API_HOST)
-        return self._session
+        super().__init__(**kwargs)
 
     async def make_token(self, base_payload: dict) -> str:
         payload = base_payload | {"Password": self.terminal_password}
@@ -78,17 +64,6 @@ class Payment:
             return await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
         return response
 
-    async def make_request(
-        self, url_name: str, method: str, payload: dict = None, headers: dict = None, session=None
-    ) -> dict:
-        headers = headers or {}
-        payload = payload or {}
-        session = session or self.session
-        headers = self.DEFAULT_HEADERS | headers
-        request_method = getattr(session, method)
-        async with request_method(url=self.urls[url_name], json=payload, headers=headers) as response:
-            return await response.json()
-
     async def init(
         self,
         amount: int,
@@ -107,8 +82,10 @@ class Payment:
             raise ValueError("CustomerKey обязателен для рекуррентных платежей")
         if is_recurrent:
             payload["Recurrent"] = "Y"
+        if customer_key:
+            payload["CustomerKey"] = customer_key
         payload["Token"] = await self.make_token(payload)
-        response = await self.make_request(url_name="init", method="post", payload=payload)
+        response = await self.make_request(url_name="init", method="post", json=payload)
         return dtos.InitPaymentResponse(**response)
 
     async def charge(

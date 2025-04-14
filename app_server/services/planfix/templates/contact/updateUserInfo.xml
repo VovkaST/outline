@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.updateUserInfo">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <contact>
+    <id>{{ id }}</id>
+    <user>
+      <password>{{ password }}</password>
+      <status>{{ status }}</status>
+      <email>{{ email }}</email>
+      <pic>{[ pic }}</pic>
+      <notifyByEmail>{{ notifyByEmail }}</notifyByEmail>
+    </user>
+  </contact>
+  <signature>{{ signature }}</signature>
+</request>

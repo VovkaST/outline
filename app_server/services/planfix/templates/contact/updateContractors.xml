@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.updateContractors">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <contact>
+    <id>{{ id }}</id>
+    <contractors>
+      <addClient>
+        {% for id in addClient %}
+          <id>{{ id }}</id>
+        {% endfor %}
+      </addClient>
+
+      <delClient>
+        {% for id in delClient %}
+          <id>{{ id }}</id>
+        {% endfor %}
+      </delClient>
+    </contractors>
+  </contact>
+  <signature>{{ signature }}</signature>
+</request>
