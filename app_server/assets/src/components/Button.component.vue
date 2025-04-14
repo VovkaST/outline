@@ -22,5 +22,11 @@
   &:active {
     border: 1px solid #ff6c6c;
   }
+
+  &[disabled] {
+    background: linear-gradient(155deg, #7a7a7a, #bdbdc1, #7a7a7a);
+    color: #707070;
+    cursor: not-allowed;
+  }
 }
 </style>
