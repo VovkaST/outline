@@ -108,6 +108,3 @@ class Payment(BaseHTTPService):
         payload["Token"] = await self.make_token(payload)
         response = await self.make_request(url_name="charge", method="post", payload=payload)
         return dtos.PaymentResponse(**response)
-
-
-payment_instance = Payment(terminal_id=t_bank_config.TERMINAL_ID, terminal_password=t_bank_config.TERMINAL_PASSWORD)

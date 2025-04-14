@@ -1,9 +1,9 @@
 from aiohttp import BasicAuth, ClientResponse
 from jinja2 import Environment, PackageLoader
 
-from ...config import planfix_config
-from ..base import BaseHTTPService
-from .functions import Contact, Task
+from app_server.config import planfix_config
+from app_server.services.base import BaseHTTPService
+from app_server.services.planfix.functions import Contact, Task
 
 
 class PlanfixAPI(BaseHTTPService):
@@ -45,6 +45,3 @@ class PlanfixAPI(BaseHTTPService):
     def load_template(self, template_name, **kwargs) -> str:
         template = self._templates_env.get_template(template_name)
         return template.render(account=self.account, **kwargs)
-
-
-planfix_api = PlanfixAPI(account=planfix_config.ACCOUNT, token=planfix_config.TOKEN, api_key=planfix_config.API_KEY)
