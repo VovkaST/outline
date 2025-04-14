@@ -10,14 +10,14 @@
 .outline-button {
   background: linear-gradient(155deg, #51bf18, #2e366a, #bd6822);
   padding: 1.2rem 2rem;
-  margin: 0.75em 20px 0;
+  margin: 0.75rem 1.5px 0;
   color: aliceblue;
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: 500;
-  border-radius: 0.6em;
+  border-radius: 0.6rem;
   transition: all 250ms ease-in-out;
   cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid #ffffff00;
 
   &:active {
     border: 1px solid #ff6c6c;
