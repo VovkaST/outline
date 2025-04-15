@@ -16,7 +16,8 @@ TBANK_TERMINAL_PASSWORD = env.get("TBANK_TERMINAL_PASSWORD")
 
 
 # Настройки Planfix
-PLANFIX_API_URL = env.get("PLANFIX_API_URL", default="https://apiru.planfix.ru/xml")
+PLANFIX_XML_API_URL = env.get("PLANFIX_XML_API_URL", default="https://apiru.planfix.ru/xml")
+PLANFIX_REST_API_URL = env.get("PLANFIX_REST_API_URL", default="https://aspectgroup.planfix.ru/rest")
 PLANFIX_ACCOUNT = env.get("PLANFIX_ACCOUNT")
 PLANFIX_TOKEN = env.get("PLANFIX_TOKEN")
 PLANFIX_API_KEY = env.get("PLANFIX_API_KEY")

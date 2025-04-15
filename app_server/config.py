@@ -21,7 +21,8 @@ class TBankConfig(BaseAppConfig):
 class PlanfixConfig(BaseAppConfig):
     PREFIX = "PLANFIX"
 
-    API_URL: str
+    REST_API_URL: str
+    XML_API_URL: str
     ACCOUNT: str
     TOKEN: str
     API_KEY: str

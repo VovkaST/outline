@@ -1,6 +1,7 @@
 from copy import copy
 
 from aiohttp import ClientResponse
+from aiohttp.typedefs import Query
 
 from root.utils.requests import LoggingClientSession
 
@@ -39,14 +40,17 @@ class BaseHTTPService:
         return {
             "url": self.urls[url_name],
             "json": json or {},
+            "params": kwargs.get("params") or {},
             "headers": self.get_headers(url_name, method),
         }
 
     async def handle_response(self, response: ClientResponse):
         return await response.json()
 
-    async def make_request(self, url_name: str, method: str, json: dict = None, session=None, **kwargs) -> dict:
-        request_kwargs = await self.prepare_request(url_name, method, json=json, **kwargs)
+    async def make_request(
+        self, url_name: str, method: str, json: dict = None, params: Query = None, session=None, **kwargs
+    ) -> dict:
+        request_kwargs = await self.prepare_request(url_name, method, json=json, params=params, **kwargs)
         session = session or self.session
         request_method = getattr(session, method)
         async with request_method(**request_kwargs) as response:
