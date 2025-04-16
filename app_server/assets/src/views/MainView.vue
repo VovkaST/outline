@@ -9,22 +9,34 @@ import { Errors } from '@/stores/enums.ts';
 const route = useRoute();
 const payment = usePaymentStore();
 
-const paymentGuid = computed<string>(() => {
+const taskGuid = computed<string>(() => {
   return route.query['guid'];
+});
+const isSuccess = computed<boolean>(() => {
+  return route.query['success'];
 });
 const isPaymentValid = ref<boolean>();
 const paymentError = ref<Errors>();
 const isReady = ref<boolean>(false);
 
-provide('paymentError', readonly(paymentError));
+provide<string>('taskGuid', readonly(taskGuid));
+provide<Errors>('paymentError', readonly(paymentError));
+provide<boolean>('isSuccess', readonly(isSuccess));
 
 onBeforeMount(() => {
-  if (paymentGuid.value) {
-    payment.checkOrder({ guid: paymentGuid.value }).then((response) => {
-      isPaymentValid.value = response.is_valid;
-      if (!isPaymentValid.value) paymentError.value = Errors.PAYMENT_NOT_FOUND;
-      isReady.value = true;
-    });
+  if (taskGuid.value) {
+    payment
+      .checkOrder({ guid: taskGuid.value })
+      .then(
+        (response) => {
+          isPaymentValid.value = response.is_valid;
+          if (!isPaymentValid.value) paymentError.value = Errors.PAYMENT_NOT_FOUND;
+        },
+        () => {
+          paymentError.value = Errors.UNHANDLED_ERROR;
+        },
+      )
+      .finally(() => (isReady.value = true));
   } else {
     paymentError.value = Errors.PAYMENT_GUID_REQUIRED;
     isReady.value = true;

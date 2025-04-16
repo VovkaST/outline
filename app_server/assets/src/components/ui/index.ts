@@ -1,4 +1,4 @@
 import Spinner from './Spinner.component.vue';
-import ErrorLayer from './ErrorLayer.vue';
+import OverflowLayer from './OverflowLayer.vue';
 
-export { ErrorLayer, Spinner };
+export { OverflowLayer, Spinner };
