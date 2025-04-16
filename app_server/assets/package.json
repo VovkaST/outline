@@ -15,14 +15,14 @@
     }
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode=development",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview --port 8080",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "schema:generate": "openapi  --input src/api/schema.json --output ./src/api/generated/public --indent 2 --useOptions"
+    "schema:generate": "openapi --input src/api/schema.json --output ./src/api/generated/public --indent 2 --useOptions"
   },
   "dependencies": {
     "@jridgewell/sourcemap-codec": "^1.5.0",
