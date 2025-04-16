@@ -33,7 +33,7 @@ const totalSum = computed<number>(() =>
   padding: 30px 45px 40px;
   background-color: #3e1d115b;
   color: #8e96a3;
-  border-radius: 22px;
+  border-radius: var(--block-border-radius);
 
   .sum {
     display: flex;

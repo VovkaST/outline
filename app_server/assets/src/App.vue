@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Subscribe from './components/Subscribe.component.vue';
+import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <subscribe />
+  <RouterView />
 </template>
 
 <style scoped>

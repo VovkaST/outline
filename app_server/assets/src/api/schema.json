@@ -12,7 +12,7 @@
         ],
         "summary": "Health",
         "description": "Проверка работоспособности сервиса.",
-        "operationId": "health_api_health_get",
+        "operationId": "health",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -25,31 +25,67 @@
         }
       }
     },
-    "/api/get-url": {
+    "/api/order/check": {
       "get": {
         "tags": [
           "server"
         ],
-        "summary": "Get Url",
-        "description": "Получить URL на оплату заказа.",
-        "operationId": "get_url_api_get_url_get",
+        "summary": "Check Order",
+        "description": "Проверка наличия заказа в системе.",
+        "operationId": "check_order",
         "parameters": [
           {
-            "name": "task_id",
+            "name": "order_guid",
             "in": "query",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Task Id"
+              "description": "Идентификатор заказа",
+              "title": "Order Guid"
+            },
+            "description": "Идентификатор заказа"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckOrderResponse"
+                }
+              }
             }
           },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payment/url": {
+      "get": {
+        "tags": [
+          "server"
+        ],
+        "summary": "Get Payment Url",
+        "description": "Получить URL на оплату заказа.",
+        "operationId": "get_payment_url",
+        "parameters": [
           {
-            "name": "guid",
+            "name": "task_guid",
             "in": "query",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "Guid"
+              "title": "Task Guid"
             }
           }
         ],
@@ -82,7 +118,7 @@
         ],
         "summary": "Payment Status Update",
         "description": "Обновить статус платежа через систему банка.",
-        "operationId": "payment_status_update_api_payment_status_post",
+        "operationId": "payment_status_update",
         "requestBody": {
           "content": {
             "application/json": {
@@ -118,6 +154,19 @@
   },
   "components": {
     "schemas": {
+      "CheckOrderResponse": {
+        "properties": {
+          "is_valid": {
+            "type": "boolean",
+            "title": "Is Valid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_valid"
+        ],
+        "title": "CheckOrderResponse"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {

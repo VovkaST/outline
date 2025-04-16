@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import CheckBox from './CheckBox.component.vue';
 import ButtonComponent from './Button.component.vue';
-import { computed } from 'vue';
+import { ErrorLayer } from '@/components/ui';
+import { computed, inject } from 'vue';
+import { Errors } from '@/stores/enums.ts';
+
+const paymentError = inject<Errors>('paymentError');
 
 const offer = defineModel('offer', { default: false });
 const personal = defineModel('personal', { default: false });
@@ -11,7 +15,10 @@ const isAgreed = computed<boolean>(() => offer.value && personal.value && subscr
 </script>
 
 <template>
-  <div class="agreement">
+  <div class="agreement position-relative">
+    <error-layer v-if="paymentError">
+      {{ paymentError }}
+    </error-layer>
     <check-box id="offer" v-model="offer">
       Согласен с <a href="/attachments/Оферта.pdf">условиями оферты</a>
     </check-box>
