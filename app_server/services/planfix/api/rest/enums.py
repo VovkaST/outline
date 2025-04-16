@@ -8,6 +8,11 @@ class Role(str, Enum):
     PARTICIPANT = "participant"
 
 
+class Priority(str, Enum):
+    NOT_URGENT = "NotUrgent"
+    URGENT = "Urgent"
+
+
 class TypeList(str, Enum):
     COMMENTS = "Comments"
     ALL = "All"
@@ -18,3 +23,16 @@ class TypeList(str, Enum):
 class OrderDirection(str, Enum):
     ASC = "Asc"
     DESC = "Desc"
+
+
+class DurationUnit(str, Enum):
+    MINUTE = "Minute"
+    HOUR = "Hour"
+    DAY = "Day"
+    WEEK = "Week"
+    MONTH = "Month"
+
+
+class DurationType(str, Enum):
+    CALENDAR_DAY = "CalendarDays"
+    WORKER_DAYS = "WorkerDays"

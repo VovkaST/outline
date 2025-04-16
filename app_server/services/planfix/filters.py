@@ -13,3 +13,8 @@ class CustomFields(IntEnum):
 class GuidF(CustF):
     type: FilterTypes = FilterTypes.CUSTOM_FIELD_LINE
     field: PositiveInt = CustomFields.GUID
+
+
+class RebillIdF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
+    field: PositiveInt = CustomFields.REBILL_ID

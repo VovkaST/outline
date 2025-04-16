@@ -3,10 +3,51 @@ from app_server.services.planfix.api.interfaces.task import ITask
 from app_server.services.planfix.api.rest.enums import OrderDirection
 from app_server.services.planfix.api.rest.filters import F
 from app_server.services.planfix.api.rest.spec import models
+from app_server.services.planfix.filters import CustomFields
+
+ALL_FIELDS = [
+    "priority",
+    "status",
+    "processId",
+    "resultChecking",
+    "type",
+    "assigner",
+    "parent",
+    "pbject",
+    "template",
+    "project",
+    "counterparty",
+    "dateTime",
+    "startDateTime",
+    "endDateTime",
+    "hasStartDate",
+    "hasEndDate",
+    "hasStartTime",
+    "hasEndTime",
+    "delayedTillDate",
+    "dateOfLastUpdate",
+    "duration",
+    "durationUnit",
+    "durationType",
+    "overdue",
+    "closeToDeadLine",
+    "notAcceptedInTime",
+    "inFavorites",
+    "isSummary",
+    "isSequential",
+    "assignees",
+    "participants",
+    "auditors",
+    "recurrence",
+    "isDeleted",
+    "files",
+    "sourceObjectId",
+    "sourceDataVersion",
+]
 
 
 class Task(BaseAPIEntity, ITask):
-    default_fields = ["id", "name", "description"]
+    default_fields = ["id", "name", "description", CustomFields.GUID.value, CustomFields.REBILL_ID.value] + ALL_FIELDS
 
     def build_fields_list(self, fields: list[str]) -> str:
         return ",".join(self.default_fields + (fields or []))

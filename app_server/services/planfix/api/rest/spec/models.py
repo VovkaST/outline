@@ -41,7 +41,11 @@ class Filter(BaseModel):
 
     def with_fields(self, *fields: list[str]) -> Self:
         instance = self.copy(deep=True)
-        instance._fields = fields
+        cleared_list = []
+        for field in fields:
+            if field not in self._fields:
+                cleared_list.append(str(field))
+        instance._fields = cleared_list
         return instance
 
 
