@@ -10,13 +10,13 @@ import SectionTitle from './Title.component.vue';
   <div class="subscribe position-relative d-flex flex-column justify-content-between">
     <div class="head d-flex flex-column align-items-start justify-content-between">
       <section-title class="mb-2">Оформить подписку</section-title>
-      <p class="mb-0">Услуги на подключение к нашим серверам бота TRIO на 1 месяц.</p>
-      <p>
-        Описание: Вы оплачиваете ключ, который выдал вам бот, для доступа к нашему VPN сервису в
-        течение 1 месяца.
+      <p class="mb-0">
+        Мы &ndash; рекламная компания, которая предоставляет услуги по продвижению ваших услуг в
+        мессенджере Telegram по г. Махачкала.
       </p>
+      <p>Стоимость подписки составляет 200 рублей в месяц.</p>
     </div>
-    <receipt :items="[{ name: 'Подписка', price: 15000 }]" />
+    <receipt :items="[{ name: 'Подписка', price: 20000 }]" />
     <agreement class="mt-3" />
     <owner-info class="mt-3" />
   </div>

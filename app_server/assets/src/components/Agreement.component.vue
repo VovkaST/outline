@@ -29,7 +29,7 @@ const isAgreed = computed<boolean>(() => offer.value && personal.value && subscr
       Согласен с <a href="/attachments/Соглашение с подпиской т.pdf">условиями подписки</a>
     </check-box>
     <div class="text-center">
-      <button-component :disabled="!isAgreed">Оплатить по карте</button-component>
+      <button-component :disabled="!isAgreed">Оплатить</button-component>
     </div>
   </div>
 </template>
