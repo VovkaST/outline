@@ -19,11 +19,16 @@ const isReady = ref<boolean>(false);
 provide('paymentError', readonly(paymentError));
 
 onBeforeMount(() => {
-  payment.checkOrder({ guid: paymentGuid.value }).then((response) => {
-    isPaymentValid.value = response.is_valid;
-    if (!isPaymentValid.value) paymentError.value = Errors.PAYMENT_NOT_FOUND;
+  if (paymentGuid.value) {
+    payment.checkOrder({ guid: paymentGuid.value }).then((response) => {
+      isPaymentValid.value = response.is_valid;
+      if (!isPaymentValid.value) paymentError.value = Errors.PAYMENT_NOT_FOUND;
+      isReady.value = true;
+    });
+  } else {
+    paymentError.value = Errors.PAYMENT_GUID_REQUIRED;
     isReady.value = true;
-  });
+  }
 });
 </script>
 
