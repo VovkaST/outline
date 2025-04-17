@@ -27,6 +27,7 @@
   "dependencies": {
     "@jridgewell/sourcemap-codec": "^1.5.0",
     "@popperjs/core": "^2.11.8",
+    "@vueuse/core": "^13.1.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "bootstrap": "^5.3.3",
     "globals": "^16.0.0",
