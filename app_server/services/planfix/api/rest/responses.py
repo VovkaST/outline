@@ -1,8 +1,11 @@
+from contextlib import suppress
+from functools import cached_property
 from typing import TypeAlias
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 
 from app_server.services.planfix.api.rest.enums import DurationType, DurationUnit, Priority
+from app_server.services.planfix.filters import CustomFields
 
 ObjectId: TypeAlias = int | str
 
@@ -113,6 +116,20 @@ class TaskResponse(BaseModel):
     isDeleted: bool | None = None
     # files: list
     customFieldData: list[CustomFieldValueResponse] | None = Field(default_factory=list)
+
+    def get_custom_field(self, field: CustomFields) -> CustomFieldValueResponse:
+        with suppress(StopIteration):
+            return next(filter(lambda d: d.field.id == field, self.customFieldData))
+
+    @computed_field
+    @cached_property
+    def rebill_field(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.REBILL_ID)
+
+    @computed_field
+    @cached_property
+    def client_field(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.CLIENT_ID)
 
 
 class TaskFilterResponse(BaseModel):

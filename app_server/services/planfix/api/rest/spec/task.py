@@ -47,7 +47,14 @@ ALL_FIELDS = [
 
 
 class Task(BaseAPIEntity, ITask):
-    default_fields = ["id", "name", "description", CustomFields.GUID.value, CustomFields.REBILL_ID.value] + ALL_FIELDS
+    default_fields = [
+        "id",
+        "name",
+        "description",
+        CustomFields.GUID.value,
+        CustomFields.REBILL_ID.value,
+        CustomFields.CLIENT_ID.value,
+    ] + ALL_FIELDS
 
     def build_fields_list(self, fields: list[str]) -> str:
         return ",".join(self.default_fields + (fields or []))

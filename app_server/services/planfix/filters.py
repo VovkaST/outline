@@ -8,6 +8,7 @@ from app_server.services.planfix.api.rest.filters import CustF, FilterTypes
 class CustomFields(IntEnum):
     GUID = 140262
     REBILL_ID = 140258
+    CLIENT_ID = 140264
 
 
 class GuidF(CustF):
@@ -18,3 +19,8 @@ class GuidF(CustF):
 class RebillIdF(CustF):
     type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
     field: PositiveInt = CustomFields.REBILL_ID
+
+
+class ClientIdF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
+    field: PositiveInt = CustomFields.CLIENT_ID

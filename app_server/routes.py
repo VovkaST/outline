@@ -2,11 +2,11 @@ from fastapi import APIRouter, Query
 from starlette.requests import Request
 
 from app_server import dtos, responses
-from app_server.exceptions import PaymentError
+from app_server.exceptions import PaymentError, TaskNotFoundError
 from app_server.services import payment_api, planfix_api
 from app_server.services.planfix.api.rest.responses import TaskFilterResponse
 from app_server.services.planfix.filters import GuidF
-from app_server.utils import build_success_url, get_rebill_field, make_order_uniq_id
+from app_server.utils import build_fail_url, build_success_url, make_order_uniq_id
 from root.config import settings
 from root.utils.others import get_route_name
 
@@ -32,15 +32,18 @@ async def get_payment_url(request: Request, task_guid: str = Query(description="
     response = await planfix_api.task.get_list(GuidF(value=task_guid))
     response = TaskFilterResponse(**response)
 
+    if not response.tasks:
+        raise TaskNotFoundError()
+
     task = response.tasks[0]
-    rebill_id_field = get_rebill_field(task.customFieldData)
     response = await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=make_order_uniq_id(task_guid),
-        customer_key=task.counterparty.id,
+        customer_key=task.client_field.value,
         is_recurrent=True,
-        rebill_id=rebill_id_field.value,
+        rebill_id=task.rebill_field.value,
         success_url=build_success_url(task_guid),
+        fail_url=build_fail_url(task_guid),
     )
     if not response.Success:
         raise PaymentError(response)

@@ -16,7 +16,8 @@ class TBankConfig(BaseAppConfig):
     REST_API_URL: str
     TERMINAL_ID: str
     TERMINAL_PASSWORD: str
-    SUCCESS_PAYMENT_REDIRECT_URL: str
+    USE_SUCCESS_PAYMENT_REDIRECT_URL: bool
+    USE_FAIL_PAYMENT_REDIRECT_URL: bool
 
 
 class PlanfixConfig(BaseAppConfig):

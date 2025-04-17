@@ -53,6 +53,7 @@ class Payment(BaseHTTPService):
         is_recurrent: bool = True,
         rebill_id: str = None,
         success_url: str = None,
+        fail_url: str = None,
     ) -> dtos.InitPaymentResponse | dtos.PaymentResponse:
         response = await self.init(
             amount=amount,
@@ -61,6 +62,7 @@ class Payment(BaseHTTPService):
             customer_key=customer_key if not rebill_id else None,
             is_recurrent=is_recurrent and not rebill_id,
             success_url=success_url,
+            fail_url=fail_url,
         )
         if rebill_id and response.Success:
             return await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
@@ -74,6 +76,7 @@ class Payment(BaseHTTPService):
         customer_key: str = None,
         is_recurrent: bool = True,
         success_url: str = None,
+        fail_url: str = None,
     ) -> dtos.InitPaymentResponse:
         payload = {
             "TerminalKey": self.terminal_id,
@@ -89,6 +92,8 @@ class Payment(BaseHTTPService):
             payload["CustomerKey"] = customer_key
         if success_url:
             payload["SuccessURL"] = success_url
+        if fail_url:
+            payload["FailURL"] = fail_url
         payload["Token"] = await self.make_token(payload)
         response = await self.make_request(url_name="init", method="post", json=payload)
         return dtos.InitPaymentResponse(**response)
