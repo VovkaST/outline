@@ -2,10 +2,12 @@ from fastapi import APIRouter, Query
 from starlette.requests import Request
 
 from app_server import dtos, responses
+from app_server.enums import PaymentStatus
 from app_server.exceptions import PaymentError, TaskNotFoundError
 from app_server.services import payment_api, planfix_api
+from app_server.services.planfix.api.rest.enums import SubscriptionStatus
 from app_server.services.planfix.api.rest.responses import TaskFilterResponse
-from app_server.services.planfix.filters import GuidF
+from app_server.services.planfix.filters import GuidF, RebillIdUpdate, SubscriptionStatusUpdate
 from app_server.utils import build_fail_url, build_success_url, make_order_uniq_id
 from root.config import settings
 from root.utils.others import get_route_name
@@ -44,13 +46,7 @@ async def get_order(request: Request, task_guid: str):
 @api_routes.get("/payment/url", response_model=responses.GetPaymentUrlResponse)
 async def get_payment_url(request: Request, task_guid: str = Query(description="Идентификатор заказа")):
     """Получить URL на оплату заказа."""
-    response = await planfix_api.task.get_list(GuidF(value=task_guid))
-    response = TaskFilterResponse(**response)
-
-    if not response.tasks:
-        raise TaskNotFoundError()
-
-    task = response.tasks[0]
+    task = await get_task(task_guid)
     response = await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=make_order_uniq_id(task_guid),
@@ -72,24 +68,35 @@ async def get_payment_url(request: Request, task_guid: str = Query(description="
 async def payment_status_update(request: Request, payload: dtos.NotificationPaymentRequest):
     """Обновить статус платежа через систему банка."""
     await payment_api.check_token(payload)
+    task = await get_task(payload.OrderId)
 
-    # result = await planfix_api.task.get(task_id=50821)
-    # result = await planfix_api.task.get_list(GuidF(value=task_guid))
-    # result = await planfix_api.task.add_comment(task_id=51282, description="Проба комментария")
-    # result = await planfix_api.task.get_task_comments(task_id=51282)
+    await planfix_api.task.add_comment(task_id=task.id, description=payload.Status)
 
-    # planfix_provider.send_payment_status(
-    #     status=payload.Status,
-    #     payment_id=payload.PaymentId,
-    #     rebill_id=payload.RebillId,
-    # )
+    if payload.Status in [PaymentStatus.AUTHORIZED, PaymentStatus.CONFIRMED]:
+        await planfix_api.task.update(
+            task_id=task.id,
+            customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE), RebillIdUpdate(payload.RebillId)],
+        )
     return "OK"
 
 
-# @api_routes.patch("/payment/subscription/reject")
-# async def subscription_reject(request: Request, payload: dtos.SubscriptionRejectRequest):
-#     """Отменить активную подписку"""
-#     task = await get_task(payload.task_guid)
-#     await planfix_api.task.update(
-#         task_id=task.id, customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.INACTIVE)]
-#     )
+@api_routes.post("/payment/charge")
+async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest):
+    """Провести автоматический периодический платеж."""
+    task_guid, payment_data = payload.task_guid.split(".", maxsplit=2)
+    task = await get_task(task_guid)
+    await payment_api.prepare_payment_init(
+        amount=settings.DEFAULT_PAYMENT_AMOUNT,
+        order_id=payload.task_guid,
+        rebill_id=task.rebill_field.value,
+    )
+    return "OK"
+
+
+@api_routes.patch("/subscription/reject")
+async def subscription_reject(request: Request, payload: dtos.SubscriptionRejectRequest):
+    """Отменить активную подписку"""
+    task = await get_task(payload.task_guid)
+    await planfix_api.task.update(
+        task_id=task.id, customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.INACTIVE)]
+    )

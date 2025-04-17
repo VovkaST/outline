@@ -33,5 +33,9 @@ class SubscriptionStatusF(CustF):
     field: PositiveInt = CustomFields.SUBSCRIPTION_STATUS_ID
 
 
+def RebillIdUpdate(value: str | int) -> dict:
+    return {"field": {"id": CustomFields.REBILL_ID}, "value": value}
+
+
 def SubscriptionStatusUpdate(status: SubscriptionStatus) -> dict:
     return {"field": {"id": CustomFields.SUBSCRIPTION_STATUS_ID}, "value": {"id": status}}

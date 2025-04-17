@@ -20,7 +20,7 @@ async def app_error_handler(request: Request, exc: AppError):
             {
                 "ErrorCode": exc.error_code,
                 "Message": exc.message,
-                "Details": str(exc.args[0]),
+                "Details": str(exc.args[0]) if exc.args else None,
             }
         ),
     )

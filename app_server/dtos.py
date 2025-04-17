@@ -2,10 +2,9 @@ from contextlib import suppress
 
 from pydantic import BaseModel, Field, model_validator
 
-
-class GetURLRequest(BaseModel):
-    task_id: str = Field(title="Идентификатор задания на оплату")
-    customer_key: str = Field(title="Идентификатор покупателя")
+# class GetURLRequest(BaseModel):
+#     task_id: str = Field(title="Идентификатор задания на оплату")
+#     customer_key: str = Field(title="Идентификатор покупателя")
 
 
 class PaymentResponse(BaseModel):
@@ -61,3 +60,7 @@ class NotificationPaymentRequest(BaseModel):
             with suppress(KeyError):
                 data["Data"] = data.pop(data_key)
         return data
+
+
+class PaymentChargeRequest(BaseModel):
+    task_guid: str = Field(title="Идентификатор задания на оплату")

@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from app_server import dtos
 from app_server.config import t_bank_config
-from app_server.exceptions import TokenError
+from app_server.exceptions import PaymentError, TokenError
 from app_server.services.base import BaseHTTPService
 
 
@@ -48,7 +48,7 @@ class Payment(BaseHTTPService):
         self,
         amount: int,
         order_id: str,
-        customer_key: str,
+        customer_key: str = None,
         description: str = "",
         is_recurrent: bool = True,
         rebill_id: str = None,
@@ -64,8 +64,15 @@ class Payment(BaseHTTPService):
             success_url=success_url,
             fail_url=fail_url,
         )
-        if rebill_id and response.Success:
-            return await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
+        if not response.Success:
+            raise PaymentError(response)
+
+        if rebill_id:
+            charge_response = await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
+            if not charge_response.Success:
+                raise PaymentError(charge_response)
+            return charge_response
+
         return response
 
     async def init(
