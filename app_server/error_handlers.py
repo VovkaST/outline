@@ -6,34 +6,29 @@ from starlette.responses import JSONResponse
 from app_server.exceptions import AppError, PaymentError
 
 
-async def payment_error_handler(request: Request, exc: PaymentError):
+def error_response(error_code: int, message: str, details: str = None, status_code: int = status.HTTP_400_BAD_REQUEST):
     return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content=jsonable_encoder(exc.response.dump_error()),
+        status_code=status_code,
+        content=jsonable_encoder(
+            {
+                "ErrorCode": error_code,
+                "Message": message,
+                "Details": details,
+            }
+        ),
     )
 
 
+async def payment_error_handler(request: Request, exc: PaymentError):
+    return error_response(**exc.response.dump_error())
+
+
 async def app_error_handler(request: Request, exc: AppError):
-    return JSONResponse(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        content=jsonable_encoder(
-            {
-                "ErrorCode": exc.error_code,
-                "Message": exc.message,
-                "Details": str(exc.args[0]) if exc.args else None,
-            }
-        ),
+    return error_response(
+        error_code=exc.error_code, message=exc.message, details=str(exc.args[0]) if exc.args else None
     )
 
 
 async def unknown_error_handler(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content=jsonable_encoder(
-            {
-                "ErrorCode": -1,
-                "Message": "Unhandled error",
-                "Details": str(exc),
-            }
-        ),
-    )
+    status_code = getattr(exc, "status_code", status.HTTP_500_INTERNAL_SERVER_ERROR)
+    return error_response(error_code=-1, message="Unhandled error", details=str(exc), status_code=status_code)

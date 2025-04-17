@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Query
+from aiohttp.web_exceptions import HTTPUnauthorized
+from fastapi import APIRouter, Header, Query
 from starlette.requests import Request
 
 from app_server import dtos, responses
@@ -81,8 +82,11 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
 
 
 @api_routes.post("/payment/charge")
-async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest):
+async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, authorization: str = Header(None)):
     """Провести автоматический периодический платеж."""
+    if authorization != settings.REQUEST_TOKEN:
+        raise HTTPUnauthorized()
+
     task_guid, payment_data = payload.task_guid.split(".", maxsplit=2)
     task = await get_task(task_guid)
     await payment_api.prepare_payment_init(
