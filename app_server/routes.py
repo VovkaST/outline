@@ -48,6 +48,8 @@ async def get_payment_url(request: Request, task_guid: str = Query(description="
     if not response.Success:
         raise PaymentError(response)
 
+    await planfix_api.task.add_comment(task_id=task.id, description=response.PaymentURL)
+
     return {"url": response.PaymentURL}
 
 
