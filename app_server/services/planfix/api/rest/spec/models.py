@@ -1,10 +1,37 @@
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import BaseModel, Field, PositiveInt, computed_field
 from typing_extensions import Self
 
 from app_server.services.planfix.api.rest.enums import OrderDirection, Role, TypeList
 from app_server.services.planfix.api.rest.filters import CustF, F
+from app_server.services.planfix.api.rest.responses import ObjectId
+
+
+class BaseRequest(BaseModel):
+    _fields: list[str] = []
+
+    @computed_field
+    @property
+    def fields(self) -> str:
+        field_names = [str(f.field.value) if isinstance(f, CustF) else f.type.label for f in self.filters]
+        return ",".join(list(self._fields) + field_names)
+
+    def with_fields(self, *fields: list[str]) -> Self:
+        instance = self.copy(deep=True)
+        cleared_list = []
+        for field in fields:
+            if field not in self._fields:
+                cleared_list.append(str(field))
+        instance._fields = cleared_list
+        return instance
+
+
+class BaseEntity(BaseModel):
+    id: ObjectId | None = None
+    name: str | None = None
 
 
 class _TimePoint(BaseModel):
@@ -26,27 +53,10 @@ class ResultOrder(BaseModel):
     direction: OrderDirection = OrderDirection.ASC
 
 
-class Filter(BaseModel):
-    _fields: list[str] = []
-
+class Filter(BaseRequest):
     offset: PositiveInt | None = 0
     pageSize: PositiveInt | None = 100
     filters: list[CustF | F] | None = Field(default_factory=list)
-
-    @computed_field
-    @property
-    def fields(self) -> str:
-        field_names = [str(f.field.value) if isinstance(f, CustF) else f.type.label for f in self.filters]
-        return ",".join(list(self._fields) + field_names)
-
-    def with_fields(self, *fields: list[str]) -> Self:
-        instance = self.copy(deep=True)
-        cleared_list = []
-        for field in fields:
-            if field not in self._fields:
-                cleared_list.append(str(field))
-        instance._fields = cleared_list
-        return instance
 
 
 class CommentsFilter(Filter):
@@ -70,3 +80,12 @@ class AddComment(BaseModel):
     isPinned: bool = False
     isHidden: bool = False
     recipients: _PeopleRequest | None = Field(default_factory=dict)
+
+
+class CustomFieldValueRequest(BaseModel):
+    field: BaseEntity | None = Field(default_factory=BaseEntity)
+    value: Any | None = None
+
+
+class TaskUpdateRequest(BaseModel):
+    customFieldData: list[CustomFieldValueRequest] | None = Field(default_factory=list)

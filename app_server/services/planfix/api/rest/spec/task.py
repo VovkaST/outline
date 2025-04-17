@@ -54,6 +54,7 @@ class Task(BaseAPIEntity, ITask):
         CustomFields.GUID.value,
         CustomFields.REBILL_ID.value,
         CustomFields.CLIENT_ID.value,
+        CustomFields.SUBSCRIPTION_STATUS_ID.value,
     ] + ALL_FIELDS
 
     def build_fields_list(self, fields: list[str]) -> str:
@@ -70,6 +71,15 @@ class Task(BaseAPIEntity, ITask):
     async def get(self, task_id: int, fields: list[str] = None):
         return await self.api.make_request(
             "get_task", method="get", task_id=task_id, params={"fields": self.build_fields_list(fields)}
+        )
+
+    async def update(self, task_id: int, silent: bool = False, **kwargs):
+        return await self.api.make_request(
+            "update_task",
+            method="post",
+            task_id=task_id,
+            params={"silent": str(silent)},
+            json=models.TaskUpdateRequest(**kwargs).model_dump(mode="json", exclude_unset=True),
         )
 
     async def get_list(self, *filters: list[F], **kwargs):

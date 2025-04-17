@@ -27,6 +27,10 @@ class InitPaymentResponse(PaymentResponse):
     PaymentURL: str | None = Field(title="Ссылка на платежную форму", default=None)
 
 
+class SubscriptionRejectRequest(BaseModel):
+    task_guid: str
+
+
 class NotificationPaymentRequest(BaseModel):
     TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
     Amount: int | None = Field(title="Сумма в копейках", default=None)

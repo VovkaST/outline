@@ -36,3 +36,8 @@ class DurationUnit(str, Enum):
 class DurationType(str, Enum):
     CALENDAR_DAY = "CalendarDays"
     WORKER_DAYS = "WorkerDays"
+
+
+class SubscriptionStatus(int, Enum):
+    ACTIVE = 1
+    INACTIVE = 2

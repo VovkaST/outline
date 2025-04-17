@@ -1,6 +1,6 @@
 from contextlib import suppress
 from functools import cached_property
-from typing import TypeAlias
+from typing import Any, TypeAlias
 
 from pydantic import BaseModel, Field, computed_field
 
@@ -70,7 +70,7 @@ class CustomField(BaseModel):
 
 class CustomFieldValueResponse(BaseModel):
     field: CustomField | None = Field(default_factory=CustomField)
-    value: str | None = None
+    value: Any | None = None
     stringValue: str | None = None
 
 
@@ -130,6 +130,11 @@ class TaskResponse(BaseModel):
     @cached_property
     def client_field(self) -> CustomFieldValueResponse:
         return self.get_custom_field(field=CustomFields.CLIENT_ID)
+
+    @computed_field
+    @cached_property
+    def subscription_status_field(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.SUBSCRIPTION_STATUS_ID)
 
 
 class TaskFilterResponse(BaseModel):

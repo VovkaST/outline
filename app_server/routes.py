@@ -13,6 +13,16 @@ from root.utils.others import get_route_name
 api_routes = APIRouter(tags=["server"], prefix="/api", generate_unique_id_function=get_route_name)
 
 
+async def get_task(task_guid):
+    response = await planfix_api.task.get_list(GuidF(value=task_guid))
+    response = TaskFilterResponse(**response)
+
+    if not response.tasks:
+        raise TaskNotFoundError()
+
+    return response.tasks[0]
+
+
 @api_routes.get("/health")
 async def health(request: Request):
     """Проверка работоспособности сервиса."""
@@ -24,6 +34,11 @@ async def check_order(request: Request, task_guid: str = Query(description="Ид
     """Проверка наличия заказа в системе."""
     result = await planfix_api.task.get_list(GuidF(value=task_guid))
     return {"is_valid": bool(result.get("tasks", []))}
+
+
+@api_routes.get("/order/{task_guid}/")
+async def get_order(request: Request, task_guid: str):
+    return await planfix_api.task.get_list(GuidF(value=task_guid))
 
 
 @api_routes.get("/payment/url", response_model=responses.GetPaymentUrlResponse)
@@ -69,3 +84,12 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
     #     rebill_id=payload.RebillId,
     # )
     return "OK"
+
+
+# @api_routes.patch("/payment/subscription/reject")
+# async def subscription_reject(request: Request, payload: dtos.SubscriptionRejectRequest):
+#     """Отменить активную подписку"""
+#     task = await get_task(payload.task_guid)
+#     await planfix_api.task.update(
+#         task_id=task.id, customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.INACTIVE)]
+#     )

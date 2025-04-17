@@ -7,6 +7,10 @@ class ITask:
         """Функция получения карточки задачи"""
 
     @abstractmethod
+    async def update(self, task_id: int, silent: bool = False, **kwargs):
+        """Функция обновления карточки задачи"""
+
+    @abstractmethod
     async def get_list(self, **kwargs):
         """Функция получения списка задач"""
 
