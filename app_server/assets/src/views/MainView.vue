@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Subscribe from '@/components/Subscribe.component.vue';
 import { Spinner } from '@/components/ui';
-import { computed, onBeforeMount, provide, readonly, ref } from 'vue';
+import { computed, onBeforeMount, provide, Ref, ref } from 'vue';
 import { usePaymentStore } from '@/stores/payment.ts';
 import { useRoute } from 'vue-router';
 import { Errors } from '@/stores/enums.ts';
@@ -19,9 +19,9 @@ const isPaymentValid = ref<boolean>();
 const paymentError = ref<Errors>();
 const isReady = ref<boolean>(false);
 
-provide<string>('taskGuid', readonly(taskGuid));
-provide<Errors>('paymentError', readonly(paymentError));
-provide<boolean>('isSuccess', readonly(isSuccess));
+provide<Ref<string>>('taskGuid', taskGuid);
+provide<Ref<Errors | undefined>>('paymentError', paymentError);
+provide<Ref<boolean>>('isSuccess', isSuccess);
 
 onBeforeMount(() => {
   if (taskGuid.value) {

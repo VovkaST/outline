@@ -1,7 +1,20 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    isBusy?: boolean;
+  }>(),
+  { isBusy: false },
+);
+</script>
 
 <template>
   <button class="button outline-button">
+    <span
+      v-if="isBusy"
+      class="spinner-border spinner-border-sm"
+      role="status"
+      aria-hidden="true"
+    ></span>
     <slot />
   </button>
 </template>

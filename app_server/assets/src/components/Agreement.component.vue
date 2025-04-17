@@ -2,10 +2,12 @@
 import CheckBox from './CheckBox.component.vue';
 import ButtonComponent from './Button.component.vue';
 import { OverflowLayer } from '@/components/ui';
-import { computed, inject, onMounted, Ref } from 'vue';
+import { computed, inject, onMounted } from 'vue';
+import type { Ref } from 'vue';
 import { Errors, Messages } from '@/stores/enums.ts';
 import { usePaymentStore } from '@/stores/payment.ts';
 import { LayerTypes } from '@/components/ui/types.ts';
+import { useToggle } from '@vueuse/core';
 
 const taskGuid = inject<Ref<string>>('taskGuid');
 const paymentError = inject<Ref<Errors>>('paymentError');
@@ -20,8 +22,21 @@ const subscription = defineModel('subscription', { default: false });
 const isAgreed = computed<boolean>(() => offer.value && personal.value && subscription.value);
 const allowToPay = computed<boolean>(() => isAgreed.value && !isSuccessfullyPayed.value);
 
+const [isBusy, isBusyToggle] = useToggle();
+
 const onPayClick = async () => {
-  payment.getPaymentURL({ guid: taskGuid.value });
+  isBusy.value = true;
+  payment
+    .getPaymentURL({ guid: taskGuid.value })
+    .then(
+      (response) => {
+        window.location.href = response.url;
+      },
+      () => {
+        paymentError.value = Errors.UNHANDLED_ERROR;
+      },
+    )
+    .finally(isBusyToggle);
 };
 
 onMounted(() => {
@@ -58,7 +73,9 @@ onMounted(() => {
       Согласен с <a href="/attachments/Соглашение с подпиской т.pdf">условиями подписки</a>
     </check-box>
     <div class="text-center">
-      <button-component :disabled="!allowToPay" @click="onPayClick">Оплатить</button-component>
+      <button-component :disabled="!allowToPay || isBusy" :is-busy="isBusy" @click="onPayClick">
+        Оплатить
+      </button-component>
     </div>
   </div>
 </template>
