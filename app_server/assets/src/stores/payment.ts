@@ -12,5 +12,9 @@ export const usePaymentStore = defineStore('payment', {
     getPaymentURL({ guid }: { guid: string }) {
       return ServerService.getPaymentUrl({ taskGuid: guid });
     },
+
+    subscriptionReject({ guid }: { guid: string }) {
+      return ServerService.subscriptionReject({ requestBody: { task_guid: guid } });
+    },
   },
 });
