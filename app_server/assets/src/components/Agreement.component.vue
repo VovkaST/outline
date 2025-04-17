@@ -11,7 +11,8 @@ import { useToggle } from '@vueuse/core';
 
 const taskGuid = inject<Ref<string>>('taskGuid');
 const paymentError = inject<Ref<Errors>>('paymentError');
-const isSuccessfullyPayed = inject<Ref<boolean>>('isSuccess');
+const isSuccessfullyPayedInj = inject<Ref<boolean>>('isSuccess');
+const isSuccessfullyPayed = computed<boolean>(() => isSuccessfullyPayedInj.value);
 
 const payment = usePaymentStore();
 

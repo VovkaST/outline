@@ -5,6 +5,7 @@ import { computed, onBeforeMount, provide, Ref, ref } from 'vue';
 import { usePaymentStore } from '@/stores/payment.ts';
 import { useRoute } from 'vue-router';
 import { Errors } from '@/stores/enums.ts';
+import { str2bool } from '@/utils.ts';
 
 const route = useRoute();
 const payment = usePaymentStore();
@@ -13,7 +14,9 @@ const taskGuid = computed<string>(() => {
   return route.query['guid'];
 });
 const isSuccess = computed<boolean>(() => {
-  return route.query['success'];
+  const successValue = route.query['success'];
+  if (successValue) return str2bool(successValue);
+  return false;
 });
 const isPaymentValid = ref<boolean>();
 const paymentError = ref<Errors>();
