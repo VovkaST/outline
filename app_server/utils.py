@@ -18,7 +18,7 @@ def get_rebill_field(fields: list[CustomFieldValueResponse]) -> CustomFieldValue
 
 
 def make_order_uniq_id(task_guid: str) -> str:
-    suffix = datetime.now().strftime("%Y-%m-%d_%H-%M")
+    suffix = datetime.now().strftime("%y%m%d_%H%M")
     return f"{task_guid}.{suffix}"
 
 
