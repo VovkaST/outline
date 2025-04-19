@@ -57,12 +57,10 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "default",
-            "level": "INFO",
         },
         "file": {
             "class": "logging.handlers.RotatingFileHandler",
             "formatter": "default",
-            "level": "WARNING",
             "filename": log_dir / "app.log",
             "maxBytes": 1024 * 1024 * 3,
             "backupCount": 10,
@@ -74,10 +72,6 @@ LOGGING = {
             "handlers": ["console", "file"],
         },
         "middleware.requests": {
-            "level": "INFO",
-            "handlers": ["console", "file"],
-        },
-        "root": {
             "level": "INFO",
             "handlers": ["console", "file"],
         },
