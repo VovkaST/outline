@@ -2,6 +2,7 @@ import logging.config
 import os
 
 import click
+import fastapi
 import uvicorn
 
 from app_server.app import init_app
@@ -40,6 +41,10 @@ def run(ctx: click.core.Context):
         version=server_settings.VERSION,
         description=server_settings.DESCRIPTION,
     )
+
+    print(f"FastAPI version {fastapi.__version__}, using settings '{os.environ.get('SETTINGS_MODULE')}'")
+    print("Starting server...")
+
     # logging.config.dictConfig(ctx.obj["config"]["logging"])
     uvicorn.run(app, host=host, port=port)
 
