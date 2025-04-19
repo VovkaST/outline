@@ -4,12 +4,15 @@ from contextlib import suppress
 
 import aiohttp
 from aiohttp import hdrs
+from starlette.responses import JSONResponse
 
 logger = logging.getLogger("HTTPClient")
 
 
 async def response_to_str(response) -> str:
     with suppress(AttributeError):
+        if isinstance(response, JSONResponse):
+            return response.body.decode()
         content_type = response.headers[hdrs.CONTENT_TYPE]
         if "application/json" in content_type:
             data = await response.json()

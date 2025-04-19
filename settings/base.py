@@ -75,5 +75,9 @@ LOGGING = {
             "level": "INFO",
             "handlers": ["console", "file"],
         },
+        "app_server": {
+            "level": "INFO",
+            "handlers": ["console", "file"],
+        },
     },
 }
