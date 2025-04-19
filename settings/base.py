@@ -1,6 +1,16 @@
+from pathlib import Path
+
 from root.utils.config import Environ
 
 env = Environ()
+
+MIDDLEWARE = [
+    (
+        "starlette.middleware.cors.CORSMiddleware",
+        {"allow_credentials": True, "allow_headers": ["*"], "allow_origins": ["*"], "allow_methods": ["*"]},
+    ),
+    "root.middleware.requests.request",
+]
 
 SITE_URL = env.get("SITE_URL", default="http://127.0.0.1:8000")
 SITE_URL_PAYMENT = SITE_URL + "/payment"
@@ -28,3 +38,48 @@ PLANFIX_REST_API_URL = env.get("PLANFIX_REST_API_URL", default="https://aspectgr
 PLANFIX_ACCOUNT = env.get("PLANFIX_ACCOUNT")
 PLANFIX_TOKEN = env.get("PLANFIX_TOKEN")
 PLANFIX_API_KEY = env.get("PLANFIX_API_KEY")
+
+
+# Логирование
+LOG_DIR = env.get("LOG_DIR", default="logs")
+log_dir = Path(LOG_DIR)
+log_dir.mkdir(exist_ok=True, parents=True)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {
+            "format": "%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "default",
+            "level": "INFO",
+        },
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "default",
+            "level": "WARNING",
+            "filename": log_dir / "app.log",
+            "maxBytes": 1024 * 1024 * 3,
+            "backupCount": 10,
+        },
+    },
+    "loggers": {
+        "HTTPClient": {
+            "level": "INFO",
+            "handlers": ["console", "file"],
+        },
+        "middleware.requests": {
+            "level": "INFO",
+            "handlers": ["console", "file"],
+        },
+        "root": {
+            "level": "INFO",
+            "handlers": ["console", "file"],
+        },
+    },
+}

@@ -1,3 +1,4 @@
+import logging.config
 import os
 
 import click
@@ -15,6 +16,8 @@ os.environ.setdefault("SETTINGS_MODULE", "settings.local")
 def cli(ctx, port: int, host: str):
     from app_server.config import server_config
     from root.config import settings
+
+    logging.config.dictConfig(settings.LOGGING)
 
     ctx.obj["port"] = port or settings.SERVER_PORT
     ctx.obj["host"] = host
