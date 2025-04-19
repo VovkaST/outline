@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
 import { OpenAPI, ServerService } from '@/api/generated/public';
 
-OpenAPI.BASE = 'http://127.0.0.1:8000';
+if (import.meta.env.DEV) {
+  OpenAPI.BASE = 'http://127.0.0.1:8000';
+}
 
 export const usePaymentStore = defineStore('payment', {
   actions: {
