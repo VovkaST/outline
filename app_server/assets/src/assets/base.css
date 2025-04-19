@@ -4,6 +4,8 @@
   --font-family-default: Whitney, Helvetica Neue, Helvetica, Arial, sans-serif;
   --font-family-secondary: 'Nunito', sans-serif;
 
+  --block-border-radius: 22px;
+
   /*font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
   font-family: var(--font-family-default);
   line-height: 1.5;

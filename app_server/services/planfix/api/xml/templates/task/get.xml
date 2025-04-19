@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="task.get">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <task>
+    <id>{{ id }}</id>
+    <general>{{ general }}</general>
+  </task>
+  {% if signature %}
+    <signature>{{ signature }}</signature>
+  {% endif %}
+</request>

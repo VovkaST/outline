@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.delete">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <contact>
+    <id>{{ id }}</id>
+  </contact>
+  <signature>{{ signature }}</signature>
+</request>

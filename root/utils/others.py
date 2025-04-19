@@ -17,3 +17,7 @@ def str2int(s: str) -> int:
     except ValueError:
         nums = re.findall(r"\d+", s)
         return int(nums[0]) if len(nums) else 0
+
+
+def get_route_name(route) -> str:
+    return route.name

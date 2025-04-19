@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.get">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <contact>
+    <id>{{ id }}</id>
+    <userid>{{ userid }}</userid>
+    <general>{{ general }}</general>
+  </contact>
+  <signature>{{ signature }}</signature>
+</request>

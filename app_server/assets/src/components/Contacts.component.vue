@@ -6,6 +6,7 @@
     <div class="d-flex">
       <a href="tel:+79654910011">+7 (965) 491-00-11</a>
       <a href="mailto:mukhammad_368300@mail.ru">mukhammad_368300@mail.ru</a>
+      <a href="https://t.me/aspect_group05">Канал в Telegram</a>
     </div>
   </div>
 </template>

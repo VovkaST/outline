@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.updateCustomData">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <contact>
+    <id>{{ id }}</id>
+    <general>{{ general }}</general>
+    <customData>
+      {% for id, value in customData %}
+        <customValue>
+          <id>{{ id }}</id>
+          <value>{{ value }}</value>
+        </customValue>
+      {% endfor %}
+    </customData>
+  </contact>
+  <signature>{{ signature }}</signature>
+</request>

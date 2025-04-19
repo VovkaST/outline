@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request method="contact.add">
+  <account>{{ account }}</account>
+  <sid>{{ sid }}</sid>
+  <contact>
+    <template>{{ template }}</template>
+    <name>{{ name }}</name>
+    <midName>{{ midName }}</midName>
+    <lastName>{{ lastName }}</lastName>
+    <post>{{ post }}</post>
+    <email>{{ email }}</email>
+    <phones>
+        <phone>
+            <number></number>
+            <typeId></typeId>
+            <typeName></typeName>
+        </phone>
+    </phones>
+    <secondaryEmails>
+        <email></email>
+    </secondaryEmails>
+    <address>{{ address }}</address>
+    <description>{{ description }}</description>
+    <sex>{{ sex }}</sex>
+    <site>{{ site }}</site>
+    <skype>{{ skipe }}</skype>
+    <facebook>{{ facebook }}</facebook>
+    <vk>{{ vk }}</vk>
+    <icq>{{ icq }}</icq>
+    <birthdate>{{ birthdate }}</birthdate>
+    <lang>{{ lang }}</lang>
+    <isCompany>{{ isCompany }}</isCompany>
+    <canBeWorker>{{ canBeWorker }}</canBeWorker>
+    <canBeClient>{{ canBeClient }}</canBeClient>
+    <group>
+      <id></id>
+    </group>
+    <customData>
+      <customValue>
+        <id></id>
+        <value></value>
+      </customValue>
+    </customData>
+    <responsible>
+      <users>
+        <id></id>
+        <id></id>
+      </users>
+      <groups>
+        <id></id>
+        <id></id>
+      </groups>
+    </responsible>
+  </contact>
+  <signature>{{ signature }}</signature>
+</request>

@@ -1,10 +1,33 @@
+import importlib
+
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.staticfiles import StaticFiles
 
 from app_server.error_handlers import app_error_handler, payment_error_handler, unknown_error_handler
 from app_server.exceptions import AppError, PaymentError
 from app_server.routes import api_routes
+from root.config import settings
+
+
+def add_middlewares(app: FastAPI):
+    middlewares = settings.MIDDLEWARE
+
+    def _add(app: FastAPI, middleware_class=BaseHTTPMiddleware, **kwargs):
+        app.add_middleware(middleware_class, **kwargs)
+
+    for middleware in middlewares:
+        if isinstance(middleware, list | tuple):
+            middleware, middleware_kwargs = middleware
+        else:
+            middleware_kwargs = {}
+        module_name, middleware_class_name = middleware.rsplit(".", 1)
+        module = importlib.import_module(module_name)
+        middleware_class = getattr(module, middleware_class_name)
+        if not middleware_kwargs:
+            _add(app, dispatch=middleware_class)
+        else:
+            app.add_middleware(middleware_class, **middleware_kwargs)
 
 
 def init_app(service_name: str, version: str, description: str) -> FastAPI:
@@ -12,13 +35,8 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
     app.exception_handler(AppError)(app_error_handler)
     app.exception_handler(PaymentError)(payment_error_handler)
     app.exception_handler(Exception)(unknown_error_handler)
-    app.add_middleware(
-        CORSMiddleware,
-        allow_credentials=True,
-        allow_headers=["*"],
-        allow_origins=["*"],
-        allow_methods=["*"],
-    )
+
+    add_middlewares(app)
 
     app.include_router(api_routes)
     app.mount("/", StaticFiles(directory="app_server/assets", html=True, check_dir=True), name="static")
