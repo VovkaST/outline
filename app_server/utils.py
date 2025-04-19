@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime
-
 from app_server.config import t_bank_config
 from root.config import settings
 
 
 def make_order_uniq_id(task_guid: str) -> str:
-    suffix = datetime.now().strftime("%y%m%d_%H%M")
-    return f"{task_guid}.{suffix}"
+    # suffix = datetime.now().strftime("%y%m%d_%H%M")
+    # return f"{task_guid}.{suffix}"
+    return task_guid
 
 
 def build_success_url(task_guid: str) -> str:
