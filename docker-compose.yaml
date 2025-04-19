@@ -1,6 +1,7 @@
 services:
   server:
     image: outline-server-python-3.10:latest
+    container_name: outline-api-server
     env_file:
       - .env
     environment:
