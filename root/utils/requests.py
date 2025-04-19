@@ -25,6 +25,11 @@ async def response_to_str(response) -> str:
 class LoggingClientSession(aiohttp.ClientSession):
     async def _request(self, method, url, **kwargs):
         logger.debug("Starting request <%s %r>", method, self._build_url(url))
+        json = kwargs.get("json")
+        data = kwargs.get("data")
+        logger.debug(
+            f"Request <{method} {url}> started: {json=}, {data=}",
+        )
         response = await super()._request(method, url, **kwargs)
         data = await response_to_str(response)
         logger.info(
