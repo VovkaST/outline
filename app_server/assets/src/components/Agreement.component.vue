@@ -68,9 +68,9 @@ onMounted(() => {
     </check-box>
     <check-box id="subscription" v-model="subscription">
       Согласен с
-      <a href="/attachments/AgreementSubscription.pdf" target="_blank" download
-        >условиями подписки</a
-      >
+      <a href="/attachments/AgreementSubscription.pdf" target="_blank" download>
+        условиями подписки
+      </a>
     </check-box>
     <div class="text-center">
       <button-component :disabled="!allowToPay || isBusy" :is-busy="isBusy" @click="onPayClick">
