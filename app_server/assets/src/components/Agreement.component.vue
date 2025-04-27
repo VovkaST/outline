@@ -86,6 +86,11 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+:deep(.overflow-layer) {
+  h2 {
+    text-align: center;
+  }
+}
 .outline-button {
   width: calc(40% - 40px);
 }
@@ -98,6 +103,10 @@ onMounted(() => {
 @media (max-width: 575.98px) {
   .outline-button {
     width: 100%;
+  }
+
+  :deep(.overflow-layer) {
+    border-radius: 0.6rem;
   }
 }
 </style>

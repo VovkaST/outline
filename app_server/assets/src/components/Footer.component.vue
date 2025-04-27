@@ -33,5 +33,9 @@ footer {
   gap: 20px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+
+  #cancel-subscription {
+    text-align: center;
+  }
 }
 </style>
