@@ -1,6 +1,8 @@
 from aiohttp.web_exceptions import HTTPUnauthorized
 from fastapi import APIRouter, Header, Query
+from starlette import status
 from starlette.requests import Request
+from starlette.responses import HTMLResponse
 
 from app_server import dtos, responses
 from app_server.enums import PaymentStatus
@@ -65,7 +67,7 @@ async def get_payment_url(request: Request, task_guid: str = Query(description="
     return {"url": response.PaymentURL}
 
 
-@api_routes.post("/payment/status")
+@api_routes.post("/payment/status", status_code=status.HTTP_200_OK)
 async def payment_status_update(request: Request, payload: dtos.NotificationPaymentRequest):
     """Обновить статус платежа через систему банка."""
     await payment_api.check_token(payload)
@@ -78,7 +80,7 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
             task_id=task.id,
             customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE), RebillIdUpdate(payload.RebillId)],
         )
-    return "OK"
+    return HTMLResponse("OK")
 
 
 @api_routes.post("/payment/charge")
