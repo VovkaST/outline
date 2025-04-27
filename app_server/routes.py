@@ -47,14 +47,18 @@ async def get_order(request: Request, task_guid: str):
 
 
 @api_routes.get("/payment/url", response_model=responses.GetPaymentUrlResponse)
-async def get_payment_url(request: Request, task_guid: str = Query(description="Идентификатор заказа")):
+async def get_payment_url(
+    request: Request,
+    task_guid: str = Query(description="Идентификатор заказа"),
+    is_recurrent: bool = Query(description="Признак рекуррентности платежа", default=False),
+):
     """Получить URL на оплату заказа."""
     task = await get_task(task_guid)
     response = await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
-        is_recurrent=True,
+        is_recurrent=is_recurrent,
         rebill_id=task.rebill_field.value,
         success_url=build_success_url(task_guid),
         fail_url=build_fail_url(task_guid),
