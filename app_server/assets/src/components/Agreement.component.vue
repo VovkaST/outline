@@ -39,7 +39,7 @@ const onPayClick = async () => {
         window.location.href = response.url;
       },
       () => {
-        paymentError.value == Errors.UNHANDLED_ERROR;
+        paymentError.value = Errors.UNHANDLED_ERROR;
       },
     )
     .finally(isBusyToggle);
