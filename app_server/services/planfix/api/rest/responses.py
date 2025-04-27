@@ -136,6 +136,12 @@ class TaskResponse(BaseModel):
     def subscription_status_field(self) -> CustomFieldValueResponse:
         return self.get_custom_field(field=CustomFields.SUBSCRIPTION_STATUS_ID)
 
+    @computed_field
+    @cached_property
+    def client_phone(self) -> str:
+        *_, phone = self.name.split(" | ")
+        return f"+{phone}" if phone else ""
+
 
 class TaskFilterResponse(BaseModel):
     result: str

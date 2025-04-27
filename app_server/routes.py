@@ -58,6 +58,7 @@ async def get_payment_url(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
+        customer_phone=task.client_phone,
         is_recurrent=is_recurrent,
         rebill_id=task.rebill_field.value,
         success_url=build_success_url(task_guid),
