@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import Contacts from './Contacts.component.vue';
 import { inject } from 'vue';
-import type { Ref } from 'vue';
 import { usePaymentStore } from '@/stores/payment.ts';
 
-const taskGuid = inject<Ref<string>>('taskGuid');
+const { taskGuid }: { taskGuid: string } = inject('paymentItem');
 
 const payment = usePaymentStore();
 
 const onRejectClick = async () => {
-  await payment.subscriptionReject({ guid: taskGuid.value }).then(() => {
+  await payment.subscriptionReject({ guid: taskGuid }).then(() => {
     alert('Подписка отменена успешно');
   });
 };

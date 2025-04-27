@@ -3,16 +3,21 @@ import CheckBox from './CheckBox.component.vue';
 import ButtonComponent from './Button.component.vue';
 import { OverflowLayer } from '@/components/ui';
 import { computed, inject, onMounted } from 'vue';
-import type { Ref } from 'vue';
+import { type Ref } from 'vue';
 import { Errors, Messages } from '@/stores/enums.ts';
 import { usePaymentStore } from '@/stores/payment.ts';
 import { LayerTypes } from '@/components/ui/types.ts';
 import { useToggle } from '@vueuse/core';
 
-const taskGuid = inject<Ref<string>>('taskGuid');
-const paymentError = inject<Ref<Errors>>('paymentError');
-const isSuccessfullyPayedInj = inject<Ref<boolean>>('isSuccess');
-const isSuccessfullyPayed = computed<boolean>(() => isSuccessfullyPayedInj.value);
+const {
+  taskGuid,
+  isSuccess,
+  isRecurrent,
+}: { taskGuid: string; isSuccess: boolean; isRecurrent: boolean } = inject('paymentItem');
+
+const { paymentError }: { paymentError: Ref<Errors> } = inject('paymentError');
+
+const isSuccessfullyPayed = computed<boolean>(() => isSuccess);
 
 const payment = usePaymentStore();
 
@@ -28,13 +33,13 @@ const [isBusy, isBusyToggle] = useToggle();
 const onPayClick = async () => {
   isBusy.value = true;
   payment
-    .getPaymentURL({ guid: taskGuid.value })
+    .getPaymentURL({ guid: taskGuid, isRecurrent: isRecurrent })
     .then(
       (response) => {
         window.location.href = response.url;
       },
       () => {
-        paymentError.value = Errors.UNHANDLED_ERROR;
+        paymentError.value == Errors.UNHANDLED_ERROR;
       },
     )
     .finally(isBusyToggle);

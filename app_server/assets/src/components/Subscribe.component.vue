@@ -27,8 +27,6 @@ import SectionTitle from './Title.component.vue';
 .subscribe {
   font-family: var(--font-family-secondary);
   border-radius: 36px;
-  min-width: 1032px;
-  max-width: 1200px;
   padding: 20px 1rem 1rem;
   margin: max(50px, 4em) auto 0;
   box-shadow: 0 4px 14px 2px rgba(0, 0, 0, 0.1);
@@ -40,4 +38,9 @@ import SectionTitle from './Title.component.vue';
     color: #767577;
   }
 }
+
+//@include media-breakpoint-down(lg) {
+//  min-width: 1032px;
+//  max-width: 1200px;
+//}
 </style>
