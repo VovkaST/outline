@@ -1,5 +1,7 @@
 docker build -t outline-server-python-3.10:latest .
 
+docker compose up assets
+
 docker compose up -d server
 
 # Removing all dangling build cache
