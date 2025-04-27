@@ -58,20 +58,19 @@ onMounted(() => {
       {{ Messages.PAYED_SUCCESSFULLY }}
     </overflow-layer>
     <check-box id="offer" v-model="offer">
-      Согласен с <a href="/attachments/Оферта.pdf">условиями оферты</a>
+      Согласен с <a href="/attachments/Offer.pdf" target="_blank" download>условиями оферты</a>
     </check-box>
     <check-box id="personal" v-model="personal">
       Согласен с
-      <a
-        href="/attachments/site1001033_Согласие%20на%20обработку%20персональных%20данных.docx"
-        target="_blank"
-        download
-      >
+      <a href="/attachments/AgreementPersonalData.pdf" target="_blank" download>
         условиями обработки персональных данных
       </a>
     </check-box>
     <check-box id="subscription" v-model="subscription">
-      Согласен с <a href="/attachments/Соглашение с подпиской т.pdf">условиями подписки</a>
+      Согласен с
+      <a href="/attachments/AgreementSubscription.pdf" target="_blank" download
+        >условиями подписки</a
+      >
     </check-box>
     <div class="text-center">
       <button-component :disabled="!allowToPay || isBusy" :is-busy="isBusy" @click="onPayClick">
