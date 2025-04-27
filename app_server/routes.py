@@ -60,7 +60,6 @@ async def get_payment_url(
         customer_key=task.client_field.value,
         customer_phone=task.client_phone,
         is_recurrent=is_recurrent,
-        rebill_id=task.rebill_field.value,
         success_url=build_success_url(task_guid),
         fail_url=build_fail_url(task_guid),
     )
@@ -88,7 +87,7 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
     return HTMLResponse("OK")
 
 
-@api_routes.post("/payment/charge")
+@api_routes.post("/payment/charge", status_code=status.HTTP_200_OK)
 async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, authorization: str = Header(None)):
     """Провести автоматический периодический платеж."""
     if authorization != settings.REQUEST_TOKEN:
@@ -100,8 +99,9 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=payload.task_guid,
         rebill_id=task.rebill_field.value,
+        customer_phone=task.client_phone,
     )
-    return "OK"
+    return HTMLResponse("OK")
 
 
 @api_routes.patch("/subscription/reject")
