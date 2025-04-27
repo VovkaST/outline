@@ -11,8 +11,8 @@ import SectionTitle from './Title.component.vue';
     <div class="head d-flex flex-column align-items-start justify-content-between">
       <section-title class="mb-2">Оформить подписку</section-title>
       <p class="mb-0">
-        Мы &ndash; рекламная компания, которая предоставляет услуги по продвижению вашего бизнеса в
-        мессенджере Telegram по г. Махачкала.
+        Мы&nbsp;&mdash; рекламная компания, которая предоставляет услуги по&nbsp;продвижению вашего
+        бизнеса в&nbsp;мессенджере Telegram по&nbsp;г.&nbsp;Махачкала.
       </p>
       <p>Стоимость подписки составляет 200 рублей в месяц.</p>
     </div>
@@ -38,9 +38,9 @@ import SectionTitle from './Title.component.vue';
     color: #767577;
   }
 }
-
-//@include media-breakpoint-down(lg) {
-//  min-width: 1032px;
-//  max-width: 1200px;
-//}
+@media (max-width: 991.98px) {
+  .subscribe {
+    margin-top: 0;
+  }
+}
 </style>

@@ -18,7 +18,7 @@ const onRejectClick = async () => {
   <footer class="d-flex flex-column align-items-center">
     <div id="cancel-subscription">
       Для отмены подписки нажмите <a href="#" @click.prevent="onRejectClick">сюда</a> или свяжитесь
-      с нами по данным из раздела Контакты
+      с&nbsp;нами по&nbsp;данным из&nbsp;раздела Контакты
     </div>
     <contacts class="mt-3" />
   </footer>

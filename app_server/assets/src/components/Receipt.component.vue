@@ -47,4 +47,10 @@ const totalSum = computed<number>(() =>
     }
   }
 }
+
+@media (max-width: 575.98px) {
+  .receipt {
+    padding: 15px 20px 25px;
+  }
+}
 </style>

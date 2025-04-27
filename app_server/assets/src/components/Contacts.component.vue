@@ -3,7 +3,7 @@
 <template>
   <div class="contacts">
     <h2 class="mb-3">Контакты</h2>
-    <div class="d-flex">
+    <div class="contacts__items d-flex">
       <a href="tel:+79654910011">+7 (965) 491-00-11</a>
       <a href="mailto:mukhammad_368300@mail.ru">mukhammad_368300@mail.ru</a>
       <a href="https://t.me/aspect_group05">Канал в Telegram</a>
@@ -26,6 +26,12 @@
       color: #808080ff;
       font-size: 18px;
     }
+  }
+}
+@media (max-width: 767.98px) {
+  .contacts__items {
+    flex-direction: column;
+    row-gap: 10px;
   }
 }
 </style>

@@ -89,4 +89,15 @@ onMounted(() => {
 .outline-button {
   width: calc(40% - 40px);
 }
+
+@media (max-width: 767.98px) {
+  .outline-button {
+    width: calc(60% - 40px);
+  }
+}
+@media (max-width: 575.98px) {
+  .outline-button {
+    width: 100%;
+  }
+}
 </style>
