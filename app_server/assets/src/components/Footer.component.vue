@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import Contacts from './Contacts.component.vue';
 import { inject } from 'vue';
-import type { Ref } from 'vue';
 import { usePaymentStore } from '@/stores/payment.ts';
 
-const taskGuid = inject<Ref<string>>('taskGuid');
+const { taskGuid }: { taskGuid: string } = inject('paymentItem');
 
 const payment = usePaymentStore();
 
 const onRejectClick = async () => {
-  await payment.subscriptionReject({ guid: taskGuid.value }).then(() => {
+  await payment.subscriptionReject({ guid: taskGuid }).then(() => {
     alert('Подписка отменена успешно');
   });
 };
@@ -19,7 +18,7 @@ const onRejectClick = async () => {
   <footer class="d-flex flex-column align-items-center">
     <div id="cancel-subscription">
       Для отмены подписки нажмите <a href="#" @click.prevent="onRejectClick">сюда</a> или свяжитесь
-      с нами по данным из раздела Контакты
+      с&nbsp;нами по&nbsp;данным из&nbsp;раздела Контакты
     </div>
     <contacts class="mt-3" />
   </footer>
@@ -34,5 +33,9 @@ footer {
   gap: 20px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+
+  #cancel-subscription {
+    text-align: center;
+  }
 }
 </style>

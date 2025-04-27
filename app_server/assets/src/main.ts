@@ -6,8 +6,9 @@ import router from './router';
 
 import 'bootstrap/dist/css/bootstrap-reboot.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/scss/mixins/_breakpoints.scss';
 
-import './assets/main.css';
+import './assets/main.scss';
 
 const app = createApp(App);
 

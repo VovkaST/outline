@@ -1,6 +1,8 @@
 from aiohttp.web_exceptions import HTTPUnauthorized
 from fastapi import APIRouter, Header, Query
+from starlette import status
 from starlette.requests import Request
+from starlette.responses import HTMLResponse
 
 from app_server import dtos, responses
 from app_server.enums import PaymentStatus
@@ -45,15 +47,19 @@ async def get_order(request: Request, task_guid: str):
 
 
 @api_routes.get("/payment/url", response_model=responses.GetPaymentUrlResponse)
-async def get_payment_url(request: Request, task_guid: str = Query(description="Идентификатор заказа")):
+async def get_payment_url(
+    request: Request,
+    task_guid: str = Query(description="Идентификатор заказа"),
+    is_recurrent: bool = Query(description="Признак рекуррентности платежа", default=False),
+):
     """Получить URL на оплату заказа."""
     task = await get_task(task_guid)
     response = await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
-        is_recurrent=True,
-        rebill_id=task.rebill_field.value,
+        customer_phone=task.client_phone,
+        is_recurrent=is_recurrent,
         success_url=build_success_url(task_guid),
         fail_url=build_fail_url(task_guid),
     )
@@ -65,7 +71,7 @@ async def get_payment_url(request: Request, task_guid: str = Query(description="
     return {"url": response.PaymentURL}
 
 
-@api_routes.post("/payment/status")
+@api_routes.post("/payment/status", status_code=status.HTTP_200_OK)
 async def payment_status_update(request: Request, payload: dtos.NotificationPaymentRequest):
     """Обновить статус платежа через систему банка."""
     await payment_api.check_token(payload)
@@ -78,10 +84,10 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
             task_id=task.id,
             customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE), RebillIdUpdate(payload.RebillId)],
         )
-    return "OK"
+    return HTMLResponse("OK")
 
 
-@api_routes.post("/payment/charge")
+@api_routes.post("/payment/charge", status_code=status.HTTP_200_OK)
 async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, authorization: str = Header(None)):
     """Провести автоматический периодический платеж."""
     if authorization != settings.REQUEST_TOKEN:
@@ -93,8 +99,9 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=payload.task_guid,
         rebill_id=task.rebill_field.value,
+        customer_phone=task.client_phone,
     )
-    return "OK"
+    return HTMLResponse("OK")
 
 
 @api_routes.patch("/subscription/reject")

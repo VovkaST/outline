@@ -1,4 +1,4 @@
-@import "~bootstrap/dist/css/bootstrap-reboot.min.css";
+@import "~bootstrap/scss/bootstrap.scss";
 
 :root {
   --font-family-default: Whitney, Helvetica Neue, Helvetica, Arial, sans-serif;
@@ -34,6 +34,12 @@ a:hover {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
+}
+
+@media (max-width: 330px) {
+  #app {
+    min-width: 330px;
+  }
 }
 
 @media (prefers-color-scheme: light) {

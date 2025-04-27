@@ -15,9 +15,10 @@ class Payment(BaseHTTPService):
     }
     API_HOST = t_bank_config.REST_API_URL
 
-    def __init__(self, terminal_id: str, terminal_password: str, **kwargs):
+    def __init__(self, terminal_id: str, terminal_password: str, taxation: str, **kwargs):
         self.terminal_id = terminal_id
         self.terminal_password = terminal_password
+        self.taxation = taxation
         super().__init__(**kwargs)
 
     async def make_token(self, base_payload: dict) -> str:
@@ -50,6 +51,8 @@ class Payment(BaseHTTPService):
         order_id: str,
         customer_key: str = None,
         description: str = "",
+        customer_phone: str = "",
+        customer_email: str = "",
         is_recurrent: bool = True,
         rebill_id: str = None,
         success_url: str = None,
@@ -60,6 +63,8 @@ class Payment(BaseHTTPService):
             order_id=order_id,
             description=description,
             customer_key=customer_key if not rebill_id else None,
+            customer_phone=customer_phone,
+            customer_email=customer_email,
             is_recurrent=is_recurrent and not rebill_id,
             success_url=success_url,
             fail_url=fail_url,
@@ -81,15 +86,35 @@ class Payment(BaseHTTPService):
         order_id: str,
         description: str = "",
         customer_key: str = None,
+        customer_phone: str = None,
+        customer_email: str = None,
         is_recurrent: bool = True,
         success_url: str = None,
         fail_url: str = None,
     ) -> dtos.InitPaymentResponse:
+        if not customer_phone and not customer_email:
+            raise ValueError("Номер телефона или почта клиента обязательны для формирования чека")
+
         payload = {
             "TerminalKey": self.terminal_id,
             "Amount": amount,
             "OrderId": order_id,
             "Description": description,
+            "Receipt": {
+                "Taxation": self.taxation,
+                "Email": customer_email,
+                "Phone": customer_phone,
+                "Items": [
+                    {
+                        "Name": "Подписка",
+                        "Price": amount,
+                        "Quantity": 1,
+                        "Amount": amount,
+                        "Tax": "none",
+                        "PaymentObject": "service",
+                    }
+                ],
+            },
         }
         if is_recurrent and not customer_key:
             raise ValueError("CustomerKey обязателен для рекуррентных платежей")

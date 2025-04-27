@@ -3,16 +3,21 @@ import CheckBox from './CheckBox.component.vue';
 import ButtonComponent from './Button.component.vue';
 import { OverflowLayer } from '@/components/ui';
 import { computed, inject, onMounted } from 'vue';
-import type { Ref } from 'vue';
+import { type Ref } from 'vue';
 import { Errors, Messages } from '@/stores/enums.ts';
 import { usePaymentStore } from '@/stores/payment.ts';
 import { LayerTypes } from '@/components/ui/types.ts';
 import { useToggle } from '@vueuse/core';
 
-const taskGuid = inject<Ref<string>>('taskGuid');
-const paymentError = inject<Ref<Errors>>('paymentError');
-const isSuccessfullyPayedInj = inject<Ref<boolean>>('isSuccess');
-const isSuccessfullyPayed = computed<boolean>(() => isSuccessfullyPayedInj.value);
+const {
+  taskGuid,
+  isSuccess,
+  isRecurrent,
+}: { taskGuid: string; isSuccess: boolean; isRecurrent: boolean } = inject('paymentItem');
+
+const { paymentError }: { paymentError: Ref<Errors> } = inject('paymentError');
+
+const isSuccessfullyPayed = computed<boolean>(() => isSuccess);
 
 const payment = usePaymentStore();
 
@@ -28,13 +33,13 @@ const [isBusy, isBusyToggle] = useToggle();
 const onPayClick = async () => {
   isBusy.value = true;
   payment
-    .getPaymentURL({ guid: taskGuid.value })
+    .getPaymentURL({ guid: taskGuid, isRecurrent: isRecurrent })
     .then(
       (response) => {
         window.location.href = response.url;
       },
       () => {
-        paymentError.value = Errors.UNHANDLED_ERROR;
+        paymentError.value == Errors.UNHANDLED_ERROR;
       },
     )
     .finally(isBusyToggle);
@@ -58,20 +63,19 @@ onMounted(() => {
       {{ Messages.PAYED_SUCCESSFULLY }}
     </overflow-layer>
     <check-box id="offer" v-model="offer">
-      Согласен с <a href="/attachments/Оферта.pdf">условиями оферты</a>
+      Согласен с <a href="/attachments/Offer.pdf" target="_blank" download>условиями оферты</a>
     </check-box>
     <check-box id="personal" v-model="personal">
       Согласен с
-      <a
-        href="/attachments/site1001033_Согласие%20на%20обработку%20персональных%20данных.docx"
-        target="_blank"
-        download
-      >
+      <a href="/attachments/AgreementPersonalData.pdf" target="_blank" download>
         условиями обработки персональных данных
       </a>
     </check-box>
     <check-box id="subscription" v-model="subscription">
-      Согласен с <a href="/attachments/Соглашение с подпиской т.pdf">условиями подписки</a>
+      Согласен с
+      <a href="/attachments/AgreementSubscription.pdf" target="_blank" download>
+        условиями подписки
+      </a>
     </check-box>
     <div class="text-center">
       <button-component :disabled="!allowToPay || isBusy" :is-busy="isBusy" @click="onPayClick">
@@ -82,7 +86,27 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+:deep(.overflow-layer) {
+  h2 {
+    text-align: center;
+  }
+}
 .outline-button {
   width: calc(40% - 40px);
+}
+
+@media (max-width: 767.98px) {
+  .outline-button {
+    width: calc(60% - 40px);
+  }
+}
+@media (max-width: 575.98px) {
+  .outline-button {
+    width: 100%;
+  }
+
+  :deep(.overflow-layer) {
+    border-radius: 0.6rem;
+  }
 }
 </style>
