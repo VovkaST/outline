@@ -148,5 +148,5 @@ class Payment(BaseHTTPService):
             payload["SendEmail"] = send_email
             payload["InfoEmail"] = info_email
         payload["Token"] = await self.make_token(payload)
-        response = await self.make_request(url_name="charge", method="post", payload=payload)
+        response = await self.make_request(url_name="charge", method="post", json=payload)
         return dtos.PaymentResponse(**response)
