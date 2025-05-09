@@ -12,5 +12,6 @@ class CheckOrderResponse(BaseModel):
     is_valid: bool
 
 
-class GetPaymentUrlResponse(BaseModel):
-    url: str
+class InitPaymentResponse(BaseModel):
+    url: str | None = None
+    qr: str | None = None

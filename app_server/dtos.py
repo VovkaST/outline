@@ -7,15 +7,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 #     customer_key: str = Field(title="Идентификатор покупателя")
 
 
-class PaymentResponse(BaseModel):
+class ErrorResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
-    Amount: int | None = Field(title="Сумма в копейках", default=None)
-    OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
-    Success: bool | None = Field(title="Успешность прохождения запроса")
-    Status: str | None = Field(title="Статус транзакции", default=None)
-    PaymentId: str | None = Field(title="Идентификатор платежа в системе Т‑Кассы", default=None)
     ErrorCode: str | None = Field(title="Код ошибки. 0 в случае успеха", default="0", alias="error_code")
     Message: str | None = Field(title="Краткое описание ошибки", default=None, alias="message")
     Details: str | None = Field(title="Подробное описание ошибки", default=None, alias="details")
@@ -24,8 +18,31 @@ class PaymentResponse(BaseModel):
         return self.model_dump(include={"ErrorCode", "Message", "Details"}, by_alias=True)
 
 
+class PaymentResponse(ErrorResponse):
+    model_config = ConfigDict(populate_by_name=True)
+
+    TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
+    Amount: int | None = Field(title="Сумма в копейках", default=None)
+    OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
+    Success: bool | None = Field(title="Успешность прохождения запроса")
+    Status: str | None = Field(title="Статус транзакции", default=None)
+    PaymentId: str | None = Field(title="Идентификатор платежа в системе Т‑Кассы", default=None)
+
+
 class InitPaymentResponse(PaymentResponse):
     PaymentURL: str | None = Field(title="Ссылка на платежную форму", default=None)
+
+
+class GetQrResponse(ErrorResponse):
+    TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
+    OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
+    Success: bool | None = Field(title="Успешность прохождения запроса")
+    Data: str | None = Field(title="Информация, которая должна быть закодирована в QR", default=None)
+    PaymentId: int | None = Field(title="Уникальный идентификатор транзакции в системе Т‑Кассы", default=None)
+    RequestKey: str | None = Field(
+        title="Идентификатор запроса на привязку счета. Передается в случае привязки и одновременной оплаты по CБП.",
+        default=None,
+    )
 
 
 class SubscriptionRejectRequest(BaseModel):

@@ -46,7 +46,7 @@ async def get_order(request: Request, task_guid: str):
     return await planfix_api.task.get_list(GuidF(value=task_guid))
 
 
-@api_routes.get("/payment/url", response_model=responses.GetPaymentUrlResponse)
+@api_routes.get("/payment/url", response_model=responses.InitPaymentResponse)
 async def get_payment_url(
     request: Request,
     task_guid: str = Query(description="Идентификатор заказа"),
@@ -54,22 +54,31 @@ async def get_payment_url(
 ):
     """Получить URL на оплату заказа."""
     task = await get_task(task_guid)
-    response = await payment_api.prepare_payment_init(
+    init_response = await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         description=settings.DEFAULT_PAYMENT_DESCRIPTION,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
         customer_phone=task.client_phone,
         is_recurrent=is_recurrent,
+        use_qr=True,
         success_url=build_success_url(task_guid),
         fail_url=build_fail_url(task_guid),
     )
-    if not response.Success:
-        raise PaymentError(response)
+    if not init_response.Success:
+        raise PaymentError(init_response)
 
-    await planfix_api.task.add_comment(task_id=task.id, description=response.PaymentURL)
+    response = {}
 
-    return {"url": response.PaymentURL}
+    if hasattr(init_response, "PaymentURL"):
+        await planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL)
+        response["url"] = init_response.PaymentURL
+
+    if hasattr(init_response, "Data"):
+        await planfix_api.task.add_comment(task_id=task.id, description=init_response.Data)
+        response["qr"] = init_response.Data
+
+    return response
 
 
 @api_routes.post("/payment/status", status_code=status.HTTP_200_OK)
