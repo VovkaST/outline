@@ -89,6 +89,7 @@ class Payment(BaseHTTPService):
         customer_phone: str = None,
         customer_email: str = None,
         is_recurrent: bool = True,
+        use_qr: bool = False,
         success_url: str = None,
         fail_url: str = None,
     ) -> dtos.InitPaymentResponse:
@@ -116,6 +117,8 @@ class Payment(BaseHTTPService):
                 ],
             },
         }
+        if use_qr:
+            payload["DATA"]["QR"] = True
         if is_recurrent and not customer_key:
             raise ValueError("CustomerKey обязателен для рекуррентных платежей")
         if is_recurrent:
