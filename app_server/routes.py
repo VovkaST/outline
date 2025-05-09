@@ -46,8 +46,8 @@ async def get_order(request: Request, task_guid: str):
     return await planfix_api.task.get_list(GuidF(value=task_guid))
 
 
-@api_routes.get("/payment/url", response_model=responses.InitPaymentResponse)
-async def get_payment_url(
+@api_routes.get("/payment/init", response_model=responses.InitPaymentResponse)
+async def init_payment(
     request: Request,
     task_guid: str = Query(description="Идентификатор заказа"),
     is_recurrent: bool = Query(description="Признак рекуррентности платежа", default=False),
@@ -68,7 +68,7 @@ async def get_payment_url(
     if not init_response.Success:
         raise PaymentError(init_response)
 
-    response = {}
+    response = {"payment_id": init_response.PaymentId}
 
     if hasattr(init_response, "PaymentURL"):
         await planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL)
@@ -95,6 +95,12 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
             customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE), RebillIdUpdate(payload.RebillId)],
         )
     return HTMLResponse("OK")
+
+
+@api_routes.get("/payment/{payment_id}/status", status_code=status.HTTP_200_OK)
+async def payment_status_update(request: Request, payment_id: str):
+    """Получить статус платежа по его идентификатору в системе банка."""
+    return await payment_api.get_state(payment_id)
 
 
 @api_routes.post("/payment/charge", status_code=status.HTTP_200_OK)

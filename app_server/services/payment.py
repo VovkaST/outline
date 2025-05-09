@@ -12,6 +12,7 @@ class Payment(BaseHTTPService):
     urls = {
         "init": "Init",
         "get_qr": "GetQr",
+        "get_state": "GetState",
         "charge": "Charge",
         "charge_qr": "ChargeQR",
     }
@@ -77,8 +78,7 @@ class Payment(BaseHTTPService):
             raise PaymentError(response)
 
         if use_qr:
-            qr_response = await self.get_qr(payment_id=response.PaymentId)
-        return qr_response
+            return await self.get_qr(payment_id=response.PaymentId)
 
         if rebill_id:
             charge_response = await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
@@ -147,6 +147,15 @@ class Payment(BaseHTTPService):
         payload["Token"] = await self.make_token(payload)
         response = await self.make_request(url_name="get_qr", method="post", json=payload)
         return dtos.GetQrResponse(**response)
+
+    async def get_state(self, payment_id: str, ip: str = None) -> dtos.PaymentStateResponse:
+        """Метод возвращает статус платежа."""
+        payload = {"TerminalKey": self.terminal_id, "PaymentId": payment_id}
+        if ip:
+            payload["IP"] = ip
+        payload["Token"] = await self.make_token(payload)
+        response = await self.make_request(url_name="get_state", method="post", json=payload)
+        return dtos.PaymentStateResponse(**response)
 
     async def charge(
         self, payment_id: str, rebill_id: str, ip: str = None, send_email: bool = False, info_email: str = None

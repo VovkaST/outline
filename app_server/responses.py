@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from starlette.responses import JSONResponse
 
 
@@ -13,5 +13,6 @@ class CheckOrderResponse(BaseModel):
 
 
 class InitPaymentResponse(BaseModel):
-    url: str | None = None
-    qr: str | None = None
+    payment_id: int | None = Field(title="Уникальный идентификатор транзакции в системе Т‑Кассы", default=None)
+    url: str | None = Field(title="Ссылка на платежную форму", default=None)
+    qr: str | None = Field(title="QR-код на оплату", default=None)

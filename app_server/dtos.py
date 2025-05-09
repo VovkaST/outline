@@ -19,8 +19,6 @@ class ErrorResponse(BaseModel):
 
 
 class PaymentResponse(ErrorResponse):
-    model_config = ConfigDict(populate_by_name=True)
-
     TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
     Amount: int | None = Field(title="Сумма в копейках", default=None)
     OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
@@ -31,6 +29,12 @@ class PaymentResponse(ErrorResponse):
 
 class InitPaymentResponse(PaymentResponse):
     PaymentURL: str | None = Field(title="Ссылка на платежную форму", default=None)
+
+
+class PaymentStateResponse(PaymentResponse):
+    Params: list[dict] | None = Field(
+        title="Информация по способу оплаты или деталям для платежей в рассрочку", default_factory=list
+    )
 
 
 class GetQrResponse(ErrorResponse):
