@@ -59,6 +59,7 @@ class Payment(BaseHTTPService):
         is_recurrent: bool = True,
         use_qr: bool = False,
         rebill_id: str = None,
+        account_token: str = None,
         success_url: str = None,
         fail_url: str = None,
     ) -> dtos.InitPaymentResponse | dtos.PaymentResponse | dtos.GetQrResponse:
@@ -66,10 +67,10 @@ class Payment(BaseHTTPService):
             amount=amount,
             order_id=order_id,
             description=description,
-            customer_key=customer_key if not rebill_id else None,
+            customer_key=customer_key if not rebill_id and not account_token else None,
             customer_phone=customer_phone,
             customer_email=customer_email,
-            is_recurrent=is_recurrent and not rebill_id,
+            is_recurrent=is_recurrent and not rebill_id and not account_token,
             use_qr=use_qr,
             success_url=success_url,
             fail_url=fail_url,
@@ -77,14 +78,18 @@ class Payment(BaseHTTPService):
         if not response.Success:
             raise PaymentError(response)
 
-        if use_qr:
-            return await self.get_qr(payment_id=response.PaymentId)
+        if rebill_id or account_token:
+            if rebill_id:
+                charge_response = await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
+            else:
+                charge_response = await self.charge_qr(payment_id=response.PaymentId, account_token=account_token)
 
-        if rebill_id:
-            charge_response = await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
             if not charge_response.Success:
                 raise PaymentError(charge_response)
             return charge_response
+
+        if use_qr:
+            return await self.get_qr(payment_id=response.PaymentId)
 
         return response
 
@@ -177,3 +182,24 @@ class Payment(BaseHTTPService):
         payload["Token"] = await self.make_token(payload)
         response = await self.make_request(url_name="charge", method="post", json=payload)
         return dtos.PaymentResponse(**response)
+
+    async def charge_qr(
+        self, payment_id: str, account_token: str, ip: str = None, send_email: bool = False, info_email: str = None
+    ) -> dtos.PaymentQRResponse:
+        payload = {
+            "TerminalKey": self.terminal_id,
+            "PaymentId": payment_id,
+            "AccountToken": account_token,
+        }
+        if ip:
+            payload["IP"] = ip
+        if send_email:
+            if not info_email:
+                raise ValueError(
+                    "Адрес почты клиента обязателен, если необходима отправка уведомления на почту клиента"
+                )
+            payload["SendEmail"] = send_email
+            payload["InfoEmail"] = info_email
+        payload["Token"] = await self.make_token(payload)
+        response = await self.make_request(url_name="charge_qr", method="post", json=payload)
+        return dtos.PaymentQRResponse(**response)

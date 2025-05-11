@@ -138,6 +138,11 @@ class TaskResponse(BaseModel):
 
     @computed_field
     @cached_property
+    def account_token_field(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.ACCOUNT_TOKEN)
+
+    @computed_field
+    @cached_property
     def client_phone(self) -> str:
         *_, phone = self.name.split(" | ")
         return f"+{phone}" if phone else ""

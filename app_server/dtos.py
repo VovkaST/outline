@@ -1,6 +1,6 @@
 from contextlib import suppress
 
-from pydantic import UUID4, BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class ErrorResponse(BaseModel):
@@ -21,6 +21,10 @@ class PaymentResponse(ErrorResponse):
     Success: bool | None = Field(title="Успешность прохождения запроса")
     Status: str | None = Field(title="Статус транзакции", default=None)
     PaymentId: str | None = Field(title="Идентификатор платежа в системе Т‑Кассы", default=None)
+
+
+class PaymentQRResponse(PaymentResponse):
+    Currency: int | None = Field(title="Код валюты по ISO 4217", default=None)
 
 
 class InitPaymentResponse(PaymentResponse):
@@ -83,7 +87,7 @@ class NotificationPaymentRequest(BaseModel):
 
 class NotificationQrRequest(BaseModel):
     TerminalKey: str = Field(title="Идентификатор терминала.", default=None)
-    RequestKey: UUID4 = Field(title="Идентификатор запроса на привязку счета.", default=None)
+    RequestKey: str = Field(title="Идентификатор запроса на привязку счета.", default=None)
     AccountToken: str = Field(title="Идентификатор привязки счета, назначаемый банком-эмитентом.", default=None)
     BankMemberId: str = Field(
         title="Идентификатор банка-эмитента клиента, который будет совершать оплату по привязанному счету — заполнен, "
