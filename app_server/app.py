@@ -4,9 +4,9 @@ from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.staticfiles import StaticFiles
 
+from app_server import routes
 from app_server.error_handlers import app_error_handler, payment_error_handler, unknown_error_handler
 from app_server.exceptions import AppError, PaymentError
-from app_server.routes import api_routes
 from root.config import settings
 
 
@@ -38,6 +38,9 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
 
     add_middlewares(app)
 
-    app.include_router(api_routes)
+    app.include_router(routes.api_server_routes)
+    app.include_router(routes.api_orders_routes)
+    app.include_router(routes.api_payments_routes)
+    app.include_router(routes.api_subscription_routes)
     app.mount("/", StaticFiles(directory="app_server/assets", html=True, check_dir=True), name="static")
     return app
