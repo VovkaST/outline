@@ -67,7 +67,7 @@ const pollingStop = () => {
 };
 const polling = async (paymentId: number) => {
   await payment.getPaymentStatus({ paymentId }).then((response) => {
-    if (['AUTHORIZED', 'CONFIRMED', 'ACTIVE', 'INACTIVE'].includes(response.Status)) pollingStop();
+    if (response.Status !== 'FORM_SHOWED') pollingStop();
   });
 };
 
