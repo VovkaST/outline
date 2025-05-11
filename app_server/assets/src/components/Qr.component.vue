@@ -6,7 +6,7 @@ defineProps<{
 
 <template>
   <div class="qr-container">
-    <h2>Сканируй и плати</h2>
+    <h2>Сканируй для оплаты</h2>
     <span>В приложении своего банка</span>
     <div v-html="qr" class="qr"></div>
   </div>
@@ -20,6 +20,7 @@ defineProps<{
   padding: 15px;
   color: #261623;
   margin: 10px auto 0;
+  overflow: hidden;
 
   h2 {
     margin-bottom: 0;

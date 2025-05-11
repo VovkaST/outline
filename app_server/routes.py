@@ -51,6 +51,7 @@ async def init_payment(
     request: Request,
     task_guid: str = Query(description="Идентификатор заказа"),
     is_recurrent: bool = Query(description="Признак рекуррентности платежа", default=False),
+    use_qr: bool = Query(description="Оплата по QR-коду СБП", default=False),
 ):
     """Инициализировать платеж."""
     task = await get_task(task_guid)
@@ -61,7 +62,7 @@ async def init_payment(
         customer_key=task.client_field.value,
         customer_phone=task.client_phone,
         is_recurrent=is_recurrent,
-        use_qr=True,
+        use_qr=use_qr,
         success_url=build_success_url(task_guid),
         fail_url=build_fail_url(task_guid),
     )
@@ -97,8 +98,10 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
     return HTMLResponse("OK")
 
 
-@api_routes.get("/payment/{payment_id}/status", status_code=status.HTTP_200_OK)
-async def payment_status_update(request: Request, payment_id: str):
+@api_routes.get(
+    "/payment/{payment_id}/status", status_code=status.HTTP_200_OK, response_model=responses.PaymentStatusResponse
+)
+async def get_payment_status(request: Request, payment_id: int):
     """Получить статус платежа по его идентификатору в системе банка."""
     return await payment_api.get_state(payment_id)
 

@@ -11,8 +11,20 @@ export const usePaymentStore = defineStore('payment', {
       return ServerService.checkOrder({ taskGuid: guid });
     },
 
-    initPayment({ guid, isRecurrent = false }: { guid: string; isRecurrent?: boolean }) {
-      return ServerService.initPayment({ taskGuid: guid, isRecurrent });
+    initPayment({
+      guid,
+      isRecurrent = false,
+      useQr = false,
+    }: {
+      guid: string;
+      isRecurrent?: boolean;
+      useQr?: boolean;
+    }) {
+      return ServerService.initPayment({ taskGuid: guid, isRecurrent, useQr });
+    },
+
+    getPaymentStatus({ paymentId }: { paymentId: number }) {
+      return ServerService.getPaymentStatus({ paymentId });
     },
 
     subscriptionReject({ guid }: { guid: string }) {

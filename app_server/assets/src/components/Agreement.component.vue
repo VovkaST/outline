@@ -37,13 +37,14 @@ const [isBusy, isBusyToggle] = useToggle();
 const onPayClick = async () => {
   isBusy.value = true;
   payment
-    .initPayment({ guid: taskGuid, isRecurrent: isRecurrent })
+    .initPayment({ guid: taskGuid, isRecurrent: isRecurrent, useQr: true })
     .then(
       (response) => {
         if (response.url) {
           window.location.href = response.url;
         } else if (response.qr) {
           qr.value = response.qr;
+          pollingStart(response.payment_id);
         }
       },
       () => {
@@ -51,6 +52,23 @@ const onPayClick = async () => {
       },
     )
     .finally(isBusyToggle);
+};
+
+const pollingInterval = ref();
+const pollingStart = (paymentId: number) => {
+  pollingInterval.value = setInterval(() => polling(paymentId), 1500);
+};
+const pollingStop = () => {
+  clearInterval(pollingInterval.value);
+  const searchParams = new URLSearchParams();
+  searchParams.append('guid', taskGuid);
+  searchParams.append('success', true);
+  window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+};
+const polling = async (paymentId: number) => {
+  await payment.getPaymentStatus({ paymentId }).then((response) => {
+    if (['AUTHORIZED', 'CONFIRMED', 'ACTIVE', 'INACTIVE'].includes(response.Status)) pollingStop();
+  });
 };
 
 onMounted(() => {
