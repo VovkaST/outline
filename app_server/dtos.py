@@ -1,10 +1,6 @@
 from contextlib import suppress
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
-
-# class GetURLRequest(BaseModel):
-#     task_id: str = Field(title="Идентификатор задания на оплату")
-#     customer_key: str = Field(title="Идентификатор покупателя")
+from pydantic import UUID4, BaseModel, ConfigDict, Field, model_validator
 
 
 class ErrorResponse(BaseModel):
@@ -83,6 +79,29 @@ class NotificationPaymentRequest(BaseModel):
             with suppress(KeyError):
                 data["Data"] = data.pop(data_key)
         return data
+
+
+class NotificationQrRequest(BaseModel):
+    TerminalKey: str = Field(title="Идентификатор терминала.", default=None)
+    RequestKey: UUID4 = Field(title="Идентификатор запроса на привязку счета.", default=None)
+    AccountToken: str = Field(title="Идентификатор привязки счета, назначаемый банком-эмитентом.", default=None)
+    BankMemberId: str = Field(
+        title="Идентификатор банка-эмитента клиента, который будет совершать оплату по привязанному счету — заполнен, "
+        "если статус ACTIVE.",
+        default=None,
+    )
+    BankMemberName: str = Field(
+        title="Наименование банка-эмитента. Заполнен, если передан BankMemberId.",
+        default=None,
+    )
+    NotificationType: str = Field(title="Тип уведомления, всегда — LINKACCOUNT.")
+    Success: bool = Field(title="Успешность прохождения запроса", default=None)
+    ErrorCode: str = Field(title="Код ошибки. 0 в случае успеха", default=None)
+    Message: str = Field(title="Краткое описание ошибки", default=None)
+    Token: str = Field(
+        title="Подпись запроса. Формируется по такому же принципу, как и в случае запросов в Т‑Кассу.", default=None
+    )
+    Status: str = Field(title="Статус платежа", default=None)
 
 
 class PaymentChargeRequest(BaseModel):

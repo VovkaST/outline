@@ -10,7 +10,7 @@ from app_server.exceptions import PaymentError, TaskNotFoundError
 from app_server.services import payment_api, planfix_api
 from app_server.services.planfix.api.rest.enums import SubscriptionStatus
 from app_server.services.planfix.api.rest.responses import TaskFilterResponse
-from app_server.services.planfix.filters import GuidF, RebillIdUpdate, SubscriptionStatusUpdate
+from app_server.services.planfix.filters import AccountTokenUpdate, GuidF, RebillIdUpdate, SubscriptionStatusUpdate
 from app_server.utils import build_fail_url, build_success_url, make_order_uniq_id
 from root.config import settings
 from root.utils.others import get_route_name
@@ -83,7 +83,9 @@ async def init_payment(
 
 
 @api_routes.post("/payment/status", status_code=status.HTTP_200_OK)
-async def payment_status_update(request: Request, payload: dtos.NotificationPaymentRequest):
+async def payment_status_update(
+    request: Request, payload: dtos.NotificationQrRequest | dtos.NotificationPaymentRequest
+):
     """Обновить статус платежа через систему банка."""
     await payment_api.check_token(payload)
     task = await get_task(payload.OrderId)
@@ -91,10 +93,13 @@ async def payment_status_update(request: Request, payload: dtos.NotificationPaym
     await planfix_api.task.add_comment(task_id=task.id, description=payload.Status)
 
     if payload.Status in [PaymentStatus.AUTHORIZED, PaymentStatus.CONFIRMED]:
-        await planfix_api.task.update(
-            task_id=task.id,
-            customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE), RebillIdUpdate(payload.RebillId)],
-        )
+        fields_to_update = [SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE)]
+        if isinstance(payload, dtos.NotificationPaymentRequest):
+            fields_to_update.append(RebillIdUpdate(payload.RebillId))
+        if isinstance(payload, dtos.NotificationQrRequest):
+            fields_to_update.append(AccountTokenUpdate(payload.AccountToken))
+
+        await planfix_api.task.update(task_id=task.id, customFieldData=fields_to_update)
     return HTMLResponse("OK")
 
 
