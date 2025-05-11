@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia';
-import { OpenAPI, ServerService } from '@/api/generated/public';
+import {
+  OpenAPI,
+  OrdersService,
+  PaymentsService,
+  SubscriptionService,
+} from '@/api/generated/public';
 
 if (import.meta.env.DEV) {
   OpenAPI.BASE = 'http://127.0.0.1:8000';
@@ -8,7 +13,7 @@ if (import.meta.env.DEV) {
 export const usePaymentStore = defineStore('payment', {
   actions: {
     checkOrder({ guid }: { guid: string }) {
-      return ServerService.checkOrder({ taskGuid: guid });
+      return OrdersService.checkOrder({ taskGuid: guid });
     },
 
     initPayment({
@@ -20,15 +25,15 @@ export const usePaymentStore = defineStore('payment', {
       isRecurrent?: boolean;
       useQr?: boolean;
     }) {
-      return ServerService.initPayment({ taskGuid: guid, isRecurrent, useQr });
+      return PaymentsService.initPayment({ taskGuid: guid, isRecurrent, useQr });
     },
 
     getPaymentStatus({ paymentId }: { paymentId: number }) {
-      return ServerService.getPaymentStatus({ paymentId });
+      return PaymentsService.getPaymentStatus({ paymentId });
     },
 
     subscriptionReject({ guid }: { guid: string }) {
-      return ServerService.subscriptionReject({ requestBody: { task_guid: guid } });
+      return SubscriptionService.subscriptionReject({ requestBody: { task_guid: guid } });
     },
   },
 });
