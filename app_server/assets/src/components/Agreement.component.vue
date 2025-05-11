@@ -30,6 +30,7 @@ const isAgreed = computed<boolean>(() => offer.value && personal.value && subscr
 const allowToPay = computed<boolean>(() => isAgreed.value && !isSuccessfullyPayed.value);
 
 const qr = ref<string>('');
+const url = ref<string>('');
 const showPaymentButton = computed<boolean>(() => !qr.value);
 
 const [isBusy, isBusyToggle] = useToggle();
@@ -40,11 +41,12 @@ const onPayClick = async () => {
     .initPayment({ guid: taskGuid, isRecurrent: isRecurrent, useQr: true })
     .then(
       (response) => {
-        if (response.url) {
-          window.location.href = response.url;
-        } else if (response.qr) {
+        if (response.qr) {
           qr.value = response.qr;
+          url.value = response.url;
           pollingStart(response.payment_id);
+        } else if (response.url) {
+          window.location.href = response.url;
         }
       },
       () => {
@@ -114,7 +116,7 @@ onMounted(() => {
       >
         Оплатить
       </button-component>
-      <QrComponent v-else :qr="qr" />
+      <QrComponent v-else :qr="qr" :url="url" />
     </div>
   </div>
 </template>

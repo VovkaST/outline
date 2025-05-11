@@ -1,4 +1,5 @@
 import hashlib
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -89,7 +90,10 @@ class Payment(BaseHTTPService):
             return charge_response
 
         if use_qr:
-            return await self.get_qr(payment_id=response.PaymentId)
+            qr_response = await self.get_qr(payment_id=response.PaymentId)
+            payload_response = await self.get_qr(payment_id=response.PaymentId, type="PAYLOAD")
+            qr_response.PaymentURL = payload_response.Data
+            return qr_response
 
         return response
 
@@ -146,9 +150,9 @@ class Payment(BaseHTTPService):
         response = await self.make_request(url_name="init", method="post", json=payload)
         return dtos.InitPaymentResponse(**response)
 
-    async def get_qr(self, payment_id: str) -> dtos.GetQrResponse:
+    async def get_qr(self, payment_id: str, type: Literal["IMAGE", "PAYLOAD"] = "IMAGE") -> dtos.GetQrResponse:
         """Метод регистрирует QR и возвращает информацию о нем. Вызывается после метода Init."""
-        payload = {"TerminalKey": self.terminal_id, "PaymentId": payment_id, "DataType": "IMAGE"}
+        payload = {"TerminalKey": self.terminal_id, "PaymentId": payment_id, "DataType": type}
         payload["Token"] = await self.make_token(payload)
         response = await self.make_request(url_name="get_qr", method="post", json=payload)
         return dtos.GetQrResponse(**response)

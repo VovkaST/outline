@@ -1,14 +1,15 @@
 <script setup lang="ts">
 defineProps<{
   qr: string;
+  url: string;
 }>();
 </script>
 
 <template>
   <div class="qr-container">
     <h2>Сканируй для оплаты</h2>
-    <span>В приложении своего банка</span>
     <div v-html="qr" class="qr"></div>
+    <a :href="url" target="_blank">Открыть в приложении банка</a>
   </div>
 </template>
 
@@ -28,7 +29,7 @@ defineProps<{
     line-height: 1.8rem;
   }
 
-  span {
+  a {
     font-size: 0.9rem;
   }
 

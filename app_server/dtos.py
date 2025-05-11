@@ -38,6 +38,7 @@ class PaymentStateResponse(PaymentResponse):
 
 
 class GetQrResponse(ErrorResponse):
+    PaymentURL: str | None = Field(title="Ссылка на платежную форму", default=None)
     TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
     OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
     Success: bool | None = Field(title="Успешность прохождения запроса")
