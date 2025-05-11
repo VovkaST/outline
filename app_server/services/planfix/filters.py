@@ -11,6 +11,7 @@ class CustomFields(IntEnum):
     REBILL_ID = 140258
     CLIENT_ID = 140264
     SUBSCRIPTION_STATUS_ID = 140268
+    ACCOUNT_TOKEN = 140280
 
 
 class GuidF(CustF):
@@ -35,6 +36,10 @@ class SubscriptionStatusF(CustF):
 
 def RebillIdUpdate(value: str | int) -> dict:
     return {"field": {"id": CustomFields.REBILL_ID}, "value": value}
+
+
+def AccountTokenUpdate(value: str) -> dict:
+    return {"field": {"id": CustomFields.ACCOUNT_TOKEN}, "value": value}
 
 
 def SubscriptionStatusUpdate(status: SubscriptionStatus) -> dict:

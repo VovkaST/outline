@@ -55,6 +55,7 @@ class Task(BaseAPIEntity, ITask):
         CustomFields.REBILL_ID.value,
         CustomFields.CLIENT_ID.value,
         CustomFields.SUBSCRIPTION_STATUS_ID.value,
+        CustomFields.ACCOUNT_TOKEN.value,
     ] + ALL_FIELDS
 
     def build_fields_list(self, fields: list[str]) -> str:

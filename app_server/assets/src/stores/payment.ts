@@ -11,8 +11,8 @@ export const usePaymentStore = defineStore('payment', {
       return ServerService.checkOrder({ taskGuid: guid });
     },
 
-    getPaymentURL({ guid, isRecurrent = false }: { guid: string; isRecurrent?: boolean }) {
-      return ServerService.getPaymentUrl({ taskGuid: guid, isRecurrent });
+    initPayment({ guid, isRecurrent = false }: { guid: string; isRecurrent?: boolean }) {
+      return ServerService.initPayment({ taskGuid: guid, isRecurrent });
     },
 
     subscriptionReject({ guid }: { guid: string }) {

@@ -52,7 +52,7 @@ async def init_payment(
     task_guid: str = Query(description="Идентификатор заказа"),
     is_recurrent: bool = Query(description="Признак рекуррентности платежа", default=False),
 ):
-    """Получить URL на оплату заказа."""
+    """Инициализировать платеж."""
     task = await get_task(task_guid)
     init_response = await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
