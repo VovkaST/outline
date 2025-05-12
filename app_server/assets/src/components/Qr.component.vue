@@ -20,7 +20,7 @@ defineProps<{
   border-radius: 20px;
   padding: 15px;
   color: #261623;
-  margin: 10px auto 0;
+  margin: 10px auto;
   overflow: hidden;
 
   h2 {
@@ -30,13 +30,17 @@ defineProps<{
   }
 
   a {
+    display: block;
     font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 0.9rem;
+    color: #534681;
   }
 
   .qr {
     background: white;
     width: 185px;
-    margin: 10px auto 0;
+    margin: 10px auto;
     padding: 5px;
     border-radius: 10px;
   }
