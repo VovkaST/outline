@@ -1,4 +1,5 @@
 import hashlib
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -11,7 +12,10 @@ from app_server.services.base import BaseHTTPService
 class Payment(BaseHTTPService):
     urls = {
         "init": "Init",
+        "get_qr": "GetQr",
+        "get_state": "GetState",
         "charge": "Charge",
+        "charge_qr": "ChargeQr",
     }
     API_HOST = t_bank_config.REST_API_URL
 
@@ -54,29 +58,42 @@ class Payment(BaseHTTPService):
         customer_phone: str = "",
         customer_email: str = "",
         is_recurrent: bool = True,
+        use_qr: bool = False,
         rebill_id: str = None,
+        account_token: str = None,
         success_url: str = None,
         fail_url: str = None,
-    ) -> dtos.InitPaymentResponse | dtos.PaymentResponse:
+    ) -> dtos.InitPaymentResponse | dtos.PaymentResponse | dtos.GetQrResponse:
         response = await self.init(
             amount=amount,
             order_id=order_id,
             description=description,
-            customer_key=customer_key if not rebill_id else None,
+            customer_key=customer_key if not rebill_id and not account_token else None,
             customer_phone=customer_phone,
             customer_email=customer_email,
-            is_recurrent=is_recurrent and not rebill_id,
+            is_recurrent=(is_recurrent and not rebill_id) or account_token,
+            use_qr=use_qr or bool(account_token),
             success_url=success_url,
             fail_url=fail_url,
         )
         if not response.Success:
             raise PaymentError(response)
 
-        if rebill_id:
-            charge_response = await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
+        if rebill_id or account_token:
+            if rebill_id:
+                charge_response = await self.charge(payment_id=response.PaymentId, rebill_id=rebill_id)
+            else:
+                charge_response = await self.charge_qr(payment_id=response.PaymentId, account_token=account_token)
+
             if not charge_response.Success:
                 raise PaymentError(charge_response)
             return charge_response
+
+        if use_qr:
+            qr_response = await self.get_qr(payment_id=response.PaymentId)
+            payload_response = await self.get_qr(payment_id=response.PaymentId, type="PAYLOAD")
+            qr_response.PaymentURL = payload_response.Data
+            return qr_response
 
         return response
 
@@ -89,6 +106,7 @@ class Payment(BaseHTTPService):
         customer_phone: str = None,
         customer_email: str = None,
         is_recurrent: bool = True,
+        use_qr: bool = False,
         success_url: str = None,
         fail_url: str = None,
     ) -> dtos.InitPaymentResponse:
@@ -116,8 +134,10 @@ class Payment(BaseHTTPService):
                 ],
             },
         }
-        if is_recurrent and not customer_key:
-            raise ValueError("CustomerKey обязателен для рекуррентных платежей")
+        if use_qr:
+            payload.update({"DATA": {"QR": True}})
+        # if is_recurrent and not customer_key:
+        #     raise ValueError("CustomerKey обязателен для рекуррентных платежей")
         if is_recurrent:
             payload["Recurrent"] = "Y"
         if customer_key:
@@ -129,6 +149,22 @@ class Payment(BaseHTTPService):
         payload["Token"] = await self.make_token(payload)
         response = await self.make_request(url_name="init", method="post", json=payload)
         return dtos.InitPaymentResponse(**response)
+
+    async def get_qr(self, payment_id: str, type: Literal["IMAGE", "PAYLOAD"] = "IMAGE") -> dtos.GetQrResponse:
+        """Метод регистрирует QR и возвращает информацию о нем. Вызывается после метода Init."""
+        payload = {"TerminalKey": self.terminal_id, "PaymentId": payment_id, "DataType": type}
+        payload["Token"] = await self.make_token(payload)
+        response = await self.make_request(url_name="get_qr", method="post", json=payload)
+        return dtos.GetQrResponse(**response)
+
+    async def get_state(self, payment_id: str, ip: str = None) -> dtos.PaymentStateResponse:
+        """Метод возвращает статус платежа."""
+        payload = {"TerminalKey": self.terminal_id, "PaymentId": payment_id}
+        if ip:
+            payload["IP"] = ip
+        payload["Token"] = await self.make_token(payload)
+        response = await self.make_request(url_name="get_state", method="post", json=payload)
+        return dtos.PaymentStateResponse(**response)
 
     async def charge(
         self, payment_id: str, rebill_id: str, ip: str = None, send_email: bool = False, info_email: str = None
@@ -150,3 +186,24 @@ class Payment(BaseHTTPService):
         payload["Token"] = await self.make_token(payload)
         response = await self.make_request(url_name="charge", method="post", json=payload)
         return dtos.PaymentResponse(**response)
+
+    async def charge_qr(
+        self, payment_id: str, account_token: str, ip: str = None, send_email: bool = False, info_email: str = None
+    ) -> dtos.PaymentQRResponse:
+        payload = {
+            "TerminalKey": self.terminal_id,
+            "PaymentId": payment_id,
+            "AccountToken": account_token,
+        }
+        if ip:
+            payload["IP"] = ip
+        if send_email:
+            if not info_email:
+                raise ValueError(
+                    "Адрес почты клиента обязателен, если необходима отправка уведомления на почту клиента"
+                )
+            payload["SendEmail"] = send_email
+            payload["InfoEmail"] = info_email
+        payload["Token"] = await self.make_token(payload)
+        response = await self.make_request(url_name="charge_qr", method="post", json=payload)
+        return dtos.PaymentQRResponse(**response)

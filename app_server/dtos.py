@@ -2,20 +2,10 @@ from contextlib import suppress
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-# class GetURLRequest(BaseModel):
-#     task_id: str = Field(title="Идентификатор задания на оплату")
-#     customer_key: str = Field(title="Идентификатор покупателя")
 
-
-class PaymentResponse(BaseModel):
+class ErrorResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
-    TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
-    Amount: int | None = Field(title="Сумма в копейках", default=None)
-    OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
-    Success: bool | None = Field(title="Успешность прохождения запроса")
-    Status: str | None = Field(title="Статус транзакции", default=None)
-    PaymentId: str | None = Field(title="Идентификатор платежа в системе Т‑Кассы", default=None)
     ErrorCode: str | None = Field(title="Код ошибки. 0 в случае успеха", default="0", alias="error_code")
     Message: str | None = Field(title="Краткое описание ошибки", default=None, alias="message")
     Details: str | None = Field(title="Подробное описание ошибки", default=None, alias="details")
@@ -24,8 +14,40 @@ class PaymentResponse(BaseModel):
         return self.model_dump(include={"ErrorCode", "Message", "Details"}, by_alias=True)
 
 
+class PaymentResponse(ErrorResponse):
+    TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
+    Amount: int | None = Field(title="Сумма в копейках", default=None)
+    OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
+    Success: bool | None = Field(title="Успешность прохождения запроса")
+    Status: str | None = Field(title="Статус транзакции", default=None)
+    PaymentId: str | None = Field(title="Идентификатор платежа в системе Т‑Кассы", default=None)
+
+
+class PaymentQRResponse(PaymentResponse):
+    Currency: int | None = Field(title="Код валюты по ISO 4217", default=None)
+
+
 class InitPaymentResponse(PaymentResponse):
     PaymentURL: str | None = Field(title="Ссылка на платежную форму", default=None)
+
+
+class PaymentStateResponse(PaymentResponse):
+    Params: list[dict] | None = Field(
+        title="Информация по способу оплаты или деталям для платежей в рассрочку", default_factory=list
+    )
+
+
+class GetQrResponse(ErrorResponse):
+    PaymentURL: str | None = Field(title="Ссылка на платежную форму", default=None)
+    TerminalKey: str | None = Field(title="Идентификатор терминала", default=None)
+    OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
+    Success: bool | None = Field(title="Успешность прохождения запроса")
+    Data: str | None = Field(title="Информация, которая должна быть закодирована в QR", default=None)
+    PaymentId: int | None = Field(title="Уникальный идентификатор транзакции в системе Т‑Кассы", default=None)
+    RequestKey: str | None = Field(
+        title="Идентификатор запроса на привязку счета. Передается в случае привязки и одновременной оплаты по CБП.",
+        default=None,
+    )
 
 
 class SubscriptionRejectRequest(BaseModel):
@@ -62,6 +84,29 @@ class NotificationPaymentRequest(BaseModel):
             with suppress(KeyError):
                 data["Data"] = data.pop(data_key)
         return data
+
+
+class NotificationQrRequest(BaseModel):
+    TerminalKey: str = Field(title="Идентификатор терминала.", default=None)
+    RequestKey: str = Field(title="Идентификатор запроса на привязку счета.", default=None)
+    AccountToken: str = Field(title="Идентификатор привязки счета, назначаемый банком-эмитентом.", default=None)
+    BankMemberId: str = Field(
+        title="Идентификатор банка-эмитента клиента, который будет совершать оплату по привязанному счету — заполнен, "
+        "если статус ACTIVE.",
+        default=None,
+    )
+    BankMemberName: str = Field(
+        title="Наименование банка-эмитента. Заполнен, если передан BankMemberId.",
+        default=None,
+    )
+    NotificationType: str = Field(title="Тип уведомления, всегда — LINKACCOUNT.")
+    Success: bool = Field(title="Успешность прохождения запроса", default=None)
+    ErrorCode: str = Field(title="Код ошибки. 0 в случае успеха", default=None)
+    Message: str = Field(title="Краткое описание ошибки", default=None)
+    Token: str = Field(
+        title="Подпись запроса. Формируется по такому же принципу, как и в случае запросов в Т‑Кассу.", default=None
+    )
+    Status: str = Field(title="Статус платежа", default=None)
 
 
 class PaymentChargeRequest(BaseModel):

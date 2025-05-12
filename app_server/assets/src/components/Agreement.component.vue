@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import CheckBox from './CheckBox.component.vue';
 import ButtonComponent from './Button.component.vue';
+import QrComponent from './Qr.component.vue';
 import { OverflowLayer } from '@/components/ui';
-import { computed, inject, onMounted } from 'vue';
+import { computed, inject, onMounted, ref } from 'vue';
 import { type Ref } from 'vue';
 import { Errors, Messages } from '@/stores/enums.ts';
 import { usePaymentStore } from '@/stores/payment.ts';
@@ -28,21 +29,48 @@ const subscription = defineModel('subscription', { default: false });
 const isAgreed = computed<boolean>(() => offer.value && personal.value && subscription.value);
 const allowToPay = computed<boolean>(() => isAgreed.value && !isSuccessfullyPayed.value);
 
+const qr = ref<string>('');
+const url = ref<string>('');
+const showPaymentButton = computed<boolean>(() => !qr.value);
+
 const [isBusy, isBusyToggle] = useToggle();
 
 const onPayClick = async () => {
   isBusy.value = true;
   payment
-    .getPaymentURL({ guid: taskGuid, isRecurrent: isRecurrent })
+    .initPayment({ guid: taskGuid, isRecurrent: isRecurrent, useQr: true })
     .then(
       (response) => {
-        window.location.href = response.url;
+        if (response.qr) {
+          qr.value = response.qr;
+          url.value = response.url;
+          pollingStart(response.payment_id);
+        } else if (response.url) {
+          window.location.href = response.url;
+        }
       },
       () => {
         paymentError.value = Errors.UNHANDLED_ERROR;
       },
     )
     .finally(isBusyToggle);
+};
+
+const pollingInterval = ref();
+const pollingStart = (paymentId: number) => {
+  pollingInterval.value = setInterval(() => polling(paymentId), 1500);
+};
+const pollingStop = () => {
+  clearInterval(pollingInterval.value);
+  const searchParams = new URLSearchParams();
+  searchParams.append('guid', taskGuid);
+  searchParams.append('success', true);
+  window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+};
+const polling = async (paymentId: number) => {
+  await payment.getPaymentStatus({ paymentId }).then((response) => {
+    if (response.Status !== 'FORM_SHOWED') pollingStop();
+  });
 };
 
 onMounted(() => {
@@ -80,9 +108,15 @@ onMounted(() => {
       с&nbsp;вашей карты оплаты в&nbsp;размере 200&nbsp;рублей.
     </check-box>
     <div class="text-center">
-      <button-component :disabled="!allowToPay || isBusy" :is-busy="isBusy" @click="onPayClick">
+      <button-component
+        v-if="showPaymentButton"
+        :disabled="!allowToPay || isBusy"
+        :is-busy="isBusy"
+        @click="onPayClick"
+      >
         Оплатить
       </button-component>
+      <QrComponent v-else :qr="qr" :url="url" />
     </div>
   </div>
 </template>
