@@ -15,7 +15,7 @@ class Payment(BaseHTTPService):
         "get_qr": "GetQr",
         "get_state": "GetState",
         "charge": "Charge",
-        "charge_qr": "ChargeQR",
+        "charge_qr": "ChargeQr",
     }
     API_HOST = t_bank_config.REST_API_URL
 
@@ -71,8 +71,8 @@ class Payment(BaseHTTPService):
             customer_key=customer_key if not rebill_id and not account_token else None,
             customer_phone=customer_phone,
             customer_email=customer_email,
-            is_recurrent=is_recurrent and not rebill_id and not account_token,
-            use_qr=use_qr,
+            is_recurrent=(is_recurrent and not rebill_id) or account_token,
+            use_qr=use_qr or bool(account_token),
             success_url=success_url,
             fail_url=fail_url,
         )
@@ -136,8 +136,8 @@ class Payment(BaseHTTPService):
         }
         if use_qr:
             payload.update({"DATA": {"QR": True}})
-        if is_recurrent and not customer_key:
-            raise ValueError("CustomerKey обязателен для рекуррентных платежей")
+        # if is_recurrent and not customer_key:
+        #     raise ValueError("CustomerKey обязателен для рекуррентных платежей")
         if is_recurrent:
             payload["Recurrent"] = "Y"
         if customer_key:

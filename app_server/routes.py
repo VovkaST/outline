@@ -136,6 +136,7 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
     await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=payload.task_guid,
+        description=settings.DEFAULT_PAYMENT_DESCRIPTION,
         rebill_id=task.rebill_field.value,
         account_token=task.account_token_field.value,
         customer_phone=task.client_phone,
