@@ -22,3 +22,5 @@ class PaymentStatus(str, Enum):
     DEADLINE_EXPIRED = "DEADLINE_EXPIRED"
     REJECTED = "REJECTED"
     AUTH_FAIL = "AUTH_FAIL"
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"

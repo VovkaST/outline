@@ -1,3 +1,5 @@
+import asyncio
+
 from aiohttp.web_exceptions import HTTPUnauthorized
 from fastapi import APIRouter, Header, Query
 from starlette import status
@@ -9,7 +11,13 @@ from app_server.enums import PaymentStatus
 from app_server.exceptions import PaymentError
 from app_server.services import payment_api, planfix_api
 from app_server.services.planfix.api.rest.enums import SubscriptionStatus
-from app_server.services.planfix.filters import AccountTokenUpdate, GuidF, RebillIdUpdate, SubscriptionStatusUpdate
+from app_server.services.planfix.filters import (
+    AccountTokenUpdate,
+    GuidF,
+    RebillIdUpdate,
+    RequestKeyUpdate,
+    SubscriptionStatusUpdate,
+)
 from app_server.utils import build_fail_url, build_success_url, get_task, make_order_uniq_id
 from root.config import settings
 from root.utils.others import get_route_name
@@ -63,14 +71,21 @@ async def init_payment(
 
     response = {"payment_id": init_response.PaymentId}
 
+    coroutines = []
+    if use_qr:
+        coroutines.append(
+            planfix_api.task.update(task_id=task.id, customFieldData=[RequestKeyUpdate(init_response.RequestKey)])
+        )
+
     if hasattr(init_response, "PaymentURL"):
-        await planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL)
+        coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL))
         response["url"] = init_response.PaymentURL
 
     if hasattr(init_response, "Data"):
-        await planfix_api.task.add_comment(task_id=task.id, description=init_response.Data)
+        coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.Data))
         response["qr"] = init_response.Data
 
+    await asyncio.gather(*coroutines)
     return response
 
 
@@ -78,20 +93,25 @@ async def init_payment(
 async def payment_status_update(
     request: Request, payload: dtos.NotificationQrRequest | dtos.NotificationPaymentRequest
 ):
-    """Обновить статус платежа через систему банка."""
+    """Обновить статус платежа через систему HTTP-уведомлений банка."""
     await payment_api.check_token(payload)
-    task = await get_task(payload.OrderId)
+    if isinstance(payload, dtos.NotificationQrRequest):
+        task = await get_task(request_key=payload.RequestKey)
+    else:
+        task = await get_task(task_guid=payload.OrderId)
 
-    await planfix_api.task.add_comment(task_id=task.id, description=payload.Status)
+    coroutines = [planfix_api.task.add_comment(task_id=task.id, description=payload.Status)]
 
-    if payload.Status in [PaymentStatus.AUTHORIZED, PaymentStatus.CONFIRMED]:
+    if payload.Status in [PaymentStatus.AUTHORIZED, PaymentStatus.CONFIRMED, PaymentStatus.ACTIVE]:
         fields_to_update = [SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE)]
         if isinstance(payload, dtos.NotificationPaymentRequest):
             fields_to_update.append(RebillIdUpdate(payload.RebillId))
         if isinstance(payload, dtos.NotificationQrRequest):
             fields_to_update.append(AccountTokenUpdate(payload.AccountToken))
 
-        await planfix_api.task.update(task_id=task.id, customFieldData=fields_to_update)
+        coroutines.append(planfix_api.task.update(task_id=task.id, customFieldData=fields_to_update))
+
+    await asyncio.gather(*coroutines)
     return HTMLResponse("OK")
 
 

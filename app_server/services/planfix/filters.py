@@ -12,6 +12,7 @@ class CustomFields(IntEnum):
     CLIENT_ID = 140264
     SUBSCRIPTION_STATUS_ID = 140268
     ACCOUNT_TOKEN = 140280
+    REQUEST_KEY = 140282
 
 
 class GuidF(CustF):
@@ -29,6 +30,11 @@ class ClientIdF(CustF):
     field: PositiveInt = CustomFields.CLIENT_ID
 
 
+class RequestKeyF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
+    field: PositiveInt = CustomFields.REQUEST_KEY
+
+
 class SubscriptionStatusF(CustF):
     type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
     field: PositiveInt = CustomFields.SUBSCRIPTION_STATUS_ID
@@ -40,6 +46,10 @@ def RebillIdUpdate(value: str | int) -> dict:
 
 def AccountTokenUpdate(value: str) -> dict:
     return {"field": {"id": CustomFields.ACCOUNT_TOKEN}, "value": value}
+
+
+def RequestKeyUpdate(value: str) -> dict:
+    return {"field": {"id": CustomFields.REQUEST_KEY}, "value": value}
 
 
 def SubscriptionStatusUpdate(status: SubscriptionStatus) -> dict:
