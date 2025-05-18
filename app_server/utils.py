@@ -38,3 +38,9 @@ async def get_task(task_guid: str = None, request_key: str = None) -> TaskRespon
         raise TaskNotFoundError()
 
     return response.tasks[0]
+
+
+def clean_guid(guid: str, separator: str = ".") -> str:
+    if separator in guid:
+        return guid.split(separator, maxsplit=2)[0]
+    return guid
