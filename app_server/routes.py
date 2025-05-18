@@ -18,7 +18,7 @@ from app_server.services.planfix.filters import (
     RequestKeyUpdate,
     SubscriptionStatusUpdate,
 )
-from app_server.utils import build_fail_url, build_success_url, get_task, make_order_uniq_id
+from app_server.utils import build_fail_url, build_success_url, clean_guid, get_task, make_order_uniq_id
 from root.config import settings
 from root.utils.others import get_route_name
 
@@ -98,7 +98,7 @@ async def payment_status_update(
     if isinstance(payload, dtos.NotificationQrRequest):
         task = await get_task(request_key=payload.RequestKey)
     else:
-        task = await get_task(task_guid=payload.OrderId)
+        task = await get_task(task_guid=clean_guid(payload.OrderId))
 
     coroutines = [planfix_api.task.add_comment(task_id=task.id, description=payload.Status)]
 
@@ -131,8 +131,7 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
     if authorization != settings.REQUEST_TOKEN:
         raise HTTPUnauthorized()
 
-    task_guid, payment_data = payload.task_guid.split(".", maxsplit=2)
-    task = await get_task(task_guid)
+    task = await get_task(task_guid=clean_guid(payload.task_guid))
     await payment_api.prepare_payment_init(
         amount=settings.DEFAULT_PAYMENT_AMOUNT,
         order_id=payload.task_guid,
