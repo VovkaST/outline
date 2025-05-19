@@ -145,10 +145,11 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
     return {"success": True, "message": "Повторная оплата прошла успешно"}
 
 
-@api_subscription_routes.patch("/subscription/reject")
+@api_subscription_routes.patch("/subscription/reject", response_model=responses.RequestStatusResponse)
 async def subscription_reject(request: Request, payload: dtos.SubscriptionRejectRequest):
     """Отменить активную подписку"""
     task = await get_task(payload.task_guid)
     await planfix_api.task.update(
         task_id=task.id, customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.INACTIVE)]
     )
+    return {"success": True, "message": "Подписка успешно отменена"}
