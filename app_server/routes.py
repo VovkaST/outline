@@ -28,10 +28,10 @@ api_payments_routes = APIRouter(tags=["Payments"], prefix="/api", generate_uniqu
 api_subscription_routes = APIRouter(tags=["Subscription"], prefix="/api", generate_unique_id_function=get_route_name)
 
 
-@api_server_routes.get("/health")
+@api_server_routes.get("/health", response_model=responses.RequestStatusResponse)
 async def health(request: Request):
     """Проверка работоспособности сервиса."""
-    return responses.SuccessResponse("OK")
+    return {"success": True, "message": "OK"}
 
 
 @api_orders_routes.get("/order/check", response_model=responses.CheckOrderResponse)
@@ -125,7 +125,9 @@ async def get_payment_status(request: Request, payment_id: int):
     return await payment_api.get_state(payment_id)
 
 
-@api_payments_routes.post("/payment/charge", status_code=status.HTTP_200_OK)
+@api_payments_routes.post(
+    "/payment/charge", status_code=status.HTTP_200_OK, response_model=responses.RequestStatusResponse
+)
 async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, authorization: str = Header(None)):
     """Провести автоматический периодический платеж."""
     if authorization != settings.REQUEST_TOKEN:
@@ -140,7 +142,7 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
         account_token=task.account_token_field.value,
         customer_phone=task.client_phone,
     )
-    return HTMLResponse("OK")
+    return {"success": True, "message": "Повторная оплата прошла успешно"}
 
 
 @api_subscription_routes.patch("/subscription/reject")

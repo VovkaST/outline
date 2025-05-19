@@ -1,11 +1,4 @@
 from pydantic import BaseModel, Field
-from starlette.responses import JSONResponse
-
-
-class SuccessResponse(JSONResponse):
-    def render(self, content):
-        message = {"success": True, "message": content}
-        return super().render(message)
 
 
 class CheckOrderResponse(BaseModel):
@@ -22,3 +15,8 @@ class PaymentStatusResponse(BaseModel):
     OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
     Status: str | None = Field(title="Статус транзакции", default=None)
     PaymentId: str | None = Field(title="Идентификатор платежа в системе Т‑Кассы", default=None)
+
+
+class RequestStatusResponse(BaseModel):
+    success: bool = Field(title="Успешность запроса")
+    message: str | None = Field(title="Сообщение о результате запроса", default=None)
