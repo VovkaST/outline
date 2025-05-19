@@ -78,11 +78,11 @@ async def init_payment(
         )
 
     if hasattr(init_response, "PaymentURL"):
-        coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL))
+        # coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL))
         response["url"] = init_response.PaymentURL
 
     if hasattr(init_response, "Data"):
-        coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.Data))
+        # coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.Data))
         response["qr"] = init_response.Data
 
     await asyncio.gather(*coroutines)
