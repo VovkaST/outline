@@ -23,30 +23,32 @@ from root.config import settings
 from root.utils.others import get_route_name
 
 api_server_routes = APIRouter(tags=["Server"], prefix="/api", generate_unique_id_function=get_route_name)
-api_orders_routes = APIRouter(tags=["Orders"], prefix="/api", generate_unique_id_function=get_route_name)
-api_payments_routes = APIRouter(tags=["Payments"], prefix="/api", generate_unique_id_function=get_route_name)
-api_subscription_routes = APIRouter(tags=["Subscription"], prefix="/api", generate_unique_id_function=get_route_name)
+api_orders_routes = APIRouter(tags=["Orders"], prefix="/api/order", generate_unique_id_function=get_route_name)
+api_payments_routes = APIRouter(tags=["Payments"], prefix="/api/payment", generate_unique_id_function=get_route_name)
+api_subscription_routes = APIRouter(
+    tags=["Subscription"], prefix="/api/subscription", generate_unique_id_function=get_route_name
+)
 
 
-@api_server_routes.get("/health")
+@api_server_routes.get("/health", response_model=responses.RequestStatusResponse)
 async def health(request: Request):
     """Проверка работоспособности сервиса."""
-    return responses.SuccessResponse("OK")
+    return {"success": True, "message": "OK"}
 
 
-@api_orders_routes.get("/order/check", response_model=responses.CheckOrderResponse)
+@api_orders_routes.get("/check", response_model=responses.CheckOrderResponse)
 async def check_order(request: Request, task_guid: str = Query(description="Идентификатор заказа")):
     """Проверка наличия заказа в системе."""
     result = await planfix_api.task.get_list(GuidF(value=task_guid))
     return {"is_valid": bool(result.get("tasks", []))}
 
 
-@api_orders_routes.get("/order/{task_guid}/")
+@api_orders_routes.get("/{task_guid}/")
 async def get_order(request: Request, task_guid: str):
     return await planfix_api.task.get_list(GuidF(value=task_guid))
 
 
-@api_payments_routes.get("/payment/init", response_model=responses.InitPaymentResponse)
+@api_payments_routes.get("/init", response_model=responses.InitPaymentResponse)
 async def init_payment(
     request: Request,
     task_guid: str = Query(description="Идентификатор заказа"),
@@ -78,18 +80,18 @@ async def init_payment(
         )
 
     if hasattr(init_response, "PaymentURL"):
-        coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL))
+        # coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.PaymentURL))
         response["url"] = init_response.PaymentURL
 
     if hasattr(init_response, "Data"):
-        coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.Data))
+        # coroutines.append(planfix_api.task.add_comment(task_id=task.id, description=init_response.Data))
         response["qr"] = init_response.Data
 
     await asyncio.gather(*coroutines)
     return response
 
 
-@api_payments_routes.post("/payment/status", status_code=status.HTTP_200_OK)
+@api_payments_routes.post("/status", status_code=status.HTTP_200_OK)
 async def payment_status_update(
     request: Request, payload: dtos.NotificationQrRequest | dtos.NotificationPaymentRequest
 ):
@@ -116,7 +118,7 @@ async def payment_status_update(
 
 
 @api_payments_routes.get(
-    "/payment/{payment_id}/status",
+    "/{payment_id}/status",
     status_code=status.HTTP_200_OK,
     response_model=responses.PaymentStatusResponse,
 )
@@ -125,7 +127,7 @@ async def get_payment_status(request: Request, payment_id: int):
     return await payment_api.get_state(payment_id)
 
 
-@api_payments_routes.post("/payment/charge", status_code=status.HTTP_200_OK)
+@api_payments_routes.post("/charge", status_code=status.HTTP_200_OK, response_model=responses.RequestStatusResponse)
 async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, authorization: str = Header(None)):
     """Провести автоматический периодический платеж."""
     if authorization != settings.REQUEST_TOKEN:
@@ -140,13 +142,14 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
         account_token=task.account_token_field.value,
         customer_phone=task.client_phone,
     )
-    return HTMLResponse("OK")
+    return {"success": True, "message": "Повторная оплата прошла успешно"}
 
 
-@api_subscription_routes.patch("/subscription/reject")
+@api_subscription_routes.patch("/reject", response_model=responses.RequestStatusResponse)
 async def subscription_reject(request: Request, payload: dtos.SubscriptionRejectRequest):
     """Отменить активную подписку"""
     task = await get_task(payload.task_guid)
     await planfix_api.task.update(
         task_id=task.id, customFieldData=[SubscriptionStatusUpdate(SubscriptionStatus.INACTIVE)]
     )
+    return {"success": True, "message": "Подписка успешно отменена"}

@@ -35,10 +35,10 @@ const showPaymentButton = computed<boolean>(() => !qr.value);
 
 const [isBusy, isBusyToggle] = useToggle();
 
-const onPayClick = async () => {
+const onPayClick = async ({ useQr = false }: { useQr: boolean }) => {
   isBusy.value = true;
   payment
-    .initPayment({ guid: taskGuid, isRecurrent: isRecurrent, useQr: true })
+    .initPayment({ guid: taskGuid, isRecurrent: isRecurrent, useQr })
     .then(
       (response) => {
         if (response.qr) {
@@ -112,7 +112,7 @@ onMounted(() => {
         v-if="showPaymentButton"
         :disabled="!allowToPay || isBusy"
         :is-busy="isBusy"
-        @click="onPayClick"
+        @click="onPayClick({ useQr: true })"
       >
         Оплатить
       </button-component>
