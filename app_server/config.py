@@ -17,8 +17,8 @@ class TBankConfig(BaseAppConfig):
     TERMINAL_ID: str
     TERMINAL_PASSWORD: str
     TAXATION: str
-    USE_SUCCESS_PAYMENT_REDIRECT_URL: bool
-    USE_FAIL_PAYMENT_REDIRECT_URL: bool
+    USE_SUCCESS_PAYMENT_REDIRECT_URL: str
+    USE_FAIL_PAYMENT_REDIRECT_URL: str
 
 
 class PlanfixConfig(BaseAppConfig):
