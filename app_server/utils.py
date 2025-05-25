@@ -5,6 +5,7 @@ from app_server.exceptions import TaskNotFoundError
 from app_server.services import planfix_api
 from app_server.services.planfix.api.rest.responses import TaskFilterResponse, TaskResponse
 from app_server.services.planfix.filters import GuidF, RequestKeyF
+from root.config import settings
 
 
 def make_order_uniq_id(task_guid: str) -> str:
@@ -14,11 +15,13 @@ def make_order_uniq_id(task_guid: str) -> str:
 
 
 def build_success_url(task_guid: str) -> str:
-    return t_bank_config.USE_SUCCESS_PAYMENT_REDIRECT_URL
+    if t_bank_config.USE_SUCCESS_PAYMENT_REDIRECT_URL:
+        return f"{settings.SITE_URL_PAYMENT}/?guid={task_guid}&success=true"
 
 
 def build_fail_url(task_guid: str) -> str:
-    return t_bank_config.USE_FAIL_PAYMENT_REDIRECT_URL
+    if t_bank_config.USE_FAIL_PAYMENT_REDIRECT_URL:
+        return f"{settings.SITE_URL_PAYMENT}/?guid={task_guid}&success=false"
 
 
 async def get_task(task_guid: str = None, request_key: str = None) -> TaskResponse:
