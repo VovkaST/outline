@@ -113,5 +113,5 @@ class NotificationQrRequest(BaseModel):
 
 class PaymentChargeRequest(BaseModel):
     task_guid: str = Field(title="Идентификатор задания на оплату")
-    amount: int = Field(description="Сумма платежа в копейках (минимум 1000)", ge=1000),
-    description: str = Field(description="Описание платежа", default=settings.DEFAULT_PAYMENT_DESCRIPTION),
+    amount: int = Field(description="Сумма платежа в копейках (минимум 1000)", ge=1000)
+    description: str = Field(description="Описание платежа", default=settings.DEFAULT_PAYMENT_DESCRIPTION)
