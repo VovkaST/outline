@@ -54,12 +54,14 @@ async def init_payment(
     task_guid: str = Query(description="Идентификатор заказа"),
     is_recurrent: bool = Query(description="Признак рекуррентности платежа", default=False),
     use_qr: bool = Query(description="Оплата по QR-коду СБП", default=False),
+    amount: int = Query(description="Сумма платежа в копейках (минимум 1000)", ge=1000),
+    description: str = Query(description="Описание платежа", default=None),
 ):
     """Инициализировать платеж."""
     task = await get_task(task_guid)
     init_response = await payment_api.prepare_payment_init(
-        amount=settings.DEFAULT_PAYMENT_AMOUNT,
-        description=settings.DEFAULT_PAYMENT_DESCRIPTION,
+        amount=amount,
+        description=description or settings.DEFAULT_PAYMENT_DESCRIPTION,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
         customer_phone=task.client_phone,
@@ -135,9 +137,9 @@ async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, a
 
     task = await get_task(task_guid=clean_guid(payload.task_guid))
     await payment_api.prepare_payment_init(
-        amount=settings.DEFAULT_PAYMENT_AMOUNT,
+        amount=payload.amount,
         order_id=payload.task_guid,
-        description=settings.DEFAULT_PAYMENT_DESCRIPTION,
+        description=payload.description,
         rebill_id=task.rebill_field.value,
         account_token=task.account_token_field.value,
         customer_phone=task.client_phone,
