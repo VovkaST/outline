@@ -14,6 +14,7 @@ services:
     restart: on-failure
     volumes:
       - ./logs:/app/logs
+      - ./media:/media
     ports:
       - '8000:8000'
     command: python -m server --host 0.0.0.0 --port 8000 run
