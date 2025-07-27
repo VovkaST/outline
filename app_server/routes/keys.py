@@ -11,7 +11,7 @@ from root.utils.others import get_route_name
 routes = APIRouter(tags=["Keys"], prefix="/api/keys", generate_unique_id_function=get_route_name)
 
 
-@routes.put("/")
+@routes.post("/")
 async def create_or_update_key(request: Request, payload: dtos.PutKeyRequest):
     """Создать или изменить ключ доступа."""
 
