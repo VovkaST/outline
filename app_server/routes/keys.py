@@ -11,7 +11,7 @@ from root.utils.others import get_route_name
 routes = APIRouter(tags=["Keys"], prefix="/api/keys", generate_unique_id_function=get_route_name)
 
 
-@routes.put("/")
+@routes.post("/")
 async def create_or_update_key(request: Request, payload: dtos.PutKeyRequest):
     """Создать или изменить ключ доступа."""
 
@@ -19,7 +19,7 @@ async def create_or_update_key(request: Request, payload: dtos.PutKeyRequest):
     keys_storage.save(file_name, key=payload.key)
 
 
-@routes.get("/{key_id}")
+@routes.get("/{key_id}/")
 async def get_key_file(request: Request, key_id: str):
     """Получить файл ключа доступа."""
     path = keys_storage.get(key_id)
