@@ -4,6 +4,8 @@ from root.utils.config import Environ
 
 env = Environ()
 
+ROOT_DIR = Path(__file__).parent.parent
+
 MIDDLEWARE = [
     (
         "starlette.middleware.cors.CORSMiddleware",
@@ -14,6 +16,10 @@ MIDDLEWARE = [
 
 SITE_URL = env.get("SITE_URL", default="http://127.0.0.1:8000")
 SITE_URL_PAYMENT = SITE_URL + "/payment"
+
+MEDIA_DIR = env.get("MEDIA_DIR", default="media")
+MEDIA_DIR = ROOT_DIR / MEDIA_DIR
+MEDIA_DIR.mkdir(exist_ok=True)
 
 # Конфигурация сервера
 SERVICE_NAME = env.get("OUTLINE VPN", default="Outline VPN")

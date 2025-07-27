@@ -8,6 +8,7 @@ class ServerAppConfig(BaseAppConfig):
     HOST: str = "127.0.0.1"
     VERSION: str = "1.0"
     DESCRIPTION: str
+    MEDIA_DIR: str = "media"
 
 
 class TBankConfig(BaseAppConfig):

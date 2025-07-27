@@ -1,6 +1,8 @@
 import importlib
 import os
 
+from root.media_storage import LocalStorage
+
 DEFAULT_SETTINGS_MODULE = "root.config"
 
 
@@ -33,3 +35,5 @@ class RootConfig:
 
 settings = RootConfig()
 settings.setup()
+
+default_storage = LocalStorage(settings.MEDIA_DIR)
