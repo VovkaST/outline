@@ -19,7 +19,7 @@ async def create_or_update_key(request: Request, payload: dtos.PutKeyRequest):
     keys_storage.save(file_name, key=payload.key)
 
 
-@routes.get("/{key_id}")
+@routes.get("/{key_id}/")
 async def get_key_file(request: Request, key_id: str):
     """Получить файл ключа доступа."""
     path = keys_storage.get(key_id)
