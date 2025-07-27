@@ -4,6 +4,21 @@
 **Все команды выполняются из корневого каталога приложения.**
 Для большинства необходимы права суперпользователя (sudo).
 
+### Docker
+```commandline
+apt update
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+echo   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt update
+apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose
+echo "Adding current user to docker group"
+usermod -aG docker $USER  
+```
+
 ### Nginx:
 Установка nginx:
 ```commandline
@@ -11,7 +26,7 @@ $ apt update && apt install nginx -y
 ```
 Закинуть файл настроек nginx для сайта. **При необходимости изменить имя хоста.**
 ```commandline
-$ cp nginx/api_server /etc/nginx/sites-available/api-server
+$ cp nginx/api-server /etc/nginx/sites-available/api-server
 ```
 И создать символическую ссылку на него в каталоге доступных сайтов:
 ```commandline
