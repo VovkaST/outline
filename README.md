@@ -57,6 +57,18 @@ $ echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time
 $ /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
 ```
 
+### Переменные окружения
+Для передачи настроек в приложение необходимо создать файл `.env` по образцу `.env.example`:
+* `SITE_URL` &ndash; url-сайта для генерации ссылок на внутренние ресурсы
+* `REQUEST_TOKEN` &ndash; токен для эндпоинтов, требующих авторизацию
+* `TBANK_TERMINAL_ID` &ndash; идентификатор терминала Т-банка
+* `TBANK_TERMINAL_PASSWORD` &ndash; пароль терминала
+* `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей
+* `TBANK_USE_FAIL_PAYMENT_REDIRECT_URL` &ndash; url для редиректов платежей, завершившихся ошибкой
+* `PLANFIX_ACCOUNT` &ndash; имя аккаунта PlanFix
+* `PLANFIX_TOKEN` &ndash; токен API PlanFix
+
+
 ### Запуск приложения
 Перед первым запуском необходимо дать права на исполнение файлу скрипта:
 ```commandline
