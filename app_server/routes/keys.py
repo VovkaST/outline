@@ -10,6 +10,10 @@ routes = APIRouter(tags=["Keys"], prefix="/api/keys", generate_unique_id_functio
 @routes.put("/")
 async def create_or_update_key(request: Request, payload: dtos.PutKeyRequest):
     """Создать или изменить ключ доступа."""
+    from keys.storage import keys_storage
+
+    file_name = keys_storage.make_name(payload.guid)
+    keys_storage.write(file_name, key=payload.key)
 
 
 @routes.get("/{key_id}")

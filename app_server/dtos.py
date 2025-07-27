@@ -118,5 +118,5 @@ class PaymentChargeRequest(BaseModel):
 
 
 class PutKeyRequest(BaseModel):
-    key_id: str = Field(description="Идентификатор ключа")
+    guid: str = Field(description="Идентификатор ключа")
     key: str = Field(description="Ключ")
