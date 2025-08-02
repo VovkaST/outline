@@ -45,7 +45,7 @@ $ nginx -t
 $ systemctl restart nginx.service
 ```
 
-### Certbot
+### Certbot (только при наличии доменного имени)
 Установить зависимости:
 ```commandline
 $ apt update && apt install python3 python3-dev python3-venv libaugeas-dev gcc
