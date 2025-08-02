@@ -24,10 +24,14 @@ usermod -aG docker $USER
 ```commandline
 $ apt update && apt install nginx -y
 ```
-Закинуть файл настроек nginx для сайта. **При необходимости изменить имя хоста.**
+Закинуть файл настроек nginx для сайта.
 ```commandline
 $ cp nginx/api-server /etc/nginx/sites-available/api-server
 ```
+**В целевом файле необходимо изменить**:
+* `HOST_NAME_OR_IP` &ndash; ip-адрес или имя домена (при наличии, _обязательно для HTTPS_).
+* `PATH_TO_APP` &ndash; путь до рабочего каталога приложения.
+
 И создать символическую ссылку на него в каталоге доступных сайтов:
 ```commandline
 $ ln -s /etc/nginx/sites-available/api-server /etc/nginx/sites-enabled/
