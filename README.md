@@ -65,7 +65,7 @@ $ ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 ```
 Запросим сертификат:
 ```commandline
-$ certbot certonly --nginx
+$ certbot --nginx
 ```
 Настроим автоматическое обновление сертификата:
 ```commandline
