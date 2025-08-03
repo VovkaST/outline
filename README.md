@@ -86,6 +86,7 @@ $ /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
 * `TBANK_USE_FAIL_PAYMENT_REDIRECT_URL` &ndash; url для редиректов платежей, завершившихся ошибкой
 * `PLANFIX_ACCOUNT` &ndash; имя аккаунта PlanFix
 * `PLANFIX_TOKEN` &ndash; токен API PlanFix
+* `DEFAULT_PAYMENT_DEADLINE` &ndash; время жизни ссылки платежа (необязательный).
 
 
 ### Запуск приложения
