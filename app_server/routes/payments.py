@@ -33,13 +33,14 @@ async def init_payment(
     use_qr: bool = Query(description="Оплата по QR-коду СБП", default=False),
     amount: int = Query(description="Сумма платежа в копейках (минимум 1000)", ge=1000),
     description: str = Query(description="Описание платежа", default=None),
+    deadline: int = Query(description="Срок жизни ссылки (дней)", default=0),
 ):
     """Инициализировать платеж."""
     task = await get_task(task_guid)
     init_response = await payment_api.prepare_payment_init(
         amount=amount,
         description=description or settings.DEFAULT_PAYMENT_DESCRIPTION,
-        deadline=settings.DEFAULT_PAYMENT_DEADLINE,
+        deadline=deadline or settings.DEFAULT_PAYMENT_DEADLINE,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
         customer_phone=task.client_phone,
