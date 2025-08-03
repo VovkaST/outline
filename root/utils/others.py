@@ -1,4 +1,5 @@
 import re
+from datetime import datetime, timedelta
 
 
 def str2bool(s: str) -> bool:
@@ -21,3 +22,8 @@ def str2int(s: str) -> int:
 
 def get_route_name(route) -> str:
     return route.name
+
+
+def make_deadline_time(since: datetime, *, days: float = 0, minutes: float = 0, hours: float = 0) -> str:
+    deadline = (since + timedelta(days=days, minutes=minutes, hours=hours)).astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+    return f"{deadline[:22]}:{deadline[22:]}"

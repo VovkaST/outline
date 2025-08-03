@@ -13,6 +13,7 @@ from app_server.services import payment_api, planfix_api
 from app_server.services.planfix.api.rest.enums import SubscriptionStatus
 from app_server.services.planfix.filters import (
     AccountTokenUpdate,
+    PaymentSumUpdate,
     RebillIdUpdate,
     RequestKeyUpdate,
     SubscriptionStatusUpdate,
@@ -32,12 +33,14 @@ async def init_payment(
     use_qr: bool = Query(description="Оплата по QR-коду СБП", default=False),
     amount: int = Query(description="Сумма платежа в копейках (минимум 1000)", ge=1000),
     description: str = Query(description="Описание платежа", default=None),
+    deadline: int = Query(description="Срок жизни ссылки (дней)", default=0),
 ):
     """Инициализировать платеж."""
     task = await get_task(task_guid)
     init_response = await payment_api.prepare_payment_init(
         amount=amount,
         description=description or settings.DEFAULT_PAYMENT_DESCRIPTION,
+        deadline=deadline or settings.DEFAULT_PAYMENT_DEADLINE,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
         customer_phone=task.client_phone,
@@ -86,6 +89,8 @@ async def payment_status_update(
         fields_to_update = [SubscriptionStatusUpdate(SubscriptionStatus.ACTIVE)]
         if isinstance(payload, dtos.NotificationPaymentRequest):
             fields_to_update.append(RebillIdUpdate(payload.RebillId))
+            if payload.Status == PaymentStatus.AUTHORIZED:
+                fields_to_update.append(PaymentSumUpdate(payload.Amount))
         if isinstance(payload, dtos.NotificationQrRequest):
             fields_to_update.append(AccountTokenUpdate(payload.AccountToken))
 
