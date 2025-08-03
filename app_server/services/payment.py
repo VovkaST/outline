@@ -1,4 +1,5 @@
 import hashlib
+from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel
@@ -7,6 +8,7 @@ from app_server import dtos
 from app_server.config import t_bank_config
 from app_server.exceptions import PaymentError, TokenError
 from app_server.services.base import BaseHTTPService
+from root.utils.others import make_deadline_time
 
 
 class Payment(BaseHTTPService):
@@ -53,6 +55,7 @@ class Payment(BaseHTTPService):
         self,
         amount: int,
         order_id: str,
+        deadline: int = 0,
         customer_key: str = None,
         description: str = "",
         customer_phone: str = "",
@@ -73,6 +76,7 @@ class Payment(BaseHTTPService):
             customer_email=customer_email,
             is_recurrent=(is_recurrent and not rebill_id) or account_token,
             use_qr=use_qr or bool(account_token),
+            deadline=deadline,
             success_url=success_url,
             fail_url=fail_url,
         )
@@ -101,6 +105,7 @@ class Payment(BaseHTTPService):
         self,
         amount: int,
         order_id: str,
+        deadline: int = 0,
         description: str = "",
         customer_key: str = None,
         customer_phone: str = None,
@@ -134,6 +139,8 @@ class Payment(BaseHTTPService):
                 ],
             },
         }
+        if deadline:
+            payload["RedirectDueDate"] = make_deadline_time(datetime.now(), days=deadline)
         if use_qr:
             payload.update({"DATA": {"QR": True}})
         # if is_recurrent and not customer_key:

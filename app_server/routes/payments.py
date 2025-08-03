@@ -39,6 +39,7 @@ async def init_payment(
     init_response = await payment_api.prepare_payment_init(
         amount=amount,
         description=description or settings.DEFAULT_PAYMENT_DESCRIPTION,
+        deadline=settings.DEFAULT_PAYMENT_DEADLINE,
         order_id=make_order_uniq_id(task_guid),
         customer_key=task.client_field.value,
         customer_phone=task.client_phone,
