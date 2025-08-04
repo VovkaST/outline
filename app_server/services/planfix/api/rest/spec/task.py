@@ -58,6 +58,7 @@ class Task(BaseAPIEntity, ITask):
         CustomFields.ACCOUNT_TOKEN.value,
         CustomFields.REQUEST_KEY.value,
         CustomFields.PAYMENT_SUM.value,
+        CustomFields.PAYMENT_SUM2.value,
     ] + ALL_FIELDS
 
     def build_fields_list(self, fields: list[str]) -> str:

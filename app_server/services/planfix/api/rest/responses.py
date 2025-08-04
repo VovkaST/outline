@@ -148,6 +148,11 @@ class TaskResponse(BaseModel):
 
     @computed_field
     @cached_property
+    def payment_sum2(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.PAYMENT_SUM2)
+
+    @computed_field
+    @cached_property
     def client_phone(self) -> str:
         *_, phone = self.name.split(" | ")
         return f"+{phone}" if phone else ""

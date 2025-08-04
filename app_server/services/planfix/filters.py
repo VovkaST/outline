@@ -14,6 +14,7 @@ class CustomFields(IntEnum):
     ACCOUNT_TOKEN = 140280
     REQUEST_KEY = 140282
     PAYMENT_SUM = 149932
+    PAYMENT_SUM2 = 140326
 
 
 class GuidF(CustF):
@@ -46,6 +47,11 @@ class PaymentSumF(CustF):
     field: PositiveInt = CustomFields.PAYMENT_SUM
 
 
+class PaymentSum2F(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
+    field: PositiveInt = CustomFields.PAYMENT_SUM2
+
+
 def RebillIdUpdate(value: str | int) -> dict:
     return {"field": {"id": CustomFields.REBILL_ID}, "value": value}
 
@@ -64,3 +70,7 @@ def SubscriptionStatusUpdate(status: SubscriptionStatus) -> dict:
 
 def PaymentSumUpdate(value: int) -> dict:
     return {"field": {"id": CustomFields.PAYMENT_SUM}, "value": value}
+
+
+def PaymentSum2Update(value: int) -> dict:
+    return {"field": {"id": CustomFields.PAYMENT_SUM2}, "value": value}
