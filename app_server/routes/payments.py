@@ -13,6 +13,7 @@ from app_server.services import payment_api, planfix_api
 from app_server.services.planfix.api.rest.enums import SubscriptionStatus
 from app_server.services.planfix.filters import (
     AccountTokenUpdate,
+    PaymentSum2Update,
     PaymentSumUpdate,
     RebillIdUpdate,
     RequestKeyUpdate,
@@ -91,6 +92,7 @@ async def payment_status_update(
             fields_to_update.append(RebillIdUpdate(payload.RebillId))
             if payload.Status == PaymentStatus.AUTHORIZED:
                 fields_to_update.append(PaymentSumUpdate(payload.Amount))
+                fields_to_update.append(PaymentSum2Update(payload.Amount))
         if isinstance(payload, dtos.NotificationQrRequest):
             fields_to_update.append(AccountTokenUpdate(payload.AccountToken))
 
