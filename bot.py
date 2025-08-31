@@ -28,12 +28,10 @@ def cli(ctx):
 def run(ctx: click.core.Context):
     bot_settings: BotAppConfig = ctx.obj["bot_settings"]
 
-    bot = run_bot(token=bot_settings.TOKEN)
-
     print(f"PythonTelegramBot version {telegram.__version__}, using settings '{os.environ.get('SETTINGS_MODULE')}'")
     print("Starting bot...")
 
-    asyncio.run(bot)
+    asyncio.run(run_bot(token=bot_settings.TOKEN))
 
 
 if __name__ == "__main__":

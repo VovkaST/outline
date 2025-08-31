@@ -4,15 +4,22 @@ import nest_asyncio
 from telegram import BotCommand
 from telegram.ext import (
     ApplicationBuilder,
+    CallbackQueryHandler,
+    CommandHandler,
+    MessageHandler,
+    filters,
 )
 from telegram.ext._application import Application
 
 from app_bot.enums import BotCommands
+from app_bot.handlers import commands
+from app_bot.handlers.callback import callback_handler
+from app_bot.handlers.messages import user_message_handler
 
 logger = logging.getLogger("bot")
 
 
-async def set_commands(app: Application):
+async def add_commands(app: Application):
     commands = []
     for command in BotCommands:
         commands.append(BotCommand(command.value, command.label))
@@ -24,11 +31,11 @@ async def run_bot(token: str):
     nest_asyncio.apply()
     app = ApplicationBuilder().token(token).build()
 
-    # telegram_app.add_handler(CommandHandler("start", start))
-    # telegram_app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_user_message))
-    # telegram_app.add_handler(CallbackQueryHandler(handle_button))
-    # telegram_app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler(BotCommands.START, commands.start))
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), user_message_handler))
+    app.add_handler(CallbackQueryHandler(callback_handler))
+    # app.add_handler(CommandHandler("help", help_command))
 
-    await set_commands(app)
+    await add_commands(app)
 
     app.run_polling()
