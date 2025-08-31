@@ -48,6 +48,10 @@ PLANFIX_TOKEN = env.get("PLANFIX_TOKEN")
 PLANFIX_API_KEY = env.get("PLANFIX_API_KEY")
 
 
+# Настройки Telegram-бота
+BOT_TOKEN = env.get("BOT_TOKEN")
+
+
 # Логирование
 LOG_DIR = env.get("LOG_DIR", default="logs")
 log_dir = Path(LOG_DIR)
@@ -84,6 +88,10 @@ LOGGING = {
             "handlers": ["console", "file"],
         },
         "app_server": {
+            "level": "INFO",
+            "handlers": ["console", "file"],
+        },
+        "bot": {
             "level": "INFO",
             "handlers": ["console", "file"],
         },
