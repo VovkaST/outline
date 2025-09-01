@@ -4,8 +4,8 @@ from typing import Any, TypeAlias
 
 from pydantic import BaseModel, Field, computed_field
 
-from app_server.services.planfix.api.rest.enums import DurationType, DurationUnit, Priority
-from app_server.services.planfix.filters import CustomFields
+from services.planfix.api.rest.enums import DurationType, DurationUnit, Priority
+from services.planfix.filters import CustomFields
 
 ObjectId: TypeAlias = int | str
 
@@ -123,6 +123,11 @@ class TaskResponse(BaseModel):
 
     @computed_field
     @cached_property
+    def vpn_key(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.VPN_KEY)
+
+    @computed_field
+    @cached_property
     def rebill_field(self) -> CustomFieldValueResponse:
         return self.get_custom_field(field=CustomFields.REBILL_ID)
 
@@ -150,6 +155,11 @@ class TaskResponse(BaseModel):
     @cached_property
     def payment_sum2(self) -> CustomFieldValueResponse:
         return self.get_custom_field(field=CustomFields.PAYMENT_SUM2)
+
+    @computed_field
+    @cached_property
+    def telegram_id(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.TELEGRAM_ID)
 
     @computed_field
     @cached_property

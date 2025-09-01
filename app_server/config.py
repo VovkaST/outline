@@ -26,10 +26,13 @@ class PlanfixConfig(BaseAppConfig):
     PREFIX = "PLANFIX"
 
     REST_API_URL: str
+    WEBCHAT_API_URL: str
     XML_API_URL: str
     ACCOUNT: str
     TOKEN: str
+    WEBCHAT_TOKEN: str
     API_KEY: str
+    PROVIDER_ID: str
 
 
 server_config = ServerAppConfig()

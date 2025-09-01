@@ -49,6 +49,7 @@ InstallMenu = Menu(
     message=messages.CONNECTION_INSTRUCTION,
     keyboard=InlineKeyboardMarkup(
         [
+            [enum2btn(BotButtons.GET_TOKEN)],
             [enum2btn(BotButtons.BACKWARD)],
         ]
     ),

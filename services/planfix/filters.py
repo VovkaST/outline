@@ -2,19 +2,26 @@ from enum import IntEnum
 
 from pydantic import PositiveInt
 
-from app_server.services.planfix.api.rest.enums import SubscriptionStatus
-from app_server.services.planfix.api.rest.filters import CustF, FilterTypes
+from services.planfix.api.rest.enums import SubscriptionStatus
+from services.planfix.api.rest.filters import CustF, FilterTypes
 
 
 class CustomFields(IntEnum):
+    VPN_KEY = 140146
     GUID = 140262
     REBILL_ID = 140258
     CLIENT_ID = 140264
     SUBSCRIPTION_STATUS_ID = 140268
     ACCOUNT_TOKEN = 140280
     REQUEST_KEY = 140282
+    TELEGRAM_ID = 140308
     PAYMENT_SUM = 149932
     PAYMENT_SUM2 = 140326
+
+
+class VPNKeyF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_LINE
+    field: PositiveInt = CustomFields.VPN_KEY
 
 
 class GuidF(CustF):
@@ -37,6 +44,11 @@ class RequestKeyF(CustF):
     field: PositiveInt = CustomFields.REQUEST_KEY
 
 
+class TelegramIdF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
+    field: PositiveInt = CustomFields.TELEGRAM_ID
+
+
 class SubscriptionStatusF(CustF):
     type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
     field: PositiveInt = CustomFields.SUBSCRIPTION_STATUS_ID
@@ -50,6 +62,10 @@ class PaymentSumF(CustF):
 class PaymentSum2F(CustF):
     type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
     field: PositiveInt = CustomFields.PAYMENT_SUM2
+
+
+def TelegramIdUpdate(value: str | int) -> dict:
+    return {"field": {"id": CustomFields.TELEGRAM_ID}, "value": value}
 
 
 def RebillIdUpdate(value: str | int) -> dict:

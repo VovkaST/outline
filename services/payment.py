@@ -7,8 +7,8 @@ from pydantic import BaseModel
 from app_server import dtos
 from app_server.config import t_bank_config
 from app_server.exceptions import PaymentError, TokenError
-from app_server.services.base import BaseHTTPService
 from root.utils.others import make_deadline_time
+from services.base import BaseHTTPService
 
 
 class Payment(BaseHTTPService):

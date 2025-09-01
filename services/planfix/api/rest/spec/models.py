@@ -5,9 +5,9 @@ from typing import Any
 from pydantic import BaseModel, Field, PositiveInt, computed_field
 from typing_extensions import Self
 
-from app_server.services.planfix.api.rest.enums import OrderDirection, Role, TypeList
-from app_server.services.planfix.api.rest.filters import CustF, F
-from app_server.services.planfix.api.rest.responses import ObjectId
+from services.planfix.api.rest.enums import OrderDirection, Role, TypeList
+from services.planfix.api.rest.filters import CustF, F
+from services.planfix.api.rest.responses import ObjectId
 
 
 class BaseRequest(BaseModel):

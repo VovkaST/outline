@@ -2,9 +2,9 @@ from fastapi import APIRouter, Query
 from starlette.requests import Request
 
 from app_server import responses
-from app_server.services import planfix_api
-from app_server.services.planfix.filters import GuidF
 from root.utils.others import get_route_name
+from services import planfix_api
+from services.planfix.filters import GuidF
 
 routes = APIRouter(tags=["Orders"], prefix="/api/order", generate_unique_id_function=get_route_name)
 

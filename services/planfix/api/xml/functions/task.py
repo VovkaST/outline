@@ -1,5 +1,5 @@
-from app_server.services.planfix.api.base import BaseAPIEntity
-from app_server.services.planfix.api.interfaces.task import ITask
+from services.planfix.api.base import BaseAPIEntity
+from services.planfix.api.interfaces.task import ITask
 
 
 class Task(BaseAPIEntity, ITask):

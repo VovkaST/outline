@@ -1,10 +1,11 @@
 from aiohttp import BasicAuth, ClientResponse
 
 from app_server.config import planfix_config
-from app_server.services.base import BaseHTTPService
-from app_server.services.planfix.api.rest.spec import Contact as RestContact
-from app_server.services.planfix.api.rest.spec import Task as RestTask
-from app_server.services.planfix.api.xml.functions import Contact, Task
+from services.base import BaseHTTPService
+from services.planfix.api.rest.spec import Contact as RestContact
+from services.planfix.api.rest.spec import Task as RestTask
+from services.planfix.api.rest.spec import Webchat
+from services.planfix.api.xml.functions import Contact, Task
 
 
 class PlanfixXMLAPI(BaseHTTPService):
@@ -17,7 +18,7 @@ class PlanfixXMLAPI(BaseHTTPService):
     }
     encoding = "UTF-8"
 
-    _templates_env = Environment(loader=PackageLoader("app_server.services.planfix.api.xml"))
+    _templates_env = Environment(loader=PackageLoader("services.planfix.api.xml"))
 
     def __init__(self, account: str = "", token: str = "", api_key: str = "", **kwargs):
         self.account = account
@@ -71,9 +72,44 @@ class PlanfixRestAPI(BaseHTTPService):
         kwargs = super().get_session_kwargs()
         return kwargs | {"headers": {"Authorization": f"Bearer {self.token}"}}
 
-    async def prepare_request(self, url_name: str, method: str, json: dict = None, **kwargs):
-        request_kwargs = await super().prepare_request(url_name, method, json=json, **kwargs)
+    async def prepare_request(
+        self, url_name: str, method: str, json: dict | None = None, data: dict | None = None, **kwargs
+    ):
+        request_kwargs = await super().prepare_request(url_name, method, json=json or {}, data=data, **kwargs)
         url = request_kwargs["url"]
         if "{task_id}" in url:
             request_kwargs["url"] = url.format(task_id=kwargs["task_id"])
         return request_kwargs
+
+
+class PlanfixWebchatAPI(BaseHTTPService):
+    API_HOST = planfix_config.WEBCHAT_API_URL
+
+    def __init__(self, token: str, provider_id: str, **kwargs):
+        self.token = token
+        self.provider_id = provider_id
+        self.chat = Webchat(self)
+        super().__init__(**kwargs)
+
+    def get_session_kwargs(self) -> dict:
+        kwargs = super().get_session_kwargs()
+        kwargs["raise_for_status"] = True
+        return kwargs
+
+    def get_headers(self, url_name: str, method: str) -> dict:
+        return {"Content-Type": "application/x-www-form-urlencoded"}
+
+    async def prepare_request(
+        self, url_name: str, method: str, json: dict | None = None, data: dict | None = None, **kwargs
+    ):
+        request_kwargs = await super().prepare_request(url_name, method, json=json, data=data, **kwargs)
+        base_message_body = {
+            "cmd": url_name,
+            "providerId": self.provider_id,
+            "planfix_token": self.token + "1",
+        }
+        request_kwargs["data"] |= base_message_body
+        return request_kwargs
+
+    async def handle_response(self, response: ClientResponse) -> str | None:
+        return response.reason

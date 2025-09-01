@@ -1,9 +1,9 @@
-from app_server.services.planfix.api.base import BaseAPIEntity
-from app_server.services.planfix.api.interfaces.task import ITask
-from app_server.services.planfix.api.rest.enums import OrderDirection
-from app_server.services.planfix.api.rest.filters import F
-from app_server.services.planfix.api.rest.spec import models
-from app_server.services.planfix.filters import CustomFields
+from services.planfix.api.base import BaseAPIEntity
+from services.planfix.api.interfaces.task import ITask
+from services.planfix.api.rest.enums import OrderDirection
+from services.planfix.api.rest.filters import F
+from services.planfix.api.rest.spec import models
+from services.planfix.filters import CustomFields
 
 ALL_FIELDS = [
     "priority",
@@ -51,12 +51,14 @@ class Task(BaseAPIEntity, ITask):
         "id",
         "name",
         "description",
+        CustomFields.VPN_KEY.value,
         CustomFields.GUID.value,
         CustomFields.REBILL_ID.value,
         CustomFields.CLIENT_ID.value,
         CustomFields.SUBSCRIPTION_STATUS_ID.value,
         CustomFields.ACCOUNT_TOKEN.value,
         CustomFields.REQUEST_KEY.value,
+        CustomFields.TELEGRAM_ID.value,
         CustomFields.PAYMENT_SUM.value,
         CustomFields.PAYMENT_SUM2.value,
     ] + ALL_FIELDS

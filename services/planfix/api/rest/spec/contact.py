@@ -1,5 +1,5 @@
-from app_server.services.planfix.api.base import BaseAPIEntity
-from app_server.services.planfix.api.interfaces.contact import IContact
+from services.planfix.api.base import BaseAPIEntity
+from services.planfix.api.interfaces.contact import IContact
 
 
 class Contact(BaseAPIEntity, IContact):
