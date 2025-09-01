@@ -1,4 +1,5 @@
-from telegram import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Update, User
+from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
 from app_bot.config import bot_config
@@ -8,6 +9,7 @@ from app_bot.interaction import menus
 from app_bot.interaction.buttons import BotButtons
 from app_bot.utils.callback_registry import registry
 from app_bot.utils.context_history import context_history
+from app_server.utils import get_task
 
 
 @registry.handler(BotButtons.BACKWARD)
@@ -53,3 +55,18 @@ async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if base_menu.keyboard:
         buttons.extend(base_menu.keyboard.inline_keyboard)
     await query.edit_message_text(text=base_menu.message, reply_markup=InlineKeyboardMarkup(buttons))
+
+
+@registry.handler(BotButtons.GET_TOKEN)
+@context_history()
+async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.callback_query:
+        return
+
+    user: User = update.effective_user  # type: ignore [attr-not-none]
+    telegram_id = user.id
+    task = await get_task(telegram_id=telegram_id)
+    menu = menus.KeyInfoMenu
+    message = menu.format_message(key=task.vpn_key.stringValue)
+
+    await update.callback_query.edit_message_text(text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard)

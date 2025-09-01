@@ -15,7 +15,7 @@ class Menu(BaseModel):
     message: str
     keyboard: InlineKeyboardMarkup | None = Field(default_factory=lambda: InlineKeyboardMarkup([]))
 
-    def format_message(self, **kwargs) -> str | None:
+    def format_message(self, **kwargs) -> str:
         return self.message.format(**kwargs)
 
     def to_message(self) -> dict:
@@ -25,8 +25,17 @@ class Menu(BaseModel):
         }
 
 
-ConnectionMenu = Menu(
+WelcomeMenu = Menu(
     message=messages.WELCOME,
+    keyboard=InlineKeyboardMarkup(
+        [
+            [enum2btn(BotButtons.CONNECT)],
+        ]
+    ),
+)
+
+MainMenuNewUser = Menu(
+    message=messages.MAIN_MENU,
     keyboard=InlineKeyboardMarkup(
         [
             [enum2btn(BotButtons.CONNECT)],
@@ -51,6 +60,15 @@ InstallMenu = Menu(
         [
             [enum2btn(BotButtons.GET_TOKEN)],
             [enum2btn(BotButtons.BACKWARD)],
+        ]
+    ),
+)
+
+KeyInfoMenu = Menu(
+    message=messages.KEY_INFO,
+    keyboard=InlineKeyboardMarkup(
+        [
+            [enum2btn(BotButtons.MAIN_MENU)],
         ]
     ),
 )

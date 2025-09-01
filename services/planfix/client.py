@@ -106,10 +106,10 @@ class PlanfixWebchatAPI(BaseHTTPService):
         base_message_body = {
             "cmd": url_name,
             "providerId": self.provider_id,
-            "planfix_token": self.token + "1",
+            "planfix_token": self.token,
         }
         request_kwargs["data"] |= base_message_body
         return request_kwargs
 
-    async def handle_response(self, response: ClientResponse) -> str | None:
-        return response.reason
+    async def handle_response(self, response: ClientResponse) -> dict:
+        return {}

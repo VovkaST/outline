@@ -2,6 +2,7 @@ from contrib.enums import TextChoices
 
 
 class BotButtons(TextChoices):
+    MAIN_MENU = "MAIN_MENU", "🏠 Главное меню"
     BACKWARD = "BACKWARD", "⬅️ Назад"
 
     CONNECT = "CONNECT", "📥 Подключиться"

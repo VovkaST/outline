@@ -38,13 +38,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 chat_id=str(telegram_id), contact_id=str(telegram_id), contact_name=username, message=message
             )
             clear_or_init_history(context)
-            text = menus.ConnectionMenu.format_message(first_name=user.first_name)
-            await bot.send_message(chat_id=chat_id, text=text, reply_markup=menus.ConnectionMenu.keyboard)
+            text = menus.WelcomeMenu.format_message(first_name=user.first_name)
+            await bot.send_message(chat_id=chat_id, text=text, reply_markup=menus.WelcomeMenu.keyboard)
 
         except ClientResponseError as error:
             logger.error("📨 Ошибка отправки данных в Planfix (%s): %s", error.code, error.message)
             await bot.send_message(
-                chat_id=chat_id, text=messages.PLANFIX_CONNECTION_ERROR, reply_markup=menus.ConnectionMenu.keyboard
+                chat_id=chat_id, text=messages.PLANFIX_CONNECTION_ERROR, reply_markup=menus.WelcomeMenu.keyboard
             )
     else:
         pass
