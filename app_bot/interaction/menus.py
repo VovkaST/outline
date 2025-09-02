@@ -34,11 +34,14 @@ WelcomeMenu = Menu(
     ),
 )
 
-MainMenuNewUser = Menu(
+MainMenu = Menu(
     message=messages.MAIN_MENU,
     keyboard=InlineKeyboardMarkup(
         [
-            [enum2btn(BotButtons.CONNECT)],
+            [enum2btn(BotButtons.PAY)],
+            [enum2btn(BotButtons.KEY_AND_INSTRUCTION)],
+            [enum2btn(BotButtons.REFERAL)],
+            [enum2btn(BotButtons.HELP)],
         ]
     ),
 )

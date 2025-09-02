@@ -1,7 +1,7 @@
 from aiohttp import BasicAuth, ClientResponse
 
 from app_server.config import planfix_config
-from services.base import BaseHTTPService
+from services.http_service import BaseHTTPService
 from services.planfix.api.rest.spec import Contact as RestContact
 from services.planfix.api.rest.spec import Task as RestTask
 from services.planfix.api.rest.spec import Webchat
@@ -33,7 +33,9 @@ class PlanfixXMLAPI(BaseHTTPService):
         kwargs = super().get_session_kwargs()
         return kwargs | {"auth": BasicAuth(self.api_key, self.token)}
 
-    async def prepare_request(self, url_name: str, method: str, json: dict = None, **kwargs) -> dict:
+    async def prepare_request(
+        self, url_name: str, method: str, json: dict | None = None, data: dict | None = None, **kwargs
+    ) -> dict:
         xml = self.load_template(url_name, **kwargs)
 
         request_kwargs = {

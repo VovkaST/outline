@@ -7,6 +7,10 @@ class BotButtons(TextChoices):
 
     CONNECT = "CONNECT", "📥 Подключиться"
     GET_TOKEN = "GET_TOKEN", "🎁 Получить ключ"
+    PAY = "PAY", "💰 Оплатить"
+    KEY_AND_INSTRUCTION = "KEY_AND_INSTRUCTION", "📄 Данные ключа и инструкция"
+    REFERAL = "INVITE", "👥 Пригласить друзей"
+    HELP = "HELP", "🛠 Помощь"
 
     IOS = "IOS", "🍏 iOS"
     ANDROID = "ANDROID", "🤖 Android"

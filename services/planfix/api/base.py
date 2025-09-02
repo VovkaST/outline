@@ -1,4 +1,4 @@
-from services.base import BaseHTTPService
+from services.http_service import BaseHTTPService
 
 
 class BaseAPIEntity:

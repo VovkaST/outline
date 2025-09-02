@@ -8,7 +8,7 @@ from app_server import dtos
 from app_server.config import t_bank_config
 from app_server.exceptions import PaymentError, TokenError
 from root.utils.others import make_deadline_time
-from services.base import BaseHTTPService
+from services.http_service import BaseHTTPService
 
 
 class Payment(BaseHTTPService):

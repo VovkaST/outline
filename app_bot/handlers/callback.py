@@ -26,11 +26,10 @@ async def backward_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
                 modified_update = update.to_dict()
                 modified_update["callback_query"]["data"] = prev
                 return await handler(Update.de_json(modified_update, update.get_bot()), context)
-    await update.callback_query.message.delete()
     await start(update, context)
 
 
-@registry.handler(BotButtons.CONNECT)
+@registry.handler(BotButtons.CONNECT, BotButtons.KEY_AND_INSTRUCTION)
 @context_history(is_beginning=True)
 async def connect_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
@@ -70,3 +69,8 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     message = menu.format_message(key=task.vpn_key.stringValue)
 
     await update.callback_query.edit_message_text(text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard)
+
+
+@registry.handler(BotButtons.MAIN_MENU)
+async def main_menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await start(update, context)
