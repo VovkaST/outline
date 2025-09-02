@@ -4,9 +4,9 @@ from aiohttp import ClientResponseError
 from telegram import Update, User
 from telegram.ext import ContextTypes
 
-from app_bot.const import NO_USERNAME
 from app_bot.interaction import menus, messages
 from app_bot.utils.context_history import clear_or_init_history
+from app_bot.utils.dialogs import clear_username
 from app_server.exceptions import TaskNotFoundError
 from app_server.utils import get_task
 from services import planfix_webchat
@@ -17,12 +17,14 @@ logger = logging.getLogger("bot")
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
-    username = f"@{user.username}" if user.username else NO_USERNAME
+    username = clear_username(user.username)
     chat_id = update.effective_chat.id  # type: ignore [attr-defined]
     bot = update.get_bot()
+    is_key_generated = False
 
     try:
         task = await get_task(telegram_id=telegram_id)
+        is_key_generated = bool(task.vpn_key.stringValue)
     except TaskNotFoundError:
         task = None
 
@@ -45,8 +47,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 chat_id=chat_id, text=messages.PLANFIX_CONNECTION_ERROR, reply_markup=menus.WelcomeMenu.keyboard
             )
     else:
+        menu = menus.MainMenu if is_key_generated else menus.WelcomeMenu
+        message_kwargs = menu.to_message()
+        if "{first_name}" in message_kwargs["text"]:
+            message_kwargs["text"] = menu.format_message(first_name=user.first_name)
         query = update.callback_query
         if query:
-            await query.edit_message_text(**menus.MainMenu.to_message())
+            await query.edit_message_text(**message_kwargs)
         else:
-            await bot.send_message(chat_id=chat_id, **menus.MainMenu.to_message())
+            await bot.send_message(chat_id=chat_id, **message_kwargs)

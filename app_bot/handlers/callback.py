@@ -1,14 +1,16 @@
 from telegram import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Update, User
 from telegram.constants import ParseMode
+from telegram.error import BadRequest
 from telegram.ext import ContextTypes
 
 from app_bot.config import bot_config
 from app_bot.const import CONTEXT_HISTORY_KEY
 from app_bot.handlers.commands import start
-from app_bot.interaction import menus
+from app_bot.interaction import menus, messages
 from app_bot.interaction.buttons import BotButtons
 from app_bot.utils.callback_registry import registry
 from app_bot.utils.context_history import context_history
+from app_bot.utils.decorators import planfix_log_querydata
 from app_server.utils import get_task
 
 
@@ -30,6 +32,7 @@ async def backward_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 
 @registry.handler(BotButtons.CONNECT, BotButtons.KEY_AND_INSTRUCTION)
+@planfix_log_querydata
 @context_history(is_beginning=True)
 async def connect_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
@@ -57,6 +60,7 @@ async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 @registry.handler(BotButtons.GET_TOKEN)
+@planfix_log_querydata
 @context_history()
 async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
@@ -65,10 +69,19 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
     task = await get_task(telegram_id=telegram_id)
-    menu = menus.KeyInfoMenu
-    message = menu.format_message(key=task.vpn_key.stringValue)
-
-    await update.callback_query.edit_message_text(text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard)
+    if task.vpn_key.stringValue:
+        menu = menus.KeyInfoMenu
+        message = menu.format_message(key=task.vpn_key.stringValue)
+        await update.callback_query.edit_message_text(
+            text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard
+        )
+    else:
+        menu = menus.InstallMenu
+        try:
+            await update.callback_query.edit_message_text(text=messages.KEY_NOT_READY, reply_markup=menu.keyboard)
+        except BadRequest as error:
+            if "Message is not modified" not in error.message:
+                raise
 
 
 @registry.handler(BotButtons.MAIN_MENU)
