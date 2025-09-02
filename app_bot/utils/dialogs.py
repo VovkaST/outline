@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext._callbackcontext import CallbackContext
 
 from app_bot.const import NO_USERNAME
+from services.planfix.api.rest.responses import TaskResponse
 
 
 def extract_update_and_context(*args, **kwargs) -> tuple[Update | None, CallbackContext | None]:
@@ -18,3 +19,7 @@ def extract_update_and_context(*args, **kwargs) -> tuple[Update | None, Callback
 
 def clear_username(username: str | None) -> str:
     return f"@{username}" if username else NO_USERNAME
+
+
+def make_ref_link(bot, task: TaskResponse) -> str:
+    return f"{bot.link}?start=REF{task.id}"

@@ -39,7 +39,7 @@ MainMenu = Menu(
     keyboard=InlineKeyboardMarkup(
         [
             [enum2btn(BotButtons.PAY)],
-            [enum2btn(BotButtons.KEY_AND_INSTRUCTION)],
+            [enum2btn(BotButtons.INSTALL)],
             [enum2btn(BotButtons.REFERAL)],
             [enum2btn(BotButtons.HELP)],
         ]
@@ -72,6 +72,15 @@ KeyInfoMenu = Menu(
     keyboard=InlineKeyboardMarkup(
         [
             [enum2btn(BotButtons.MAIN_MENU)],
+        ]
+    ),
+)
+
+ReferalMenu = Menu(
+    message=messages.REFERAL,
+    keyboard=InlineKeyboardMarkup(
+        [
+            [enum2btn(BotButtons.BACKWARD)],
         ]
     ),
 )

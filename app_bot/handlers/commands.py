@@ -6,6 +6,7 @@ from telegram.ext import ContextTypes
 
 from app_bot.interaction import menus, messages
 from app_bot.utils.context_history import clear_or_init_history
+from app_bot.utils.decorators import store_task_to_context
 from app_bot.utils.dialogs import clear_username
 from app_server.exceptions import TaskNotFoundError
 from app_server.utils import get_task
@@ -24,6 +25,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     try:
         task = await get_task(telegram_id=telegram_id)
+        store_task_to_context(context, task)
         is_key_generated = bool(task.vpn_key.stringValue)
     except TaskNotFoundError:
         task = None

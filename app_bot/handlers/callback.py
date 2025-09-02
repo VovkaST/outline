@@ -10,7 +10,8 @@ from app_bot.interaction import menus, messages
 from app_bot.interaction.buttons import BotButtons
 from app_bot.utils.callback_registry import registry
 from app_bot.utils.context_history import context_history
-from app_bot.utils.decorators import planfix_log_querydata
+from app_bot.utils.decorators import get_task_from_context, planfix_log_querydata, planfix_task_required
+from app_bot.utils.dialogs import make_ref_link
 from app_server.utils import get_task
 
 
@@ -31,7 +32,12 @@ async def backward_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await start(update, context)
 
 
-@registry.handler(BotButtons.CONNECT, BotButtons.KEY_AND_INSTRUCTION)
+@registry.handler(BotButtons.MAIN_MENU)
+async def main_menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await start(update, context)
+
+
+@registry.handler(BotButtons.CONNECT, BotButtons.INSTALL)
 @planfix_log_querydata
 @context_history(is_beginning=True)
 async def connect_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -84,6 +90,15 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 raise
 
 
-@registry.handler(BotButtons.MAIN_MENU)
-async def main_menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await start(update, context)
+@registry.handler(BotButtons.REFERAL)
+@planfix_log_querydata
+@planfix_task_required
+@context_history()
+async def referal_create_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.callback_query:
+        return
+    task = get_task_from_context(context)
+    link = make_ref_link(context.bot, task)
+    menu = menus.ReferalMenu
+    message = menu.format_message(ref_link=link)
+    await update.callback_query.edit_message_text(text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard)

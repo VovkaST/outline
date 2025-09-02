@@ -8,8 +8,8 @@ class BotButtons(TextChoices):
     CONNECT = "CONNECT", "📥 Подключиться"
     GET_TOKEN = "GET_TOKEN", "🎁 Получить ключ"
     PAY = "PAY", "💰 Оплатить"
-    KEY_AND_INSTRUCTION = "KEY_AND_INSTRUCTION", "📄 Данные ключа и инструкция"
-    REFERAL = "INVITE", "👥 Пригласить друзей"
+    INSTALL = "INSTALL", "📄 Установить VPN"
+    REFERAL = "REFERAL", "👥 Создать партнерскую ссылку"
     HELP = "HELP", "🛠 Помощь"
 
     IOS = "IOS", "🍏 iOS"
