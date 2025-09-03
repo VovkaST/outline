@@ -1,3 +1,5 @@
+import secrets
+
 from aiohttp.web_exceptions import HTTPUnauthorized
 from fastapi import APIRouter, Header
 from starlette import status
@@ -19,7 +21,6 @@ routes = APIRouter(tags=["Bot hooks"], prefix="/api/bot", generate_unique_id_fun
 )
 async def messages_distribution(request: Request, payload: dtos.DistributionRequest, authorization: str = Header(None)):
     """Отправить сообщения пользователям в чат."""
-    import secrets
 
     if not secrets.compare_digest(str(authorization), str(settings.REQUEST_TOKEN)):
         raise HTTPUnauthorized()
