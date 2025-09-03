@@ -4,6 +4,7 @@ from aiohttp import ClientResponseError
 from telegram import Update, User
 from telegram.ext import ContextTypes
 
+from app_bot.enums import BotCommands
 from app_bot.interaction import menus, messages
 from app_bot.utils.context_history import clear_or_init_history
 from app_bot.utils.decorators import get_task_from_context, planfix_task_context, store_task_to_context
@@ -17,6 +18,7 @@ logger = logging.getLogger("bot")
 
 @planfix_task_context
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    is_command = update.effective_message.text[1:] == BotCommands.START if update.effective_message else False
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
     username = clear_username(user.username)
@@ -25,8 +27,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     is_key_generated = False
 
     try:
-        task = get_task_from_context(context)
-        if not (task or task.vpn_key.stringValue):
+        task = get_task_from_context(context) if not is_command else None
+        if not task or not task.vpn_key.stringValue:
             task = await get_task(telegram_id=telegram_id)
             store_task_to_context(context, task)
         is_key_generated = bool(task.vpn_key.stringValue)
