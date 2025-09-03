@@ -45,8 +45,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await planfix_webchat.chat.new_message(
                 chat_id=str(telegram_id), contact_id=str(telegram_id), contact_name=username, message=message
             )
-            text = menus.WelcomeMenu.format_message(first_name=user.first_name)
-            await bot.send_message(chat_id=chat_id, text=text, reply_markup=menus.WelcomeMenu.keyboard)
+            await bot.send_message(chat_id=chat_id, **menus.WelcomeMenu.to_message())
 
         except ClientResponseError as error:
             logger.error("📨 Ошибка отправки данных в Planfix (%s): %s", error.code, error.message)
