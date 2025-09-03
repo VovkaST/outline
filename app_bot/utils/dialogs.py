@@ -42,7 +42,7 @@ async def send_message_to_user(
         raise error
 
 
-async def preform_messages_distribution(payload: DistributionRequest):
+async def perform_messages_distribution(payload: DistributionRequest):
     """Отправить сообщения пользователям в чат."""
     from app_bot.bot import build_app
 
