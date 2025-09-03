@@ -105,6 +105,16 @@ async def pay_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await update.callback_query.edit_message_text(**menus.PayMenu.to_message())
 
 
+@registry.handler(BotButtons.PAY_1MON, BotButtons.PAY_3MON, BotButtons.PAY_6MON, BotButtons.PAY_12MON)
+@planfix_log_querydata
+@context_history()
+async def tariff_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.callback_query:
+        return
+    button = BotButtons(update.callback_query.data)
+    await update.callback_query.edit_message_text(**menus.TariffSelectedMenu.to_message(tariff=button.label))
+
+
 @registry.handler(BotButtons.REFERAL)
 @planfix_log_querydata
 @planfix_task_context

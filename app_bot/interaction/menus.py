@@ -19,9 +19,9 @@ class Menu(BaseModel):
     def format_message(self, **kwargs) -> str:
         return self.message.format(**kwargs)
 
-    def to_message(self, parse_mode: ParseMode = ParseMode.HTML) -> dict:
+    def to_message(self, parse_mode: ParseMode = ParseMode.HTML, **format_message_kwargs) -> dict:
         return {
-            "text": self.message or "",
+            "text": self.format_message(**format_message_kwargs) if format_message_kwargs else self.message or "",
             "reply_markup": self.keyboard,
             "parse_mode": parse_mode,
         }
@@ -79,7 +79,7 @@ KeyInfoMenu = Menu(
 )
 
 PayMenu = Menu(
-    message=messages.PRICES,
+    message=messages.CHOOSE_TARIFF,
     keyboard=InlineKeyboardMarkup(
         [
             [enum2btn(BotButtons.PAY_1MON)],
@@ -87,6 +87,15 @@ PayMenu = Menu(
             [enum2btn(BotButtons.PAY_6MON)],
             [enum2btn(BotButtons.PAY_12MON)],
             [enum2btn(BotButtons.BACKWARD)],
+        ]
+    ),
+)
+
+TariffSelectedMenu = Menu(
+    message=messages.TARIFF_SELECTED,
+    keyboard=InlineKeyboardMarkup(
+        [
+            [enum2btn(BotButtons.MAIN_MENU)],
         ]
     ),
 )
