@@ -15,8 +15,3 @@ class PaymentStatusResponse(BaseModel):
     OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
     Status: str | None = Field(title="Статус транзакции", default=None)
     PaymentId: str | None = Field(title="Идентификатор платежа в системе Т‑Кассы", default=None)
-
-
-class RequestStatusResponse(BaseModel):
-    success: bool = Field(title="Успешность запроса")
-    message: str | None = Field(title="Сообщение о результате запроса", default=None)

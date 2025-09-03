@@ -136,3 +136,9 @@ async def help_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     if not update.callback_query:
         return
     await update.callback_query.edit_message_text(**menus.HelpMenu.to_message())
+
+
+@registry.handler(hook=True)
+@planfix_log_querydata
+async def hook_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Колбэк-обработчик для хуков. Не имеет функционала, кроме логирования нажатых кнопок в Planfix."""

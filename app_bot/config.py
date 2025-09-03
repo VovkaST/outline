@@ -8,5 +8,7 @@ class BotAppConfig(BaseAppConfig):
     APP_URL_IOS: str = "https://apps.apple.com/us/app/v2raytun/id6476628951?l=ru"
     APP_URL_ANDROID: str = "https://play.google.com/store/apps/details?id=com.v2raytun.android&hl=ru"
 
+    HOOK_REQUEST_DATA_PREFIX: str = "HOOK_"
+
 
 bot_config = BotAppConfig()

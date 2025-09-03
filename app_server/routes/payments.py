@@ -11,6 +11,7 @@ from app_server.enums import PaymentStatus
 from app_server.exceptions import PaymentError
 from app_server.utils import build_fail_url, build_success_url, clean_guid, get_task, make_order_uniq_id
 from root.config import settings
+from root.dtos import RequestStatusResponse
 from root.utils.others import get_route_name
 from services import payment_api, planfix_api
 from services.planfix.api.rest.enums import SubscriptionStatus
@@ -112,7 +113,7 @@ async def get_payment_status(request: Request, payment_id: int):
     return await payment_api.get_state(payment_id)
 
 
-@routes.post("/charge", status_code=status.HTTP_200_OK, response_model=responses.RequestStatusResponse)
+@routes.post("/charge", status_code=status.HTTP_200_OK, response_model=RequestStatusResponse)
 async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, authorization: str = Header(None)):
     """Провести автоматический периодический платеж."""
     if authorization != settings.REQUEST_TOKEN:

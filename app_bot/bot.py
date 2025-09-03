@@ -26,15 +26,18 @@ async def add_commands(app: Application):
     await app.bot.set_my_commands(commands)
 
 
+def build_app(token: str):
+    return ApplicationBuilder().token(token).build()
+
+
 async def run_bot(token: str):
     logger.info("🚀 Запуск бота...")
     nest_asyncio.apply()
-    app = ApplicationBuilder().token(token).build()
+    app = build_app(token)
 
     app.add_handler(CommandHandler(BotCommands.START, commands.start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), user_message_handler))
     app.add_handler(CallbackQueryHandler(registry.handle))
-    # app.add_handler(CommandHandler("help", help_command))
 
     await add_commands(app)
 
