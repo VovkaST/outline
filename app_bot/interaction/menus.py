@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.constants import ParseMode
 
 from app_bot.interaction import messages
 from app_bot.interaction.buttons import BotButtons
@@ -18,10 +19,11 @@ class Menu(BaseModel):
     def format_message(self, **kwargs) -> str:
         return self.message.format(**kwargs)
 
-    def to_message(self) -> dict:
+    def to_message(self, parse_mode: ParseMode = ParseMode.HTML) -> dict:
         return {
             "text": self.message or "",
             "reply_markup": self.keyboard,
+            "parse_mode": parse_mode,
         }
 
 
@@ -72,6 +74,19 @@ KeyInfoMenu = Menu(
     keyboard=InlineKeyboardMarkup(
         [
             [enum2btn(BotButtons.MAIN_MENU)],
+        ]
+    ),
+)
+
+PayMenu = Menu(
+    message=messages.PRICES,
+    keyboard=InlineKeyboardMarkup(
+        [
+            [enum2btn(BotButtons.PAY_1MON)],
+            [enum2btn(BotButtons.PAY_3MON)],
+            [enum2btn(BotButtons.PAY_6MON)],
+            [enum2btn(BotButtons.PAY_12MON)],
+            [enum2btn(BotButtons.BACKWARD)],
         ]
     ),
 )

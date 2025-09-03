@@ -62,7 +62,9 @@ async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
         buttons.append([InlineKeyboardButton(BotButtons.ANDROID_DOWNLOAD.label, url=bot_config.APP_URL_ANDROID)])
     if base_menu.keyboard:
         buttons.extend(base_menu.keyboard.inline_keyboard)
-    await query.edit_message_text(text=base_menu.message, reply_markup=InlineKeyboardMarkup(buttons))
+    await query.edit_message_text(
+        text=base_menu.message, reply_markup=InlineKeyboardMarkup(buttons), parse_mode=ParseMode.HTML
+    )
 
 
 @registry.handler(BotButtons.GET_TOKEN)
@@ -87,10 +89,20 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     else:
         menu = menus.InstallMenu
         try:
-            await update.callback_query.edit_message_text(text=messages.KEY_NOT_READY, reply_markup=menu.keyboard)
+            await update.callback_query.edit_message_text(
+                text=messages.KEY_NOT_READY, reply_markup=menu.keyboard, parse_mode=ParseMode.HTML
+            )
         except BadRequest as error:
             if "Message is not modified" not in error.message:
                 raise
+
+
+@registry.handler(BotButtons.PAY)
+@context_history()
+async def pay_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.callback_query:
+        return
+    await update.callback_query.edit_message_text(**menus.PayMenu.to_message())
 
 
 @registry.handler(BotButtons.REFERAL)
