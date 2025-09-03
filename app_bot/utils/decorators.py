@@ -42,7 +42,7 @@ def get_task_from_context(context) -> TaskResponse:
     return context.user_data[CONTEXT_TASK_KEY]
 
 
-def planfix_task_required(func: Callable):
+def planfix_task_context(func: Callable):
     @wraps(func)
     async def decorator(*args, **kwargs):
         update, context = extract_update_and_context(*args, **kwargs)

@@ -10,7 +10,7 @@ from app_bot.interaction import menus, messages
 from app_bot.interaction.buttons import BotButtons
 from app_bot.utils.callback_registry import registry
 from app_bot.utils.context_history import context_history
-from app_bot.utils.decorators import get_task_from_context, planfix_log_querydata, planfix_task_required
+from app_bot.utils.decorators import get_task_from_context, planfix_log_querydata, planfix_task_context
 from app_bot.utils.dialogs import make_ref_link
 from app_server.utils import get_task
 
@@ -67,6 +67,7 @@ async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 @registry.handler(BotButtons.GET_TOKEN)
 @planfix_log_querydata
+@planfix_task_context
 @context_history()
 async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
@@ -74,7 +75,9 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
-    task = await get_task(telegram_id=telegram_id)
+    task = get_task_from_context(context)
+    if not (task or task.vpn_key.stringValue):
+        task = await get_task(telegram_id=telegram_id)
     if task.vpn_key.stringValue:
         menu = menus.KeyInfoMenu
         message = menu.format_message(key=task.vpn_key.stringValue)
@@ -92,7 +95,7 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 @registry.handler(BotButtons.REFERAL)
 @planfix_log_querydata
-@planfix_task_required
+@planfix_task_context
 @context_history()
 async def referal_create_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
@@ -102,3 +105,12 @@ async def referal_create_callback(update: Update, context: ContextTypes.DEFAULT_
     menu = menus.ReferalMenu
     message = menu.format_message(ref_link=link)
     await update.callback_query.edit_message_text(text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard)
+
+
+@registry.handler(BotButtons.HELP)
+@planfix_log_querydata
+@context_history()
+async def help_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.callback_query:
+        return
+    await update.callback_query.edit_message_text(**menus.HelpMenu.to_message())

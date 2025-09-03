@@ -84,3 +84,12 @@ ReferalMenu = Menu(
         ]
     ),
 )
+
+HelpMenu = Menu(
+    message=messages.HELP,
+    keyboard=InlineKeyboardMarkup(
+        [
+            [enum2btn(BotButtons.BACKWARD)],
+        ]
+    ),
+)
