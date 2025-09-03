@@ -13,7 +13,7 @@ routes = APIRouter(tags=["Bot hooks"], prefix="/api/bot", generate_unique_id_fun
 
 
 @routes.post(
-    "/distribution/",
+    "/messages/create/",
     response_model=OkResponse,
     responses={status.HTTP_400_BAD_REQUEST: {"model": ErrorResponse}},
 )
