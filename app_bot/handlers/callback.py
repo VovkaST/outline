@@ -76,7 +76,7 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
     task = get_task_from_context(context)
-    if not (task or task.vpn_key.stringValue):
+    if not task or not task.vpn_key.stringValue:
         task = await get_task(telegram_id=telegram_id)
     if task.vpn_key.stringValue:
         menu = menus.KeyInfoMenu
