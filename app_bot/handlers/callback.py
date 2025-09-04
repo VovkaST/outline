@@ -67,7 +67,6 @@ async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 @registry.handler(BotButtons.GET_TOKEN)
 @planfix_log_querydata
-@planfix_task_context
 @context_history()
 async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
@@ -75,14 +74,11 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
-    task = get_task_from_context(context)
-    if not task or not task.vpn_key_link.stringValue:
-        task = await get_task(telegram_id=telegram_id)
+    task = await get_task(telegram_id=telegram_id)
     if task.vpn_key_link.stringValue:
         menu = menus.KeyInfoMenu
-        message = menu.format_message(key=task.vpn_key_link.stringValue)
         await update.callback_query.edit_message_text(
-            text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard
+            **menus.KeyInfoMenu.to_message(link=task.vpn_key_link.stringValue)
         )
     else:
         menu = menus.InstallMenu
