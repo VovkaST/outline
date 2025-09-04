@@ -15,6 +15,7 @@ class CustomFields(IntEnum):
     ACCOUNT_TOKEN = 140280
     REQUEST_KEY = 140282
     TELEGRAM_ID = 140308
+    VPN_KEY_LINK = 140352
     PAYMENT_SUM = 149932
     PAYMENT_SUM2 = 140326
 
@@ -22,6 +23,11 @@ class CustomFields(IntEnum):
 class VPNKeyF(CustF):
     type: FilterTypes = FilterTypes.CUSTOM_FIELD_LINE
     field: PositiveInt = CustomFields.VPN_KEY
+
+
+class VPNKeyLinkF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_LINE
+    field: PositiveInt = CustomFields.VPN_KEY_LINK
 
 
 class GuidF(CustF):

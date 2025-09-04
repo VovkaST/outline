@@ -128,6 +128,11 @@ class TaskResponse(BaseModel):
 
     @computed_field
     @cached_property
+    def vpn_key_link(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.VPN_KEY_LINK)
+
+    @computed_field
+    @cached_property
     def rebill_field(self) -> CustomFieldValueResponse:
         return self.get_custom_field(field=CustomFields.REBILL_ID)
 

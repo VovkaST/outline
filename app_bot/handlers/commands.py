@@ -28,10 +28,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     try:
         task = get_task_from_context(context) if not is_command else None
-        if not task or not task.vpn_key.stringValue:
+        if not task or not task.vpn_key_link.stringValue:
             task = await get_task(telegram_id=telegram_id)
             store_task_to_context(context, task)
-        is_key_generated = bool(task.vpn_key.stringValue)
+        is_key_generated = bool(task.vpn_key_link.stringValue)
     except TaskNotFoundError:
         task = None
 
