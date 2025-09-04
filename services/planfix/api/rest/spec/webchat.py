@@ -17,6 +17,8 @@ class Webchat(BaseAPIEntity, IWebchat):
         contact_ico: str = "",
         title: str = "",
         user_email: str = "",
+        attachment_name: str = "",
+        attachment_url: str = "",
     ) -> dict:
         data = {
             "channel": channel,
@@ -32,4 +34,7 @@ class Webchat(BaseAPIEntity, IWebchat):
             "contactData": contact_data,
             "userEmail": user_email,
         }
+        if attachment_name and attachment_url:
+            data["attachments[name]"] = attachment_name
+            data["attachments[url]"] = attachment_url
         return await self.api.make_request("newMessage", method="post", data=data)
