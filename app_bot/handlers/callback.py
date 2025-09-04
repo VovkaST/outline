@@ -56,10 +56,8 @@ async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     context.user_data["os"] = query.data
     base_menu = menus.InstallMenu
     buttons = []
-    if query.data == BotButtons.IOS:
-        buttons.append([InlineKeyboardButton(BotButtons.IOS_DOWNLOAD.label, url=bot_config.APP_URL_IOS)])
-    else:
-        buttons.append([InlineKeyboardButton(BotButtons.ANDROID_DOWNLOAD.label, url=bot_config.APP_URL_ANDROID)])
+    url = bot_config.APP_URL_IOS if query.data == BotButtons.IOS else bot_config.APP_URL_ANDROID
+    buttons.append([InlineKeyboardButton(BotButtons.DOWNLOAD_APP.label, url=url)])
     if base_menu.keyboard:
         buttons.extend(base_menu.keyboard.inline_keyboard)
     await query.edit_message_text(
