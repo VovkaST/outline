@@ -1,6 +1,9 @@
 import re
 from datetime import datetime, timedelta
 
+import aiohttp
+from starlette import status
+
 
 def str2bool(s: str) -> bool:
     """Гарантированно вернёт булево значение из строки."""
@@ -27,3 +30,9 @@ def get_route_name(route) -> str:
 def make_deadline_time(since: datetime, *, days: float = 0, minutes: float = 0, hours: float = 0) -> str:
     deadline = (since + timedelta(days=days, minutes=minutes, hours=hours)).astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
     return f"{deadline[:22]}:{deadline[22:]}"
+
+
+async def download_file(session: aiohttp.ClientSession, url: str):
+    async with session.get(url) as resp:
+        if resp.status == status.HTTP_200_OK:
+            return await resp.content.read()

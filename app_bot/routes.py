@@ -10,6 +10,7 @@ from app_bot.utils.dialogs import handle_new_chat_message
 from root.config import settings
 from root.dtos import ErrorResponse, OkResponse
 from root.utils.others import get_route_name
+from services.planfix.utils import prefetch_form_data
 
 routes = APIRouter(tags=["Bot hooks"], prefix="/api/bot", generate_unique_id_function=get_route_name)
 
@@ -23,7 +24,7 @@ async def message_create(request: Request):
     """Отправить сообщение пользователю в чат."""
 
     form_data = await request.form()
-    payload = dtos.NewMessageRequest(**form_data)  # type: ignore [call
+    payload = dtos.NewMessageRequest(**prefetch_form_data(form_data.multi_items()))  # type: ignore [call
     if not secrets.compare_digest(str(payload.token), str(settings.REQUEST_TOKEN)):
         raise HTTPUnauthorized()
 

@@ -1,14 +1,16 @@
 import asyncio
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+import aiohttp
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Update
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext._callbackcontext import CallbackContext
 
 from app_bot.config import bot_config
 from app_bot.const import NO_USERNAME
-from app_bot.dtos import DistributionRequest, NewMessageRequest
+from app_bot.dtos import DistributionRequest, MessageAttachment, NewMessageRequest
 from app_bot.exceptions import ChatNotFoundError
+from root.utils.others import download_file
 from services.planfix.api.rest.responses import TaskResponse
 
 
@@ -32,10 +34,28 @@ def make_ref_link(bot, task: TaskResponse) -> str:
     return f"{bot.link}?start=REF{task.id}"
 
 
+async def prepare_media(attachments: list[MessageAttachment]) -> list[InputMediaPhoto]:
+    async with aiohttp.ClientSession() as session:
+        coroutines = []
+        for attachment in attachments:
+            coroutines.append(download_file(session, attachment.url))
+        media = await asyncio.gather(*coroutines)
+    return [InputMediaPhoto(f) for f in media if f]
+
+
 async def send_message_to_user(
-    app, *, chat_id: int, text: str, reply_markup=None, parse_mode=ParseMode.HTML, silent_no_chat: bool = False
+    app,
+    *,
+    chat_id: int,
+    text: str,
+    reply_markup=None,
+    parse_mode=ParseMode.HTML,
+    silent_no_chat: bool = False,
+    attachments: list[MessageAttachment] | None = None,
 ):
     try:
+        if attachments and (media := await prepare_media(attachments)):
+            return await app.bot.send_media_group(chat_id=chat_id, media=media, caption=text, parse_mode=parse_mode)
         await app.bot.send_message(chat_id=chat_id, text=text, reply_markup=reply_markup, parse_mode=parse_mode)
     except BadRequest as error:
         if "Chat not found" in error.message:
@@ -72,4 +92,6 @@ async def handle_new_chat_message(payload: NewMessageRequest):
     from app_bot.bot import build_app
 
     app = build_app(bot_config.TOKEN)
-    await send_message_to_user(app=app, chat_id=int(payload.chatId), text=payload.message)
+    await send_message_to_user(
+        app=app, chat_id=int(payload.chatId), text=payload.message, attachments=payload.attachments
+    )

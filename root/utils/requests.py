@@ -37,5 +37,7 @@ class LoggingClientSession(aiohttp.ClientSession):
         logger.info(
             f"Request <{method} {response.real_url}> finished: {response.status} {response.reason}",
         )
-        logger.debug(f"Request <{method} {response.real_url}> finished: {response.status} {response.reason} {data}")
+        logger.debug(
+            f"Request <{method} {response.real_url}> finished: {response.status} {response.reason} {data[:2000]}"
+        )
         return response

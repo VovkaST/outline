@@ -15,6 +15,11 @@ class DistributionRequest(BaseModel):
     inline_keyboard: list[TelegramButton] = Field(default_factory=list)
 
 
+class MessageAttachment(BaseModel):
+    name: str
+    url: str
+
+
 class NewMessageRequest(BaseModel):
     cmd: str
     providerId: str
@@ -27,3 +32,4 @@ class NewMessageRequest(BaseModel):
     userIco: str
     taskEmail: str
     integration: str
+    attachments: list[MessageAttachment] = Field(default_factory=list)
