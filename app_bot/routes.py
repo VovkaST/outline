@@ -19,9 +19,11 @@ routes = APIRouter(tags=["Bot hooks"], prefix="/api/bot", generate_unique_id_fun
     response_model=OkResponse,
     responses={status.HTTP_400_BAD_REQUEST: {"model": ErrorResponse}},
 )
-async def message_create(request: Request, payload: dtos.NewMessageRequest):
+async def message_create(request: Request):
     """Отправить сообщение пользователю в чат."""
 
+    form_data = await request.form()
+    payload = dtos.NewMessageRequest(**form_data)  # type: ignore [call
     if not secrets.compare_digest(str(payload.token), str(settings.REQUEST_TOKEN)):
         raise HTTPUnauthorized()
 
