@@ -7,8 +7,9 @@ from starlette.staticfiles import StaticFiles
 from app_bot.routes import routes as bot_routes
 from app_server import routes
 from app_server.error_handlers import app_error_handler, payment_error_handler, unknown_error_handler
-from app_server.exceptions import AppError, PaymentError
+from app_server.exceptions import PaymentError
 from root.config import settings
+from root.exceptions import AppError
 
 
 def add_middlewares(app: FastAPI):

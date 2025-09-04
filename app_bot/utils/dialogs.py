@@ -7,7 +7,8 @@ from telegram.ext._callbackcontext import CallbackContext
 
 from app_bot.config import bot_config
 from app_bot.const import NO_USERNAME
-from app_bot.dtos import DistributionRequest
+from app_bot.dtos import DistributionRequest, NewMessageRequest
+from app_bot.exceptions import ChatNotFoundError
 from services.planfix.api.rest.responses import TaskResponse
 
 
@@ -37,8 +38,10 @@ async def send_message_to_user(
     try:
         await app.bot.send_message(chat_id=chat_id, text=text, reply_markup=reply_markup, parse_mode=parse_mode)
     except BadRequest as error:
-        if "Chat not found" in error.message and silent_no_chat:
-            return
+        if "Chat not found" in error.message:
+            if silent_no_chat:
+                return
+            raise ChatNotFoundError from error
         raise error
 
 
@@ -63,3 +66,10 @@ async def perform_messages_distribution(payload: DistributionRequest):
         coroutines.append(send_message_to_user(app=app, chat_id=chat_id, **message, silent_no_chat=True))
 
     await asyncio.gather(*coroutines)
+
+
+async def handle_new_chat_message(payload: NewMessageRequest):
+    from app_bot.bot import build_app
+
+    app = build_app(bot_config.TOKEN)
+    await send_message_to_user(app=app, chat_id=int(payload.chatId), text=payload.message)

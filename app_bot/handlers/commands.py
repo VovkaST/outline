@@ -18,7 +18,7 @@ logger = logging.getLogger("bot")
 
 @planfix_task_context
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    is_command = update.effective_message.text[1:] == BotCommands.START if update.effective_message else False
+    is_command = update.effective_message and update.effective_message.text[1:] == BotCommands.START
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
     username = clear_username(user.username)
@@ -35,16 +35,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     except TaskNotFoundError:
         task = None
 
+    is_first_visit = not task
+
     clear_or_init_history(context)
-    if not task:
-        ref_link: str = ""
-        if context.args:
-            ref_link = context.args[0]
-        message = f"✅ Пользователь запустил бота через /start{ref_link}\nID: {telegram_id}\nUsername: {username}"
+    if is_first_visit or not is_key_generated:
         try:
-            await planfix_webchat.chat.new_message(
-                chat_id=str(telegram_id), contact_id=str(telegram_id), contact_name=username, message=message
-            )
+            if is_command and is_first_visit:
+                ref_link: str = ""
+                if context.args:
+                    ref_link = context.args[0]
+                message = (
+                    f"✅ Пользователь запустил бота через /start{ref_link}\nID: {telegram_id}\nUsername: {username}"
+                )
+                await planfix_webchat.chat.new_message(
+                    chat_id=str(telegram_id), contact_id=str(telegram_id), contact_name=username, message=message
+                )
             await bot.send_message(chat_id=chat_id, **menus.WelcomeMenu.to_message())
 
         except ClientResponseError as error:

@@ -13,3 +13,17 @@ class DistributionRequest(BaseModel):
     telegram_ids: list[int]
     message: str
     inline_keyboard: list[TelegramButton] = Field(default_factory=list)
+
+
+class NewMessageRequest(BaseModel):
+    cmd: str
+    providerId: str
+    chatId: str
+    token: str
+    message: str
+    messageId: str
+    userName: str
+    userLastName: str
+    userIco: str
+    taskEmail: str
+    integration: str
