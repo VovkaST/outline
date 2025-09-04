@@ -1,7 +1,16 @@
 import asyncio
+from typing import TypeVar
 
 import aiohttp
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Update
+from telegram import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    InputMediaAudio,
+    InputMediaDocument,
+    InputMediaPhoto,
+    InputMediaVideo,
+    Update,
+)
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext._callbackcontext import CallbackContext
@@ -34,13 +43,16 @@ def make_ref_link(bot, task: TaskResponse) -> str:
     return f"{bot.link}?start=REF{task.id}"
 
 
-async def prepare_media(attachments: list[MessageAttachment]) -> list[InputMediaPhoto]:
+_MediaT = TypeVar("_MediaT", InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo)
+
+
+async def prepare_media(attachments: list[MessageAttachment], media_type: type[_MediaT]) -> list[_MediaT]:
     async with aiohttp.ClientSession() as session:
         coroutines = []
         for attachment in attachments:
             coroutines.append(download_file(session, attachment.url))
         media = await asyncio.gather(*coroutines)
-    return [InputMediaPhoto(f) for f in media if f]
+    return [media_type(f) for f in media if f]
 
 
 async def send_message_to_user(
@@ -54,7 +66,7 @@ async def send_message_to_user(
     attachments: list[MessageAttachment] | None = None,
 ):
     try:
-        if attachments and (media := await prepare_media(attachments)):
+        if attachments and (media := await prepare_media(attachments, media_type=InputMediaPhoto)):
             return await app.bot.send_media_group(chat_id=chat_id, media=media, caption=text, parse_mode=parse_mode)
         await app.bot.send_message(chat_id=chat_id, text=text, reply_markup=reply_markup, parse_mode=parse_mode)
     except BadRequest as error:
