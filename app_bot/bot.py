@@ -27,7 +27,15 @@ async def add_commands(app: Application):
 
 
 def build_app(token: str):
-    return ApplicationBuilder().token(token).build()
+    return (
+        ApplicationBuilder()
+        .token(token)
+        .concurrent_updates(True)
+        .read_timeout(30)
+        .write_timeout(30)
+        .get_updates_read_timeout(42)
+        .build()
+    )
 
 
 async def run_bot(token: str):
