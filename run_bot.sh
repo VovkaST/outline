@@ -1,6 +1,6 @@
 docker build -t outline-app-python-3.10:latest .
 
-docker compose up -d bot
+docker compose up -d server bot
 
 # Removing all dangling build cache
 docker builder prune --force
