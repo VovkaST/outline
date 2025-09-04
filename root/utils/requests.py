@@ -25,6 +25,8 @@ async def response_to_str(response) -> str | None:
 
 
 class LoggingClientSession(aiohttp.ClientSession):
+    MAX_LOG_LENGTH = 2000
+
     async def _request(self, method, url, **kwargs):
         logger.debug("Starting request <%s %r>", method, self._build_url(url))
         json = kwargs.get("json")
@@ -38,6 +40,7 @@ class LoggingClientSession(aiohttp.ClientSession):
             f"Request <{method} {response.real_url}> finished: {response.status} {response.reason}",
         )
         logger.debug(
-            f"Request <{method} {response.real_url}> finished: {response.status} {response.reason} {data[:2000]}"
+            f"Request <{method} {response.real_url}> finished: "
+            f"{response.status} {response.reason} {data[: self.MAX_LOG_LENGTH] if data else data}",
         )
         return response
