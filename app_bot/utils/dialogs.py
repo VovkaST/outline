@@ -1,4 +1,5 @@
 import asyncio
+from typing import TypeAlias
 
 import aiohttp
 import filetype
@@ -43,7 +44,7 @@ def make_ref_link(bot, task: TaskResponse) -> str:
     return f"{bot.link}?start=REF{task.id}"
 
 
-AttachmentFile = InputMediaAudio | InputMediaDocument | InputMediaPhoto | InputMediaVideo
+AttachmentFile: TypeAlias = InputMediaAudio | InputMediaDocument | InputMediaPhoto | InputMediaVideo
 
 
 def media_to_input_file(file: bytes) -> AttachmentFile:
