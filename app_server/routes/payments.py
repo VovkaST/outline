@@ -9,7 +9,7 @@ from starlette.responses import HTMLResponse
 from app_server import dtos, responses
 from app_server.enums import PaymentStatus
 from app_server.exceptions import PaymentError
-from app_server.utils import build_fail_url, build_success_url, clean_guid, get_task, make_order_uniq_id
+from app_server.utils import build_fail_url, build_success_url, clean_guid, make_order_uniq_id
 from root.config import settings
 from root.dtos import RequestStatusResponse
 from root.utils.others import get_route_name
@@ -23,6 +23,7 @@ from services.planfix.filters import (
     RequestKeyUpdate,
     SubscriptionStatusUpdate,
 )
+from services.planfix.utils import get_task
 
 routes = APIRouter(tags=["Payments"], prefix="/api/payment", generate_unique_id_function=get_route_name)
 

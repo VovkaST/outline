@@ -6,9 +6,9 @@ from telegram import User
 from app_bot.const import CONTEXT_TASK_KEY
 from app_bot.utils.dialogs import clear_username, extract_update_and_context
 from app_server.exceptions import TaskNotFoundError
-from app_server.utils import get_task
 from services import planfix_webchat
 from services.planfix.api.rest.responses import TaskResponse
+from services.planfix.utils import get_task
 
 
 def planfix_log_querydata(func: Callable):

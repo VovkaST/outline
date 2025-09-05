@@ -12,7 +12,7 @@ from app_bot.utils.callback_registry import registry
 from app_bot.utils.context_history import context_history
 from app_bot.utils.decorators import get_task_from_context, planfix_log_querydata, planfix_task_context
 from app_bot.utils.dialogs import make_ref_link
-from app_server.utils import get_task
+from services.planfix.utils import get_task
 
 
 @registry.handler(BotButtons.BACKWARD)
