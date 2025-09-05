@@ -9,7 +9,7 @@ class TelegramButton(BaseModel):
     url: str | None = Field(description="URL, который будет открыт при нажатии кнопки", default=None)
 
 
-class DistributionRequest(BaseModel):
+class CustomMessageRequest(BaseModel):
     telegram_ids: list[int]
     message: str
     inline_keyboard: list[TelegramButton] = Field(default_factory=list)

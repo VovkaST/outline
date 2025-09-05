@@ -18,7 +18,7 @@ from telegram.ext._callbackcontext import CallbackContext
 
 from app_bot.config import bot_config
 from app_bot.const import NO_USERNAME
-from app_bot.dtos import DistributionRequest, MessageAttachment, NewMessageRequest
+from app_bot.dtos import CustomMessageRequest, MessageAttachment, NewMessageRequest
 from app_bot.exceptions import ChatNotFoundError
 from root.utils.others import download_file
 from services.planfix.api.rest.responses import TaskResponse
@@ -88,7 +88,7 @@ async def send_message_to_user(
         raise error
 
 
-async def perform_messages_distribution(payload: DistributionRequest):
+async def perform_messages_distribution(payload: CustomMessageRequest):
     """Отправить сообщения пользователям в чат."""
     from app_bot.bot import build_app
 
