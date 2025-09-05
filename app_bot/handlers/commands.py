@@ -1,4 +1,5 @@
 import logging
+import re
 
 from aiohttp import ClientResponseError
 from telegram import Update, User
@@ -15,10 +16,13 @@ from services import planfix_webchat
 
 logger = logging.getLogger("bot")
 
+COMMAND_REGEXP = re.compile(r"^/(?P<command>\w+)\s?(?P<referal>\w+)?$")
+
 
 @planfix_task_context
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    is_command = update.effective_message and update.effective_message.text[1:] == BotCommands.START
+    match = COMMAND_REGEXP.match(update.effective_message.text or "") if update.effective_message else None
+    is_command: bool = match.group("command") == BotCommands.START if match else False
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
     username = clear_username(user.username)
