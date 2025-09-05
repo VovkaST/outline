@@ -35,7 +35,7 @@ async def user_message_with_attachment_handler(update: Update, context: ContextT
         chat_id=telegram_id,
         contact_id=telegram_id,
         contact_name=username,
-        message="",
+        message=update.message.caption,
         attachment_name=file_path.split("/")[-1] if file_path else "",
         attachment_url=file_path,
     )
