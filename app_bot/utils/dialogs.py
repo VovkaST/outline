@@ -1,7 +1,7 @@
 import asyncio
-from typing import TypeVar
 
 import aiohttp
+import filetype
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -43,16 +43,26 @@ def make_ref_link(bot, task: TaskResponse) -> str:
     return f"{bot.link}?start=REF{task.id}"
 
 
-_MediaT = TypeVar("_MediaT", InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo)
+AttachmentFile = InputMediaAudio | InputMediaDocument | InputMediaPhoto | InputMediaVideo
 
 
-async def prepare_media(attachments: list[MessageAttachment], media_type: type[_MediaT]) -> list[_MediaT]:
+def media_to_input_file(file: bytes) -> AttachmentFile:
+    if filetype.is_image(file):
+        return InputMediaPhoto(file)
+    if filetype.is_video(file):
+        return InputMediaVideo(file)
+    if filetype.is_audio(file):
+        return InputMediaAudio(file)
+    return InputMediaDocument(file)
+
+
+async def prepare_media(attachments: list[MessageAttachment]) -> list[AttachmentFile]:
     async with aiohttp.ClientSession() as session:
         coroutines = []
         for attachment in attachments:
             coroutines.append(download_file(session, attachment.url))
         media = await asyncio.gather(*coroutines)
-    return [media_type(f) for f in media if f]
+    return [media_to_input_file(f) for f in media if f]
 
 
 async def send_message_to_user(
@@ -66,7 +76,7 @@ async def send_message_to_user(
     attachments: list[MessageAttachment] | None = None,
 ):
     try:
-        if attachments and (media := await prepare_media(attachments, media_type=InputMediaPhoto)):
+        if attachments and (media := await prepare_media(attachments)):
             return await app.bot.send_media_group(chat_id=chat_id, media=media, caption=text, parse_mode=parse_mode)
         await app.bot.send_message(chat_id=chat_id, text=text, reply_markup=reply_markup, parse_mode=parse_mode)
     except BadRequest as error:
