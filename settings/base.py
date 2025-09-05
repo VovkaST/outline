@@ -43,9 +43,16 @@ DEFAULT_PAYMENT_DEADLINE = env.as_int("DEFAULT_PAYMENT_DEADLINE", default=30)
 # Настройки Planfix
 PLANFIX_XML_API_URL = env.get("PLANFIX_XML_API_URL", default="https://apiru.planfix.ru/xml")
 PLANFIX_REST_API_URL = env.get("PLANFIX_REST_API_URL", default="https://aspectgroup.planfix.ru/rest")
+PLANFIX_WEBCHAT_API_URL = env.get("PLANFIX_WEBCHAT_API_URL", default="https://aspectgroup.planfix.ru/webchat/api")
+PLANFIX_PROVIDER_ID = env.get("PLANFIX_PROVIDER_ID")
 PLANFIX_ACCOUNT = env.get("PLANFIX_ACCOUNT")
 PLANFIX_TOKEN = env.get("PLANFIX_TOKEN")
+PLANFIX_WEBCHAT_TOKEN = env.get("PLANFIX_WEBCHAT_TOKEN")
 PLANFIX_API_KEY = env.get("PLANFIX_API_KEY")
+
+
+# Настройки Telegram-бота
+BOT_TOKEN = env.get("BOT_TOKEN")
 
 
 # Логирование
@@ -84,6 +91,10 @@ LOGGING = {
             "handlers": ["console", "file"],
         },
         "app_server": {
+            "level": "INFO",
+            "handlers": ["console", "file"],
+        },
+        "bot": {
             "level": "INFO",
             "handlers": ["console", "file"],
         },

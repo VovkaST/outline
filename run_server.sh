@@ -1,4 +1,4 @@
-docker build -t outline-server-python-3.10:latest .
+docker build -t outline-app-python-3.10:latest .
 
 docker compose up assets
 

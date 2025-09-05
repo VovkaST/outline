@@ -1,6 +1,6 @@
 services:
   server:
-    image: outline-server-python-3.10:latest
+    image: outline-app-python-3.10:latest
     container_name: outline-api-server
     env_file:
       - .env
@@ -16,15 +16,27 @@ services:
       - ./logs:/app/logs
       - ./media:/app/media
     ports:
-      - '8000:8000'
+      - '127.0.0.1:8000:8000'
     command: python -m server --host 0.0.0.0 --port 8000 run
+
+  bot:
+    image: outline-app-python-3.10:latest
+    container_name: outline-bot
+    env_file:
+      - .env
+    environment:
+      - TZ=Europe/Moscow
+      - SETTINGS_MODULE=settings.prod
+      - PYTHONUNBUFFERED=1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: python -m bot run
 
   assets:
     image: node:22.14
     container_name: outline-assets
-    ports:
-      - "8080:8080"
-      - "5173:5173"
     volumes:
       - ./app_server/assets:/app_server/assets
       - ./static:/static

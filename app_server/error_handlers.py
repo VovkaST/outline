@@ -6,7 +6,8 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from app_server.exceptions import AppError, PaymentError
+from app_server.exceptions import PaymentError
+from root.exceptions import AppError
 from root.utils.requests import response_to_str
 
 logger = logging.getLogger("app_server")

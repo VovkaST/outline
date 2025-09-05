@@ -1,4 +1,5 @@
 from app_server.dtos import PaymentResponse
+from root.exceptions import AppError
 
 
 class PaymentError(Exception):
@@ -6,16 +7,6 @@ class PaymentError(Exception):
         self.response = response
 
 
-class AppError(Exception):
-    error_code = -1
-    message = None
-
-
 class TokenError(AppError):
     error_code = 1000
     message = "Ошибка токена"
-
-
-class TaskNotFoundError(AppError):
-    error_code = 1001
-    message = "Задача не найдена"

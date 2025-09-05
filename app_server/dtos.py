@@ -1,19 +1,9 @@
 from contextlib import suppress
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 from root.config import settings
-
-
-class ErrorResponse(BaseModel):
-    model_config = ConfigDict(populate_by_name=True)
-
-    ErrorCode: str | None = Field(title="Код ошибки. 0 в случае успеха", default="0", alias="error_code")
-    Message: str | None = Field(title="Краткое описание ошибки", default=None, alias="message")
-    Details: str | None = Field(title="Подробное описание ошибки", default=None, alias="details")
-
-    def dump_error(self) -> dict[str, str]:
-        return self.model_dump(include={"ErrorCode", "Message", "Details"}, by_alias=True)
+from root.dtos import ErrorResponse
 
 
 class PaymentResponse(ErrorResponse):

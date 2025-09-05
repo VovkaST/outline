@@ -9,20 +9,24 @@ from starlette.responses import JSONResponse
 logger = logging.getLogger("HTTPClient")
 
 
-async def response_to_str(response) -> str:
+async def response_to_str(response) -> str | None:
     with suppress(AttributeError):
         if isinstance(response, JSONResponse):
             return response.body.decode()
-        content_type = response.headers[hdrs.CONTENT_TYPE]
-        if "application/json" in content_type:
-            data = await response.json()
-            return json.dumps(data, ensure_ascii=True)
-        elif "text/xml" in content_type:
-            data = await response.text()
-            return data.decode()
+        if hdrs.CONTENT_TYPE in response.headers:
+            content_type = response.headers[hdrs.CONTENT_TYPE]
+            if "application/json" in content_type:
+                data = await response.json()
+                return json.dumps(data, ensure_ascii=True)
+            elif "text/xml" in content_type:
+                data = await response.text()
+                return data.decode()
+        return response.reason
 
 
 class LoggingClientSession(aiohttp.ClientSession):
+    MAX_LOG_LENGTH = 2000
+
     async def _request(self, method, url, **kwargs):
         logger.debug("Starting request <%s %r>", method, self._build_url(url))
         json = kwargs.get("json")
@@ -35,5 +39,8 @@ class LoggingClientSession(aiohttp.ClientSession):
         logger.info(
             f"Request <{method} {response.real_url}> finished: {response.status} {response.reason}",
         )
-        logger.debug(f"Request <{method} {response.real_url}> finished: {response.status} {response.reason} {data}")
+        logger.debug(
+            f"Request <{method} {response.real_url}> finished: "
+            f"{response.status} {response.reason} {data[: self.MAX_LOG_LENGTH] if data else data}",
+        )
         return response
