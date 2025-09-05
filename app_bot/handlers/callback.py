@@ -33,6 +33,7 @@ async def backward_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 
 @registry.handler(BotButtons.MAIN_MENU)
+@context_history(is_beginning=True)
 async def main_menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await start(update, context)
 
@@ -53,7 +54,6 @@ async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if not update.callback_query:
         return
     query: CallbackQuery = update.callback_query
-    context.user_data["os"] = query.data
     base_menu = menus.InstallMenu
     buttons = []
     url = bot_config.APP_URL_IOS if query.data == BotButtons.IOS else bot_config.APP_URL_ANDROID
