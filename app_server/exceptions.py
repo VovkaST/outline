@@ -10,8 +10,3 @@ class PaymentError(Exception):
 class TokenError(AppError):
     error_code = 1000
     message = "Ошибка токена"
-
-
-class TaskNotFoundError(AppError):
-    error_code = 1001
-    message = "Задача не найдена"

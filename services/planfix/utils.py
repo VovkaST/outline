@@ -1,9 +1,9 @@
 import re
 from collections import defaultdict
 
-from app_server.exceptions import TaskNotFoundError
 from services import planfix_api
 from services.planfix.api.rest.responses import TaskFilterResponse, TaskResponse
+from services.planfix.exceptions import TaskNotFoundError
 from services.planfix.filters import GuidF, RequestKeyF, TelegramIdF
 
 ATTACHMENTS_REGEXP = re.compile(r"^attachments\[(.+)\]$", re.IGNORECASE)
