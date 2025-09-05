@@ -76,15 +76,13 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     telegram_id = user.id
     task = await get_task(telegram_id=telegram_id)
     if task.vpn_key_link.stringValue:
-        menu = menus.KeyInfoMenu
         await update.callback_query.edit_message_text(
             **menus.KeyInfoMenu.to_message(link=task.vpn_key_link.stringValue)
         )
     else:
-        menu = menus.InstallMenu
         try:
             await update.callback_query.edit_message_text(
-                text=messages.KEY_NOT_READY, reply_markup=menu.keyboard, parse_mode=ParseMode.HTML
+                text=messages.KEY_NOT_READY, reply_markup=menus.InstallMenu.keyboard, parse_mode=ParseMode.HTML
             )
         except BadRequest as error:
             if "Message is not modified" not in error.message:
@@ -118,9 +116,7 @@ async def referal_create_callback(update: Update, context: ContextTypes.DEFAULT_
         return
     task = get_task_from_context(context)
     link = make_ref_link(context.bot, task)
-    menu = menus.ReferalMenu
-    message = menu.format_message(ref_link=link)
-    await update.callback_query.edit_message_text(text=message, parse_mode=ParseMode.HTML, reply_markup=menu.keyboard)
+    await update.callback_query.edit_message_text(**menus.ReferalMenu.to_message(ref_link=link))
 
 
 @registry.handler(BotButtons.HELP)
