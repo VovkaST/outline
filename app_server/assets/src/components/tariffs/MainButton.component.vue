@@ -1,7 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    disabled?: boolean;
+  }>(),
+  {
+    disabled: false,
+  },
+);
+</script>
 
 <template>
-  <button class="btn btn-primary" :data-amount="{ price }" @click="onActionClick">
+  <button class="btn btn-primary" :disabled="disabled">
     <slot></slot>
   </button>
 </template>

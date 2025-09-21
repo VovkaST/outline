@@ -1,31 +1,42 @@
 <script setup lang="ts">
-import { Header, TariffCard, PayForm, Delimiter } from '@/components/tariffs';
+import { Delimiter, Header, PayForm, TariffsList } from '@/components/tariffs';
+import { validateEmail } from '@/utils';
+import { ref } from 'vue';
+
+const tariffsListRef = ref<typeof TariffsList | null>(null);
+const paymentFormRef = ref<typeof TariffsList | null>(null);
+const selectedPrice = ref<number | null>(null);
+const userEmail = ref<string | null>(null);
+
+const formErrors = ref<Record<string, string>>({});
+
+const onHeaderClick = () => {
+  if (!tariffsListRef.value?.$el) return;
+  tariffsListRef.value?.$el.scrollIntoView({ behavior: 'smooth' });
+};
+
+const onActionClick = (price: number) => {
+  if (!paymentFormRef.value?.$el) return;
+  selectedPrice.value = price;
+  paymentFormRef.value?.$el.scrollIntoView({ behavior: 'smooth' });
+};
+
+const onFormSubmit = (payload: { amount: number; email: string }) => {
+  if (!validateEmail(payload.email)) return;
+  console.log('onFormSubmit', payload);
+};
 </script>
 <template>
   <div class="tariff-form-container">
-    <Header />
-    <div id="plans" class="d-flex flex-column">
-      <TariffCard :price="199" :old-price="249" :per-month="199">
-        <template v-slot:term> 1 месяц </template>
-      </TariffCard>
-
-      <TariffCard :price="499" :old-price="597" :per-month="166" border="green">
-        <template v-slot:term> 3 месяца </template>
-        <template v-slot:badge> — Выгодно — </template>
-      </TariffCard>
-
-      <TariffCard :price="899" :old-price="1393" :per-month="128">
-        <template v-slot:term> 6 месяцев <span class="gift">+ 1 в подарок 🎁</span> </template>
-      </TariffCard>
-
-      <TariffCard :price="1999" :old-price="2085" :per-month="133">
-        <template v-slot:term> 12 месяцев <span class="gift">+ 3 в подарок 🎁</span> </template>
-      </TariffCard>
-    </div>
-
+    <Header @headerButtonClick="onHeaderClick" />
+    <TariffsList ref="tariffsListRef" @actionClick="onActionClick" />
     <Delimiter />
-
-    <PayForm :amount="1000">
+    <PayForm
+      ref="paymentFormRef"
+      v-model:amount="selectedPrice"
+      v-model:email="userEmail"
+      @submit="onFormSubmit"
+    >
       <template v-slot:header>Оформление заказа</template>
       <template v-slot:description>
         Нажмите на выбранный тариф выше — сумма автоматически подставится в форму.

@@ -1,20 +1,41 @@
 <script setup lang="ts">
-import { MainButton } from '@/components/tariffs';
-import { ref } from 'vue';
+import { MainButton, InputText } from '@/components/tariffs';
+import { validateEmail } from '@/utils';
+import { computed, reactive } from 'vue';
 
-const props = defineProps<{
-  amount?: number;
-}>();
+type Errors = {
+  amount?: string[];
+  email?: string[];
+};
+
+const errors = reactive<Errors>({});
 
 const emit = defineEmits<{
   (e: 'submit', payload: any): void;
 }>();
 
-const amountValue = ref(props.amount);
-const emailValue = ref(null);
+const amount = defineModel('amount');
+const email = defineModel('email');
+
+const canSubmit = computed<boolean>(() => !amount.value);
+
+const validate = (): Errors => {
+  if (!amount.value) {
+    errors['amount'] = ['Сумма обязательна для заполнения'];
+  } else errors['amount'] = [];
+  if (email.value ?? !validateEmail(email.value)) {
+    errors['email'] = ['Неверный формат почты'];
+  } else errors['email'] = [];
+  return errors;
+};
+
+const isValid = (): boolean => {
+  return !Object.keys(validate()).length;
+};
 
 const onFormSubmit = () => {
-  emit('submit', { amount: amountValue.value, email: emailValue.value });
+  if (!isValid()) return;
+  emit('submit', { amount: amount.value, email: email.value });
 };
 </script>
 <template>
@@ -26,9 +47,21 @@ const onFormSubmit = () => {
       <slot name="description"></slot>
     </p>
     <div class="form d-flex flex-column">
-      <input name="amount" type="text" disabled placeholder="Сумма (₽)" v-model="amountValue" />
-      <input name="email" type="email" placeholder="Email для чека" v-model="emailValue" />
-      <MainButton @click="onFormSubmit">Оплатить сейчас</MainButton>
+      <InputText
+        class="mb-2"
+        disabled
+        placeholder="Сумма (₽)"
+        v-model="amount"
+        :errors="errors['amount']"
+      />
+      <InputText
+        type="email"
+        class="mb-2"
+        placeholder="Email для чека"
+        v-model="email"
+        :errors="errors['email']"
+      />
+      <MainButton @click="onFormSubmit" :disabled="canSubmit">Оплатить сейчас</MainButton>
     </div>
     <p class="footnote">
       <slot name="footnote"></slot>
