@@ -10,3 +10,4 @@ python-multipart==0.0.20
 python-telegram-bot==22.3
 starlette==0.47.3
 uvicorn==0.35.0
+yookassa==3.7.0

@@ -22,6 +22,15 @@ class TBankConfig(BaseAppConfig):
     USE_FAIL_PAYMENT_REDIRECT_URL: str
 
 
+class YookassaConfig(BaseAppConfig):
+    PREFIX = "YOOKASSA"
+
+    ACCOUNT_ID: str
+    TOKEN: str
+    USE_SUCCESS_PAYMENT_REDIRECT_URL: str
+    DEFAULT_CURRENCY: str
+
+
 class PlanfixConfig(BaseAppConfig):
     PREFIX = "PLANFIX"
 
@@ -38,3 +47,4 @@ class PlanfixConfig(BaseAppConfig):
 server_config = ServerAppConfig()
 t_bank_config = TBankConfig()
 planfix_config = PlanfixConfig()
+yookassa_config = YookassaConfig()

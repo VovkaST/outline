@@ -51,5 +51,5 @@ async def app_error_handler(request: Request, exc: AppError):
 
 @exception_handler_log
 async def unknown_error_handler(request: Request, exc: Exception):
-    status_code = getattr(exc, "status_code", status.HTTP_500_INTERNAL_SERVER_ERROR)
+    status_code = getattr(exc, "status_code", status.HTTP_400_BAD_REQUEST)
     return error_response(error_code=-1, message="Unhandled error", details=str(exc), status_code=status_code)

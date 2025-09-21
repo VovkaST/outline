@@ -25,7 +25,7 @@ from services.planfix.filters import (
 )
 from services.planfix.utils import get_task
 
-routes = APIRouter(tags=["Payments"], prefix="/payment", generate_unique_id_function=get_route_name)
+routes = APIRouter(tags=["Payments v1"], prefix="/v1/payment", generate_unique_id_function=get_route_name)
 
 
 @routes.get("/init/", response_model=responses.InitPaymentResponse)

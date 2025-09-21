@@ -11,6 +11,10 @@ class InitPaymentResponse(BaseModel):
     qr: str | None = Field(title="QR-код на оплату", default=None)
 
 
+class InitYooKassaPaymentResponse(BaseModel):
+    payment_id: str = Field(title="Уникальный идентификатор транзакции в системе YooKassa")
+
+
 class PaymentStatusResponse(BaseModel):
     OrderId: str | None = Field(title="Идентификатор заказа в системе мерчанта", default=None)
     Status: str | None = Field(title="Статус транзакции", default=None)
