@@ -66,17 +66,12 @@ const onFormSubmit = (payload: { amount: number; email: string }) => {
 .tariff-form-container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 16px;
-
-  #plans {
-    gap: 16px;
-    margin-top: 16px;
-  }
+  padding: 1rem;
 
   footer {
     margin-top: 40px;
     color: var(--muted-color);
-    font-size: 13px;
+    font-size: 0.8rem;
     text-align: center;
   }
 }

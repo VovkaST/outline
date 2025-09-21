@@ -10,7 +10,7 @@ const onActionClick = (price: number) => {
 };
 </script>
 <template>
-  <div id="plans" class="d-flex flex-column">
+  <div id="plans" class="d-flex flex-column mt-1">
     <TariffCard :price="19900" :old-price="24900" :per-month="19900" @actionClick="onActionClick">
       <template v-slot:term> 1 месяц </template>
     </TariffCard>
@@ -35,4 +35,8 @@ const onActionClick = (price: number) => {
     </TariffCard>
   </div>
 </template>
-<style lang="scss" module></style>
+<style lang="scss" scoped>
+#plans {
+  gap: 1rem;
+}
+</style>
