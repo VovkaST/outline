@@ -25,7 +25,7 @@ const onFormSubmit = () => {
     <p class="description lead">
       <slot name="description"></slot>
     </p>
-    <div @submit.prevent="onFormSubmit" class="d-flex flex-column">
+    <div class="form d-flex flex-column">
       <input name="amount" type="text" disabled placeholder="Сумма (₽)" v-model="amountValue" />
       <input name="email" type="email" placeholder="Email для чека" v-model="emailValue" />
       <MainButton @click="onFormSubmit">Оплатить сейчас</MainButton>
@@ -55,16 +55,17 @@ const onFormSubmit = () => {
     font-size: 1rem;
   }
 
-  input[type='text'],
-  input[type='email'] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    background: transparent;
-    font-size: 0.8rem;
-    color: #fff;
-    margin-bottom: 8px;
+  .form {
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: transparent;
+      font-size: 0.8rem;
+      color: #fff;
+      margin-bottom: 8px;
+    }
   }
 
   .footnote {
