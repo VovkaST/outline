@@ -31,15 +31,15 @@ const onActionClick = () => {
     <div class="badge">
       <slot name="badge"></slot>
     </div>
-    <div class="term">
+    <div class="term mb-2">
       <slot name="term">
         <span class="gift"></span>
       </slot>
     </div>
     <div class="price-old">{{ _oldPrice }} ₽</div>
-    <div class="price-now">
+    <div class="price-now mt-1">
       {{ _price }} ₽
-      <span v-if="perMonth" class="per-month">({{ _perMonth }} ₽/мес)</span>
+      <span v-if="perMonth" class="per-month mt-1">({{ _perMonth }} ₽/мес)</span>
     </div>
     <div class="actions d-flex flex-column">
       <MainButton @click="onActionClick">Купить</MainButton>
@@ -66,23 +66,22 @@ const onActionClick = () => {
 
   .badge {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 0.75rem;
+    right: 0.75rem;
     background: var(--accent-color);
     color: #041004;
     padding: 6px 9px;
-    border-radius: 9px;
+    border-radius: 10px;
     font-size: 0.8rem;
   }
 
   .term {
-    font-size: 15px;
+    font-size: 0.95rem;
     color: var(--muted-color);
-    margin-bottom: 8px;
 
     :deep(.gift) {
       display: inline-block;
-      margin-left: 8px;
+      margin-left: 0.5rem;
     }
   }
 
@@ -93,47 +92,19 @@ const onActionClick = () => {
   }
 
   .price-now {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 800;
-    margin-top: 6px;
 
     .per-month {
-      font-size: 13px;
+      font-size: 0.85rem;
       color: var(--muted-color);
       font-weight: 600;
     }
   }
 
-  .per-month {
-    font-size: 13px;
-    color: var(--muted-color);
-    margin-top: 6px;
-  }
-
   .actions {
-    margin-top: 12px;
+    margin-top: 0.75rem;
     gap: 8px;
-  }
-}
-
-.actions {
-  margin-top: 12px;
-  gap: 8px;
-
-  .btn {
-    display: inline-block;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-
-    &.btn-primary {
-      background: linear-gradient(90deg, var(--green-color), var(--dark-green-color));
-      color: #041004;
-      border: none;
-    }
   }
 }
 </style>
