@@ -1,19 +1,22 @@
 @import "~bootstrap/scss/bootstrap.scss";
 
 :root {
-  --font-family-default: Whitney, Helvetica Neue, Helvetica, Arial, sans-serif;
+  --font-family-default: Inter, Roboto, Arial, sans-serif;
   --font-family-secondary: 'Nunito', sans-serif;
 
   --block-border-radius: 22px;
+  --font-color-default: #fff;
 
-  /*font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
-  font-family: var(--font-family-default);
-  line-height: 1.5;
+  --bg:#000000;
+  --bg-card:#0b0b0b;
+  --green-color:#23c552;
+  --dark-green-color:#0f6b35;
+  --muted-color:#9aa39a;
+  --accent-color: var(--green-color);
+
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #ffffffdd;
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -33,7 +36,6 @@ a:hover {
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 @media (max-width: 330px) {
