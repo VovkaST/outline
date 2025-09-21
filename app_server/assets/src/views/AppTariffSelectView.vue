@@ -22,7 +22,6 @@ const onActionClick = (price: number) => {
 };
 
 const onFormSubmit = (payload: { amount: number; email: string }) => {
-  if (!validateEmail(payload.email)) return;
   console.log('onFormSubmit', payload);
 };
 </script>

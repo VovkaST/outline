@@ -23,14 +23,14 @@ const validate = (): Errors => {
   if (!amount.value) {
     errors['amount'] = ['Сумма обязательна для заполнения'];
   } else errors['amount'] = [];
-  if (email.value ?? !validateEmail(email.value)) {
+  if (email.value && !validateEmail(email.value)) {
     errors['email'] = ['Неверный формат почты'];
   } else errors['email'] = [];
   return errors;
 };
 
 const isValid = (): boolean => {
-  return !Object.keys(validate()).length;
+  return !Object.values(validate()).filter((i) => i.length).length;
 };
 
 const onFormSubmit = () => {
