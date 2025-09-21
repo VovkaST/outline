@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Header, TariffCard } from '@/components/tariffs';
+import { Header, TariffCard, PayForm } from '@/components/tariffs';
 </script>
 <template>
   <div class="tariff-form-container">
@@ -22,6 +22,16 @@ import { Header, TariffCard } from '@/components/tariffs';
         <template v-slot:term> 12 месяцев <span class="gift">+ 3 в подарок 🎁</span> </template>
       </TariffCard>
     </div>
+    <PayForm :amount="1000">
+      <template v-slot:header>Оформление заказа</template>
+      <template v-slot:description>
+        Нажмите на выбранный тариф выше — сумма автоматически подставится в форму.
+      </template>
+      <template v-slot:footnote>
+        Безопасные платежи. Никаких подписок, оплата разовая. Цены указаны с учётом акции.
+      </template>
+    </PayForm>
+    <footer>© 2025 — Все права защищены</footer>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -33,6 +43,13 @@ import { Header, TariffCard } from '@/components/tariffs';
   #plans {
     gap: 16px;
     margin-top: 16px;
+  }
+
+  footer {
+    margin-top: 40px;
+    color: var(--muted-color);
+    font-size: 13px;
+    text-align: center;
   }
 }
 </style>

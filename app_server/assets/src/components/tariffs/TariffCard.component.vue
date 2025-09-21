@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { MainButton } from '@/components/tariffs';
+
 const props = defineProps<{
   price: number;
   oldPrice: number;
@@ -31,9 +33,7 @@ const onActionClick = () => {
       <span v-if="perMonth" class="per-month">({{ perMonth }} ₽/мес)</span>
     </div>
     <div class="actions d-flex flex-column">
-      <a class="btn btn-primary" :data-amount="{ price }" @click.prevent="onActionClick">
-        <slot name="actionText">Купить</slot>
-      </a>
+      <MainButton @click="onActionClick">Купить</MainButton>
     </div>
   </div>
 </template>
