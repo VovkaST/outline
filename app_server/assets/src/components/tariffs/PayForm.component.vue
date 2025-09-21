@@ -8,6 +8,15 @@ type Errors = {
   email?: string[];
 };
 
+const props = withDefaults(
+  defineProps<{
+    wait?: boolean;
+  }>(),
+  {
+    wait: false,
+  },
+);
+
 const errors = reactive<Errors>({});
 
 const emit = defineEmits<{
@@ -17,7 +26,7 @@ const emit = defineEmits<{
 const amount = defineModel('amount');
 const email = defineModel('email');
 
-const canSubmit = computed<boolean>(() => !amount.value);
+const allowSubmit = computed<boolean>(() => !!amount.value && !props.wait);
 
 const validate = (): Errors => {
   if (!amount.value) {
@@ -61,7 +70,13 @@ const onFormSubmit = () => {
         v-model="email"
         :errors="errors['email']"
       />
-      <MainButton @click="onFormSubmit" :disabled="canSubmit">Оплатить сейчас</MainButton>
+      <MainButton
+        @click="() => (allowSubmit ? onFormSubmit() : null)"
+        :disabled="canSubmit"
+        :wait="wait"
+      >
+        Оплатить сейчас
+      </MainButton>
     </div>
     <p class="footnote">
       <slot name="footnote"></slot>

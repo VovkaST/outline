@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Delimiter, Header, PayForm, TariffsList } from '@/components/tariffs';
 import { usePaymentStore } from '@/stores/payment';
+import { useToggle } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -14,6 +15,8 @@ const userEmail = ref<string | null>(null);
 
 const taskId = computed<string>(() => (route.query['task'] as string) || 'empty');
 
+const [formSubmitting, formSubmittingToggle] = useToggle(false);
+
 const onHeaderClick = () => {
   if (!tariffsListRef.value?.$el) return;
   tariffsListRef.value?.$el.scrollIntoView({ behavior: 'smooth' });
@@ -26,11 +29,14 @@ const onActionClick = (price: number) => {
 };
 
 const onFormSubmit = (payload: { amount: number; email: string }) => {
-  paymentStore.initYooKassaPayment({
-    taskId: taskId.value,
-    amount: payload.amount * 100,
-    customerEmail: payload.email,
-  });
+  formSubmitting.value = true;
+  paymentStore
+    .initYooKassaPayment({
+      taskId: taskId.value,
+      amount: payload.amount * 100,
+      customerEmail: payload.email,
+    })
+    .finally(formSubmittingToggle);
 };
 </script>
 <template>
@@ -42,6 +48,7 @@ const onFormSubmit = (payload: { amount: number; email: string }) => {
       ref="paymentFormRef"
       v-model:amount="selectedPrice"
       v-model:email="userEmail"
+      :wait="formSubmitting"
       @submit="onFormSubmit"
     >
       <template v-slot:header>Оформление заказа</template>
