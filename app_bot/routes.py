@@ -12,7 +12,7 @@ from root.dtos import ErrorResponse, OkResponse
 from root.utils.others import get_route_name
 from services.planfix.utils import prefetch_form_data
 
-routes = APIRouter(tags=["Bot hooks"], prefix="/api/bot", generate_unique_id_function=get_route_name)
+routes = APIRouter(tags=["Bot hooks"], prefix="/bot", generate_unique_id_function=get_route_name)
 
 
 @routes.post(

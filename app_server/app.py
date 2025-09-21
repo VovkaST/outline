@@ -40,11 +40,11 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
 
     add_middlewares(app)
 
-    app.include_router(routes.keys_routes)
-    app.include_router(routes.orders_routes)
-    app.include_router(routes.payments_routes)
-    app.include_router(routes.server_routes)
-    app.include_router(routes.subscription_routes)
-    app.include_router(bot_routes)
+    app.include_router(routes.keys_routes, prefix="/api")
+    app.include_router(routes.orders_routes, prefix="/api")
+    app.include_router(routes.payments_routes, prefix="/api")
+    app.include_router(routes.server_routes, prefix="/api")
+    app.include_router(routes.subscription_routes, prefix="/api")
+    app.include_router(bot_routes, prefix="/api")
     app.mount("/", StaticFiles(directory="app_server/assets", html=True, check_dir=True), name="static")
     return app
