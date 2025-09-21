@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { MainButton } from '@/components/tariffs';
+import { decimalNumberFormat } from '@/utils';
+import { computed } from 'vue';
 
 const props = defineProps<{
   price: number;
@@ -11,6 +13,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'actionClick', price: number): void;
 }>();
+
+const formatPrice = (value: number) => {
+  return decimalNumberFormat({ value: value / 100, fractionDigits: 0 });
+};
+const _price = computed<string>(() => formatPrice(props.price));
+const _oldPrice = computed<string>(() => formatPrice(props.oldPrice));
+const _perMonth = computed<string>(() => formatPrice(props.perMonth ?? 0));
 
 const onActionClick = () => {
   emit('actionClick', props.price);
@@ -27,10 +36,10 @@ const onActionClick = () => {
         <span class="gift"></span>
       </slot>
     </div>
-    <div class="price-old">{{ oldPrice }} ₽</div>
+    <div class="price-old">{{ _oldPrice }} ₽</div>
     <div class="price-now">
-      {{ price }} ₽
-      <span v-if="perMonth" class="per-month">({{ perMonth }} ₽/мес)</span>
+      {{ _price }} ₽
+      <span v-if="perMonth" class="per-month">({{ _perMonth }} ₽/мес)</span>
     </div>
     <div class="actions d-flex flex-column">
       <MainButton @click="onActionClick">Купить</MainButton>

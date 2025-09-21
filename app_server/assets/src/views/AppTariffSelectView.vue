@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { Delimiter, Header, PayForm, TariffsList } from '@/components/tariffs';
-import { validateEmail } from '@/utils';
-import { ref } from 'vue';
+import { usePaymentStore } from '@/stores/payment';
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const paymentStore = usePaymentStore();
 
 const tariffsListRef = ref<typeof TariffsList | null>(null);
 const paymentFormRef = ref<typeof TariffsList | null>(null);
 const selectedPrice = ref<number | null>(null);
 const userEmail = ref<string | null>(null);
 
-const formErrors = ref<Record<string, string>>({});
+const taskId = computed<string>(() => (route.query['task'] as string) || 'empty');
 
 const onHeaderClick = () => {
   if (!tariffsListRef.value?.$el) return;
@@ -17,12 +21,16 @@ const onHeaderClick = () => {
 
 const onActionClick = (price: number) => {
   if (!paymentFormRef.value?.$el) return;
-  selectedPrice.value = price;
+  selectedPrice.value = price / 100;
   paymentFormRef.value?.$el.scrollIntoView({ behavior: 'smooth' });
 };
 
 const onFormSubmit = (payload: { amount: number; email: string }) => {
-  console.log('onFormSubmit', payload);
+  paymentStore.initYooKassaPayment({
+    taskId: taskId.value,
+    amount: payload.amount * 100,
+    customerEmail: payload.email,
+  });
 };
 </script>
 <template>

@@ -2,7 +2,8 @@ import { defineStore } from 'pinia';
 import {
   OpenAPI,
   OrdersService,
-  PaymentsService,
+  PaymentsV1Service,
+  PaymentsV2Service,
   SubscriptionService,
 } from '@/api/generated/public';
 
@@ -25,11 +26,30 @@ export const usePaymentStore = defineStore('payment', {
       isRecurrent?: boolean;
       useQr?: boolean;
     }) {
-      return PaymentsService.initPayment({ taskGuid: guid, isRecurrent, useQr });
+      return PaymentsV1Service.initPayment({ taskGuid: guid, isRecurrent, useQr });
+    },
+
+    initYooKassaPayment({
+      taskId,
+      amount,
+      customerEmail = '',
+      description = '',
+    }: {
+      taskId: string;
+      amount: number;
+      customerEmail?: string;
+      description?: string;
+    }) {
+      return PaymentsV2Service.initYookassaPayment({
+        taskId,
+        amount,
+        customerEmail,
+        description,
+      });
     },
 
     getPaymentStatus({ paymentId }: { paymentId: number }) {
-      return PaymentsService.getPaymentStatus({ paymentId });
+      return PaymentsV1Service.getPaymentStatus({ paymentId });
     },
 
     subscriptionReject({ guid }: { guid: string }) {

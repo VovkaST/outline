@@ -11,14 +11,14 @@ const onActionClick = (price: number) => {
 </script>
 <template>
   <div id="plans" class="d-flex flex-column">
-    <TariffCard :price="199" :old-price="249" :per-month="199" @actionClick="onActionClick">
+    <TariffCard :price="19900" :old-price="24900" :per-month="19900" @actionClick="onActionClick">
       <template v-slot:term> 1 месяц </template>
     </TariffCard>
 
     <TariffCard
-      :price="499"
-      :old-price="597"
-      :per-month="166"
+      :price="49900"
+      :old-price="59700"
+      :per-month="16600"
       border="green"
       @actionClick="onActionClick"
     >
@@ -26,11 +26,11 @@ const onActionClick = (price: number) => {
       <template v-slot:badge> — Выгодно — </template>
     </TariffCard>
 
-    <TariffCard :price="899" :old-price="1393" :per-month="128" @actionClick="onActionClick">
+    <TariffCard :price="89900" :old-price="139300" :per-month="12800" @actionClick="onActionClick">
       <template v-slot:term> 6 месяцев <span class="gift">+ 1 в подарок 🎁</span> </template>
     </TariffCard>
 
-    <TariffCard :price="1999" :old-price="2085" :per-month="133" @actionClick="onActionClick">
+    <TariffCard :price="199900" :old-price="208500" :per-month="13300" @actionClick="onActionClick">
       <template v-slot:term> 12 месяцев <span class="gift">+ 3 в подарок 🎁</span> </template>
     </TariffCard>
   </div>
