@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Header, TariffCard, PayForm } from '@/components/tariffs';
+import { Header, TariffCard, PayForm, Delimiter } from '@/components/tariffs';
 </script>
 <template>
   <div class="tariff-form-container">
@@ -22,6 +22,9 @@ import { Header, TariffCard, PayForm } from '@/components/tariffs';
         <template v-slot:term> 12 месяцев <span class="gift">+ 3 в подарок 🎁</span> </template>
       </TariffCard>
     </div>
+
+    <Delimiter />
+
     <PayForm :amount="1000">
       <template v-slot:header>Оформление заказа</template>
       <template v-slot:description>
