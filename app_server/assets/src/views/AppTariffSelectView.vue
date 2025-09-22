@@ -49,22 +49,6 @@ const onFormSubmit = (payload: { amount: number; email: string }) => {
   <div class="tariff-form-container">
     <Header @headerButtonClick="onHeaderClick" />
     <TariffsList ref="tariffsListRef" @actionClick="onActionClick" />
-    <Delimiter />
-    <PayForm
-      ref="paymentFormRef"
-      v-model:amount="selectedPrice"
-      v-model:email="userEmail"
-      :wait="formSubmitting"
-      @submit="onFormSubmit"
-    >
-      <template v-slot:header>Оформление заказа</template>
-      <template v-slot:description>
-        Нажмите на выбранный тариф выше — сумма автоматически подставится в форму.
-      </template>
-      <template v-slot:footnote>
-        Безопасные платежи. Никаких подписок, оплата разовая. Цены указаны с учётом акции.
-      </template>
-    </PayForm>
     <footer>© 2025 — Все права защищены</footer>
   </div>
 </template>

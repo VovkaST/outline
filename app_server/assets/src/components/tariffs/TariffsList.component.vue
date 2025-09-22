@@ -15,13 +15,7 @@ const onActionClick = (price: number) => {
       <template v-slot:term> 1 месяц </template>
     </TariffCard>
 
-    <TariffCard
-      :price="49900"
-      :old-price="59700"
-      :per-month="16600"
-      border="green"
-      @actionClick="onActionClick"
-    >
+    <TariffCard :price="49900" :old-price="59700" :per-month="16600" @actionClick="onActionClick">
       <template v-slot:term> 3 месяца </template>
       <template v-slot:badge> — Выгодно — </template>
     </TariffCard>
