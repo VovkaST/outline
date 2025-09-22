@@ -7,6 +7,7 @@ class BotAppConfig(BaseAppConfig):
     TOKEN: str = ""
     APP_URL_IOS: str
     APP_URL_ANDROID: str
+    APP_NAME: str
 
     HOOK_REQUEST_DATA_PREFIX: str = "HOOK_"
 
