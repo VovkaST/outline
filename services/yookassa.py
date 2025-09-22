@@ -47,7 +47,7 @@ class YooKassaService:
                         {
                             "description": description or task_id,
                             "quantity": 1.000,
-                            "amount": {"value": _amount, "currency": "RUB"},
+                            "amount": {"value": _amount, "currency": yookassa_config.DEFAULT_CURRENCY},
                             "vat_code": 1,
                             "payment_mode": "full_prepayment",
                             "payment_subject": "service",
