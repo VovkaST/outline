@@ -3,12 +3,15 @@ import { MainButton } from '@/components/tariffs';
 import { decimalNumberFormat } from '@/utils';
 import { computed } from 'vue';
 
-const props = defineProps<{
-  price: number;
-  oldPrice: number;
-  perMonth?: number;
-  border?: 'green';
-}>();
+const props = withDefaults(
+  defineProps<{
+    price: number;
+    oldPrice: number;
+    perMonth?: number;
+    wait?: boolean;
+  }>(),
+  { wait: false },
+);
 
 const emit = defineEmits<{
   (e: 'actionClick', price: number): void;
@@ -24,10 +27,12 @@ const _perMonth = computed<string>(() => formatPrice(props.perMonth ?? 0));
 const onActionClick = () => {
   emit('actionClick', props.price);
 };
+
+defineExpose({ price: props.price });
 </script>
 
 <template>
-  <div :class="['card', border ? `border-${border}` : null]">
+  <div class="card">
     <div class="badge">
       <slot name="badge"></slot>
     </div>
@@ -42,7 +47,7 @@ const onActionClick = () => {
       <span v-if="perMonth" class="per-month mt-1">({{ _perMonth }} ₽/мес)</span>
     </div>
     <div class="actions d-flex flex-column">
-      <MainButton @click="onActionClick">Купить</MainButton>
+      <MainButton @click="onActionClick" :wait="wait">Купить</MainButton>
     </div>
   </div>
 </template>
@@ -55,14 +60,9 @@ const onActionClick = () => {
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(6px);
-  box-shadow: 0 6px 18px rgba(2, 6, 2, 0.6);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
   position: relative;
   overflow: hidden;
-
-  &.border-green {
-    border: 2px solid var(--green-color);
-    transform: translateY(0);
-  }
 
   .badge {
     position: absolute;
@@ -72,7 +72,7 @@ const onActionClick = () => {
     color: #041004;
     padding: 6px 9px;
     border-radius: 10px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
   }
 
   .term {
@@ -86,7 +86,7 @@ const onActionClick = () => {
   }
 
   .price-old {
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(0, 0, 0, 0.4);
     text-decoration: line-through;
     font-weight: 600;
   }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Delimiter, Header, PayForm, TariffsList } from '@/components/tariffs';
+import { Header, TariffsList } from '@/components/tariffs';
 import { usePaymentStore } from '@/stores/payment';
 import { useToggle } from '@vueuse/core';
 import { computed, ref } from 'vue';
@@ -9,9 +9,6 @@ const route = useRoute();
 const paymentStore = usePaymentStore();
 
 const tariffsListRef = ref<typeof TariffsList | null>(null);
-const paymentFormRef = ref<typeof TariffsList | null>(null);
-const selectedPrice = ref<number | null>(null);
-const userEmail = ref<string | null>(null);
 
 const taskId = computed<string>(() => (route.query['task'] as string) || 'empty');
 
@@ -23,18 +20,11 @@ const onHeaderClick = () => {
 };
 
 const onActionClick = (price: number) => {
-  if (!paymentFormRef.value?.$el) return;
-  selectedPrice.value = price / 100;
-  paymentFormRef.value?.$el.scrollIntoView({ behavior: 'smooth' });
-};
-
-const onFormSubmit = (payload: { amount: number; email: string }) => {
   formSubmitting.value = true;
   paymentStore
     .initYooKassaPayment({
       taskId: taskId.value,
-      amount: payload.amount * 100,
-      customerEmail: payload.email,
+      amount: price,
     })
     .then(
       (response) => {
@@ -48,23 +38,7 @@ const onFormSubmit = (payload: { amount: number; email: string }) => {
 <template>
   <div class="tariff-form-container">
     <Header @headerButtonClick="onHeaderClick" />
-    <TariffsList ref="tariffsListRef" @actionClick="onActionClick" />
-    <Delimiter />
-    <PayForm
-      ref="paymentFormRef"
-      v-model:amount="selectedPrice"
-      v-model:email="userEmail"
-      :wait="formSubmitting"
-      @submit="onFormSubmit"
-    >
-      <template v-slot:header>Оформление заказа</template>
-      <template v-slot:description>
-        Нажмите на выбранный тариф выше — сумма автоматически подставится в форму.
-      </template>
-      <template v-slot:footnote>
-        Безопасные платежи. Никаких подписок, оплата разовая. Цены указаны с учётом акции.
-      </template>
-    </PayForm>
+    <TariffsList ref="tariffsListRef" @actionClick="onActionClick" :wait="formSubmitting" />
     <footer>© 2025 — Все права защищены</footer>
   </div>
 </template>
