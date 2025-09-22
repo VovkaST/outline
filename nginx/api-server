@@ -17,6 +17,13 @@ server {
 
     location /attachments {
         alias /PATH_TO_APP/app_server/assets/dist/attachments;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location /static {
+        alias /PATH_TO_APP/app_server/assets/dist/static;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
     }
 
     error_page 404 /index.html;
