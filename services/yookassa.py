@@ -3,6 +3,7 @@ import uuid
 
 from yookassa import Configuration, Payment
 
+from app_server.dtos import InitYooKassaPaymentDTO
 from services import yookassa_config
 
 logger = logging.getLogger("app_server")
@@ -21,7 +22,7 @@ class YooKassaService:
         amount: int,
         description: str = "",
         customer_email: str = "",
-    ) -> str:
+    ) -> InitYooKassaPaymentDTO:
         _amount = amount / 100
         payment = Payment.create(
             {
@@ -56,4 +57,4 @@ class YooKassaService:
             },
             idempotency_key=uuid.uuid4(),
         )
-        return payment.id
+        return InitYooKassaPaymentDTO(payment_id=payment.id, confirmation_url=payment.confirmation.confirmation_url)

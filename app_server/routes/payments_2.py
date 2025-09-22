@@ -17,7 +17,7 @@ async def init_yookassa_payment(
     description: str = Query(description="Описание платежа", default=""),
 ):
     """Инициализировать платеж в YooKassa."""
-    payment_id = yookassa.init_payment(
+    payment = yookassa.init_payment(
         task_id=task_id, amount=amount, description=description, customer_email=customer_email
     )
-    return responses.InitYooKassaPaymentResponse(payment_id=payment_id)
+    return responses.InitYooKassaPaymentResponse.model_validate(payment, from_attributes=True)
