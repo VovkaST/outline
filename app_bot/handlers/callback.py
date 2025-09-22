@@ -49,6 +49,7 @@ async def connect_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 
 @registry.handler(BotButtons.IOS, BotButtons.ANDROID)
+@planfix_log_querydata
 @context_history()
 async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:

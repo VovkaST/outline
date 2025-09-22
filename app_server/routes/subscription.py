@@ -9,10 +9,10 @@ from services.planfix.api.rest.enums import SubscriptionStatus
 from services.planfix.filters import SubscriptionStatusUpdate
 from services.planfix.utils import get_task
 
-routes = APIRouter(tags=["Subscription"], prefix="/api/subscription", generate_unique_id_function=get_route_name)
+routes = APIRouter(tags=["Subscription"], prefix="/subscription", generate_unique_id_function=get_route_name)
 
 
-@routes.patch("/reject", response_model=RequestStatusResponse)
+@routes.patch("/reject/", response_model=RequestStatusResponse)
 async def subscription_reject(request: Request, payload: dtos.SubscriptionRejectRequest):
     """Отменить активную подписку"""
     task = await get_task(payload.task_guid)

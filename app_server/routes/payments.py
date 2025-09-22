@@ -25,10 +25,10 @@ from services.planfix.filters import (
 )
 from services.planfix.utils import get_task
 
-routes = APIRouter(tags=["Payments"], prefix="/api/payment", generate_unique_id_function=get_route_name)
+routes = APIRouter(tags=["Payments v1"], prefix="/v1/payment", generate_unique_id_function=get_route_name)
 
 
-@routes.get("/init", response_model=responses.InitPaymentResponse)
+@routes.get("/init/", response_model=responses.InitPaymentResponse)
 async def init_payment(
     request: Request,
     task_guid: str = Query(description="Идентификатор заказа"),
@@ -75,7 +75,7 @@ async def init_payment(
     return response
 
 
-@routes.post("/status", status_code=status.HTTP_200_OK)
+@routes.post("/status/", status_code=status.HTTP_200_OK)
 async def payment_status_update(
     request: Request, payload: dtos.NotificationQrRequest | dtos.NotificationPaymentRequest
 ):
@@ -105,7 +105,7 @@ async def payment_status_update(
 
 
 @routes.get(
-    "/{payment_id}/status",
+    "/{payment_id}/status/",
     status_code=status.HTTP_200_OK,
     response_model=responses.PaymentStatusResponse,
 )
@@ -114,7 +114,7 @@ async def get_payment_status(request: Request, payment_id: int):
     return await payment_api.get_state(payment_id)
 
 
-@routes.post("/charge", status_code=status.HTTP_200_OK, response_model=RequestStatusResponse)
+@routes.post("/charge/", status_code=status.HTTP_200_OK, response_model=RequestStatusResponse)
 async def payment_charge(request: Request, payload: dtos.PaymentChargeRequest, authorization: str = Header(None)):
     """Провести автоматический периодический платеж."""
     if authorization != settings.REQUEST_TOKEN:

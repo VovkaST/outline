@@ -39,6 +39,12 @@ TBANK_USE_FAIL_PAYMENT_REDIRECT_URL = env.get("TBANK_USE_FAIL_PAYMENT_REDIRECT_U
 DEFAULT_PAYMENT_DESCRIPTION = env.get("DEFAULT_PAYMENT_DESCRIPTION", default="Оплата подписки")
 DEFAULT_PAYMENT_DEADLINE = env.as_int("DEFAULT_PAYMENT_DEADLINE", default=30)
 
+# Настройки YooKassa
+YOOKASSA_ACCOUNT_ID = env.get("YOOKASSA_ACCOUNT_ID")
+YOOKASSA_TOKEN = env.get("YOOKASSA_TOKEN")
+YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL = env.get("YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL")
+YOOKASSA_DEFAULT_CURRENCY = env.get("YOOKASSA_DEFAULT_CURRENCY", default="RUB")
+
 
 # Настройки Planfix
 PLANFIX_XML_API_URL = env.get("PLANFIX_XML_API_URL", default="https://apiru.planfix.ru/xml")
@@ -53,6 +59,8 @@ PLANFIX_API_KEY = env.get("PLANFIX_API_KEY")
 
 # Настройки Telegram-бота
 BOT_TOKEN = env.get("BOT_TOKEN")
+BOT_APP_URL_IOS = env.get("BOT_APP_URL_IOS", default="https://apps.apple.com/ru/")
+BOT_APP_URL_ANDROID = env.get("BOT_APP_URL_ANDROID", default="https://play.google.com/store/apps/")
 
 
 # Логирование

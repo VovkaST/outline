@@ -110,3 +110,8 @@ class PaymentChargeRequest(BaseModel):
 class PutKeyRequest(BaseModel):
     guid: str = Field(description="Идентификатор ключа")
     key: str = Field(description="Ключ")
+
+
+class InitYooKassaPaymentDTO(BaseModel):
+    payment_id: str = Field(description="Уникальный идентификатор транзакции в системе YooKassa")
+    confirmation_url: str = Field(description="Ссылка на страницу подтверждения платежа")
