@@ -36,6 +36,12 @@ const onFormSubmit = (payload: { amount: number; email: string }) => {
       amount: payload.amount * 100,
       customerEmail: payload.email,
     })
+    .then(
+      (response) => {
+        window.location.href = response.confirmation_url;
+      },
+      (reason) => console.error('Init payment error: ', reason),
+    )
     .finally(formSubmittingToggle);
 };
 </script>
