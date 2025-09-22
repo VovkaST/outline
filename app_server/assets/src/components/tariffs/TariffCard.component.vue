@@ -3,11 +3,15 @@ import { MainButton } from '@/components/tariffs';
 import { decimalNumberFormat } from '@/utils';
 import { computed } from 'vue';
 
-const props = defineProps<{
-  price: number;
-  oldPrice: number;
-  perMonth?: number;
-}>();
+const props = withDefaults(
+  defineProps<{
+    price: number;
+    oldPrice: number;
+    perMonth?: number;
+    wait?: boolean;
+  }>(),
+  { wait: false },
+);
 
 const emit = defineEmits<{
   (e: 'actionClick', price: number): void;
@@ -23,6 +27,8 @@ const _perMonth = computed<string>(() => formatPrice(props.perMonth ?? 0));
 const onActionClick = () => {
   emit('actionClick', props.price);
 };
+
+defineExpose({ price: props.price });
 </script>
 
 <template>
@@ -41,7 +47,7 @@ const onActionClick = () => {
       <span v-if="perMonth" class="per-month mt-1">({{ _perMonth }} ₽/мес)</span>
     </div>
     <div class="actions d-flex flex-column">
-      <MainButton @click="onActionClick">Купить</MainButton>
+      <MainButton @click="onActionClick" :wait="wait">Купить</MainButton>
     </div>
   </div>
 </template>
