@@ -15,9 +15,10 @@ async def init_yookassa_payment(
     amount: int = Query(description="Сумма платежа в копейках (минимум 1000)"),
     customer_email: str = Query(description="Почтовый ящик клиента", default=""),
     description: str = Query(description="Описание платежа", default=""),
+    return_url: str = Query(description="URL редиректа успешной оплаты", default=""),
 ):
     """Инициализировать платеж в YooKassa."""
     payment = yookassa.init_payment(
-        task_id=task_id, amount=amount, description=description, customer_email=customer_email
+        task_id=task_id, amount=amount, description=description, customer_email=customer_email, return_url=return_url
     )
     return responses.InitYooKassaPaymentResponse.model_validate(payment, from_attributes=True)
