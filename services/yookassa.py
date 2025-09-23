@@ -22,6 +22,7 @@ class YooKassaService:
         amount: int,
         description: str = "",
         customer_email: str = "",
+        return_url: str = "",
     ) -> InitYooKassaPaymentDTO:
         _amount = amount / 100
         payment = Payment.create(
@@ -32,7 +33,7 @@ class YooKassaService:
                 },
                 "confirmation": {
                     "type": "redirect",
-                    "return_url": yookassa_config.USE_SUCCESS_PAYMENT_REDIRECT_URL,
+                    "return_url": return_url or yookassa_config.USE_SUCCESS_PAYMENT_REDIRECT_URL,
                 },
                 "capture": True,
                 "description": task_id,

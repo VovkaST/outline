@@ -11,6 +11,7 @@ const paymentStore = usePaymentStore();
 const tariffsListRef = ref<typeof TariffsList | null>(null);
 
 const taskId = computed<string>(() => (route.query['task'] as string) || 'empty');
+const returnUrl = computed<string>(() => route.query['returnUrl'] as string);
 
 const [formSubmitting, formSubmittingToggle] = useToggle(false);
 
@@ -25,6 +26,7 @@ const onActionClick = (price: number) => {
     .initYooKassaPayment({
       taskId: taskId.value,
       amount: price,
+      returnUrl: returnUrl.value,
     })
     .then(
       (response) => {
