@@ -34,17 +34,20 @@ export const usePaymentStore = defineStore('payment', {
       amount,
       customerEmail = '',
       description = '',
+      returnUrl = '',
     }: {
       taskId: string;
       amount: number;
       customerEmail?: string;
       description?: string;
+      returnUrl?: string;
     }) {
       return PaymentsV2Service.initYookassaPayment({
         taskId,
         amount,
         customerEmail,
         description,
+        returnUrl,
       });
     },
 
