@@ -69,4 +69,11 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
     left: calc(50% - 1rem);
   }
 }
+
+@media (max-width: 768px) {
+  button {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+}
 </style>

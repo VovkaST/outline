@@ -56,7 +56,7 @@ const onActionClick = (price: number) => {
       <TariffCard
         :price="89900"
         :old-price="139300"
-        :per-month="12800"
+        :per-month="14900"
         :wait="isTariffSelected(89900)"
         isPopular
         @actionClick="onActionClick"
@@ -101,6 +101,23 @@ const onActionClick = (price: number) => {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
     margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tariffs-container {
+    padding: 20px 10px;
+  }
+
+  .tariffs {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tariff {
+    padding: 18px 12px;
   }
 }
 </style>

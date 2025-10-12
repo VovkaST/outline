@@ -34,6 +34,7 @@ defineExpose({ price: props.price });
 
 <template>
   <div class="tariff" :class="{ popular: isPopular }">
+    <div v-if="isPopular" class="popular-badge">Выгодно</div>
     <div class="tariff-header">
       <div class="period">
         <slot name="term" />
@@ -75,6 +76,20 @@ defineExpose({ price: props.price });
 
     &:hover {
       transform: translateY(-5px);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--secondary);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
     }
   }
 
@@ -122,6 +137,34 @@ defineExpose({ price: props.price });
     list-style: none;
     margin: 15px 0;
     flex-grow: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .tariff {
+    padding: 20px 15px;
+
+    .period {
+      font-size: 1.1rem;
+    }
+
+    .price-new {
+      font-size: 1.6rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .tariff {
+    padding: 18px 12px;
+
+    .period {
+      font-size: 1rem;
+    }
+
+    .price-new {
+      font-size: 1.5rem;
+    }
   }
 }
 </style>

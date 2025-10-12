@@ -63,4 +63,10 @@ const onActionClick = (price: number) => {
     border-top: 1px solid var(--border);
   }
 }
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 15px;
+  }
+}
 </style>

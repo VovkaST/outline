@@ -22,4 +22,10 @@ li {
     min-width: 16px;
   }
 }
+
+@media (max-width: 768px) {
+  li {
+    font-size: 0.9rem;
+  }
+}
 </style>

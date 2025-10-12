@@ -36,4 +36,11 @@
     font-size: 0.9rem;
   }
 }
+
+@media (max-width: 768px) {
+  .payment-info {
+    padding: 15px;
+    margin-top: 20px;
+  }
+}
 </style>

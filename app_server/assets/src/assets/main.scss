@@ -23,3 +23,9 @@ body {
 
   user-select: none;
 }
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+}

@@ -40,4 +40,38 @@ header {
     line-height: 1.3;
   }
 }
+
+@media (max-width: 768px) {
+  header {
+    padding: 25px 15px 12px;
+  }
+
+  .logo {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 20px 10px 10px;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+  }
+}
 </style>
