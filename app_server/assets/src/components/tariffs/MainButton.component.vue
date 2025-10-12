@@ -23,7 +23,6 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
     <button class="btn btn-primary" :class="`${color}`" :disabled="isDisabled">
       <slot></slot>
     </button>
-    <Spinner v-if="wait" class="wait-spinner" />
   </div>
 </template>
 
@@ -52,6 +51,10 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
       background: linear-gradient(135deg, var(--primary-dark), var(--primary));
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    &[disabled] {
+      color: lightgray;
     }
 
     &.green {
