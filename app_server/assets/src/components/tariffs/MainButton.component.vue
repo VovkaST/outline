@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Spinner } from '@/components/ui';
 import { computed } from 'vue';
 
 const props = withDefaults(
