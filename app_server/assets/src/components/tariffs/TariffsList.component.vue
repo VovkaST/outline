@@ -56,7 +56,7 @@ const onActionClick = (price: number) => {
       <TariffCard
         :price="89900"
         :old-price="139300"
-        :per-month="14900"
+        :per-month="12900"
         :wait="isTariffSelected(89900)"
         isPopular
         @actionClick="onActionClick"
