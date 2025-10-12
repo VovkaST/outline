@@ -9,8 +9,9 @@ const props = withDefaults(
     oldPrice: number;
     perMonth?: number;
     wait?: boolean;
+    isPopular?: boolean;
   }>(),
-  { wait: false },
+  { wait: false, isPopular: false },
 );
 
 const emit = defineEmits<{
@@ -32,79 +33,95 @@ defineExpose({ price: props.price });
 </script>
 
 <template>
-  <div class="card">
-    <div class="badge">
-      <slot name="badge"></slot>
+  <div class="tariff" :class="{ popular: isPopular }">
+    <div class="tariff-header">
+      <div class="period">
+        <slot name="term" />
+      </div>
+      <div class="price-container">
+        <div class="price-old">{{ _oldPrice }} ₽</div>
+        <div class="price-new">{{ _price }} ₽</div>
+        <div class="price-per-month">({{ _perMonth }} ₽/мес)</div>
+      </div>
     </div>
-    <div class="term mb-2">
-      <slot name="term">
-        <span class="gift"></span>
-      </slot>
-    </div>
-    <div class="price-old">{{ _oldPrice }} ₽</div>
-    <div class="price-now mt-1">
-      {{ _price }} ₽
-      <span v-if="perMonth" class="per-month mt-1">({{ _perMonth }} ₽/мес)</span>
-    </div>
-    <div class="actions d-flex flex-column">
-      <MainButton @click="onActionClick" :wait="wait">Купить</MainButton>
-    </div>
+    <ul class="features">
+      <slot name="features" />
+    </ul>
+    <MainButton @click="onActionClick" :wait="wait" :color="isPopular ? 'green' : 'default'">
+      Оплатить сейчас
+    </MainButton>
   </div>
 </template>
 
 <style scoped lang="scss">
-.card {
-  background: var(--bg-card);
-  color: var(--color-default);
-  border-radius: 12px;
-  padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+.tariff {
+  background: white;
+  border-radius: 15px;
+  padding: 25px 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
   position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
-  .badge {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    background: var(--accent-color);
-    color: #041004;
-    padding: 6px 9px;
-    border-radius: 10px;
-    font-size: 0.85rem;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
 
-  .term {
-    font-size: 0.95rem;
-    color: var(--muted-color);
+  &.popular {
+    border: 2px solid var(--secondary);
 
-    :deep(.gift) {
-      display: inline-block;
-      margin-left: 0.5rem;
+    &:hover {
+      transform: translateY(-5px);
     }
   }
 
-  .price-old {
-    color: rgba(0, 0, 0, 0.4);
-    text-decoration: line-through;
-    font-weight: 600;
-  }
+  &-header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
 
-  .price-now {
-    font-size: 1.25rem;
-    font-weight: 800;
-
-    .per-month {
-      font-size: 0.85rem;
-      color: var(--muted-color);
+    .period {
+      font-size: 1.2rem;
       font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .price-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 8px;
+
+      .price-old {
+        font-size: 0.9rem;
+        color: var(--gray);
+        text-decoration: line-through;
+        margin-bottom: 3px;
+      }
+
+      .price-new {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary);
+        line-height: 1;
+      }
+
+      .price-per-month {
+        font-size: 0.85rem;
+        color: var(--gray);
+        margin-top: 3px;
+      }
     }
   }
-
-  .actions {
-    margin-top: 0.75rem;
-    gap: 8px;
+  .features {
+    list-style: none;
+    margin: 15px 0;
+    flex-grow: 1;
   }
 }
 </style>

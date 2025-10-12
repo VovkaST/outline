@@ -6,10 +6,12 @@ const props = withDefaults(
   defineProps<{
     disabled?: boolean;
     wait?: boolean;
+    color?: 'default' | 'green';
   }>(),
   {
     disabled: false,
     wait: false,
+    color: 'default',
   },
 );
 
@@ -18,7 +20,7 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
 
 <template>
   <div class="button-container">
-    <button class="btn btn-primary" :disabled="isDisabled">
+    <button class="btn btn-primary" :class="`${color}`" :disabled="isDisabled">
       <slot></slot>
     </button>
     <Spinner v-if="wait" class="wait-spinner" />
@@ -30,16 +32,36 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
   position: relative;
 
   button {
-    background: linear-gradient(90deg, var(--green-color), var(--dark-green-color));
-    padding: 12px 16px;
-    border-radius: 10px;
+    display: block;
     width: 100%;
-    color: #041004;
-    font-size: 0.85rem;
-    font-weight: 700;
-    line-height: normal;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
     border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    margin-top: auto;
+
+    &:hover {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+
+    &.green {
+      background: linear-gradient(135deg, var(--secondary), #0da271);
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+
+      &:hover {
+        background: linear-gradient(135deg, #0da271, var(--secondary));
+      }
+    }
   }
   .wait-spinner {
     position: absolute;

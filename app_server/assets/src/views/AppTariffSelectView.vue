@@ -15,11 +15,6 @@ const returnUrl = computed<string>(() => route.query['returnUrl'] as string);
 
 const [formSubmitting, formSubmittingToggle] = useToggle(false);
 
-const onHeaderClick = () => {
-  if (!tariffsListRef.value?.$el) return;
-  tariffsListRef.value?.$el.scrollIntoView({ behavior: 'smooth' });
-};
-
 const onActionClick = (price: number) => {
   formSubmitting.value = true;
   paymentStore
@@ -39,22 +34,33 @@ const onActionClick = (price: number) => {
 </script>
 <template>
   <div class="tariff-form-container">
-    <Header @headerButtonClick="onHeaderClick" />
-    <TariffsList ref="tariffsListRef" @actionClick="onActionClick" :wait="formSubmitting" />
-    <footer>© 2025 — Все права защищены</footer>
+    <div class="card">
+      <Header />
+      <TariffsList ref="tariffsListRef" @actionClick="onActionClick" :wait="formSubmitting" />
+      <footer>© 2025 — Все права защищены</footer>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .tariff-form-container {
-  max-width: 600px;
+  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
-  padding: 1rem;
+
+  .card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
 
   footer {
-    margin-top: 40px;
-    color: var(--muted-color);
-    font-size: 0.8rem;
     text-align: center;
+    padding: 20px;
+    color: var(--gray);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
   }
 }
 </style>
