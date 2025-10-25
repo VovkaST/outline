@@ -59,7 +59,8 @@ PLANFIX_API_KEY = env.get("PLANFIX_API_KEY")
 
 # Настройки Telegram-бота
 BOT_TOKEN = env.get("BOT_TOKEN")
-BOT_APP_URL_IOS = env.get("BOT_APP_URL_IOS", default="https://apps.apple.com/ru/")
+BOT_APP_URL_IOS_EU = env.get("BOT_APP_URL_IOS_EU", default="https://apps.apple.com/ru/")
+BOT_APP_URL_IOS_RU = env.get("BOT_APP_URL_IOS_RU", default="https://apps.apple.com/ru/")
 BOT_APP_URL_ANDROID = env.get("BOT_APP_URL_ANDROID", default="https://play.google.com/store/apps/")
 BOT_APP_NAME = env.get("BOT_APP_NAME", default="Some app name")
 

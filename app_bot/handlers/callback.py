@@ -48,16 +48,23 @@ async def connect_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await query.edit_message_text(**menus.OSMenu.to_message())
 
 
-@registry.handler(BotButtons.IOS, BotButtons.ANDROID)
+@registry.handler(BotButtons.IOS_RU, BotButtons.IOS_EU, BotButtons.ANDROID)
 @planfix_log_querydata
 @context_history()
 async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
         return
+
+    urls_map = {
+        BotButtons.IOS_RU: bot_config.APP_URL_IOS_RU,
+        BotButtons.IOS_EU: bot_config.APP_URL_IOS_EU,
+        BotButtons.ANDROID: bot_config.APP_URL_ANDROID,
+    }
+
     query: CallbackQuery = update.callback_query
     base_menu = menus.InstallMenu
     buttons = []
-    url = bot_config.APP_URL_IOS if query.data == BotButtons.IOS else bot_config.APP_URL_ANDROID
+    url = urls_map[query.data]  # pyright: ignore[reportArgumentType]
     buttons.append([InlineKeyboardButton(BotButtons.DOWNLOAD_APP.label, url=url)])
     if base_menu.keyboard:
         buttons.extend(base_menu.keyboard.inline_keyboard)

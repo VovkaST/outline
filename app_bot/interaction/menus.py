@@ -52,7 +52,8 @@ OSMenu = Menu(
     message=messages.CHOOSE_PLATFORM,
     keyboard=InlineKeyboardMarkup(
         [
-            [enum2btn(BotButtons.IOS)],
+            [enum2btn(BotButtons.IOS_RU)],
+            [enum2btn(BotButtons.IOS_EU)],
             [enum2btn(BotButtons.ANDROID)],
             [enum2btn(BotButtons.BACKWARD)],
         ]

@@ -16,7 +16,8 @@ class BotButtons(TextChoices):
     REFERAL = "REFERAL", "👥 Создать партнерскую ссылку"
     HELP = "HELP", "🛠 Помощь"
 
-    IOS = "IOS", "🍏 iOS/Айфон"
+    IOS_EU = "IOS_EU", "🍏 iOS/Айфон (🇪🇺 EU)"
+    IOS_RU = "IOS_RU", "🍏 iOS/Айфон (🇷🇺 RU)"
     ANDROID = "ANDROID", "🤖 Android"
     DOWNLOAD_APP = "DOWNLOAD_APP", "⬇️ Скачать приложение"
     IOS_DOWNLOAD = "IOS_DOWNLOAD", "⬇️ iOS"
