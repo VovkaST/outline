@@ -5,7 +5,8 @@ class BotAppConfig(BaseAppConfig):
     PREFIX = "BOT"
 
     TOKEN: str = ""
-    APP_URL_IOS: str
+    APP_URL_IOS_EU: str
+    APP_URL_IOS_RU: str
     APP_URL_ANDROID: str
     APP_NAME: str
 
