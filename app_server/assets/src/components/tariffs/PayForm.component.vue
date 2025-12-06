@@ -23,8 +23,8 @@ const emit = defineEmits<{
   (e: 'submit', payload: any): void;
 }>();
 
-const amount = defineModel('amount');
-const email = defineModel('email');
+const amount = defineModel<number>('amount');
+const email = defineModel<string>('email');
 
 const allowSubmit = computed<boolean>(() => !!amount.value && !props.wait);
 

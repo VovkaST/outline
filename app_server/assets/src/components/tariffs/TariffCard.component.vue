@@ -6,10 +6,13 @@ import { computed } from 'vue';
 const props = withDefaults(
   defineProps<{
     price: number;
+    discount?: string;
     oldPrice: number;
     perMonth?: number;
+    economy?: number;
     wait?: boolean;
     isPopular?: boolean;
+    guaranteeIcon?: 'shield-alt' | 'crown' | 'gem' | 'star';
   }>(),
   { wait: false, isPopular: false },
 );
@@ -33,35 +36,41 @@ defineExpose({ price: props.price });
 </script>
 
 <template>
-  <div class="tariff" :class="{ popular: isPopular }">
-    <div v-if="isPopular" class="popular-badge">Выгодно</div>
+  <div class="tariff" :class="{ popular: props.isPopular }">
+    <div v-if="props.isPopular" class="popular-badge text-xsmall">🔥 ВЫГОДНЕЕ ВСЕХ</div>
+    <div v-if="props.discount" class="discount-badge text-xsmall">{{ props.discount }}</div>
     <div class="tariff-header">
       <div class="period">
         <slot name="term" />
       </div>
       <div class="price-container">
-        <div class="price-old">{{ _oldPrice }} ₽</div>
+        <div class="price-old text-small">{{ _oldPrice }} ₽</div>
         <div class="price-new">{{ _price }} ₽</div>
-        <div class="price-per-month">({{ _perMonth }} ₽/мес)</div>
+        <div v-if="props.economy" class="economy text-xsmall">Экономия {{ props.economy }} ₽</div>
+        <div class="price-per-month text-small">({{ _perMonth }} ₽/мес)</div>
       </div>
     </div>
     <ul class="features">
       <slot name="features" />
     </ul>
     <MainButton @click="onActionClick" :wait="wait" :color="isPopular ? 'green' : 'default'">
-      Оплатить сейчас
+      <slot name="buttonText"> Оплатить сейчас </slot>
     </MainButton>
+    <div v-if="$slots.guarantee" class="guarantee text-xsmall">
+      <i class="fas" :class="`fa-${props.guaranteeIcon}`"></i>
+      <span><slot name="guarantee" /></span>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .tariff {
   background: white;
-  border-radius: 15px;
-  padding: 25px 20px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
-  border: 1px solid var(--border);
+  border: 2px solid #e5e7eb;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -73,6 +82,7 @@ defineExpose({ price: props.price });
 
   &.popular {
     border: 2px solid var(--secondary);
+    background: var(--light);
 
     &:hover {
       transform: translateY(-5px);
@@ -80,63 +90,98 @@ defineExpose({ price: props.price });
 
     .popular-badge {
       position: absolute;
-      top: -12px;
+      top: -10px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--secondary);
       color: white;
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+      white-space: nowrap;
+      max-width: 90%;
     }
   }
 
   &-header {
     text-align: center;
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border);
-
-    .period {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--dark);
-      margin-bottom: 8px;
-    }
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    position: relative;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     .price-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
 
       .price-old {
-        font-size: 0.9rem;
-        color: var(--gray);
+        color: #6b7280;
         text-decoration: line-through;
-        margin-bottom: 3px;
+        margin-bottom: 2px;
       }
 
       .price-new {
-        font-size: 1.8rem;
-        font-weight: 700;
+        font-size: 1.5rem;
+        font-weight: 800;
         color: var(--primary);
         line-height: 1;
       }
 
+      .economy {
+        color: #dc2626;
+        font-weight: 700;
+        margin-top: 2px;
+        background: #fef2f2;
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+
       .price-per-month {
-        font-size: 0.85rem;
-        color: var(--gray);
-        margin-top: 3px;
+        color: #6b7280;
+        margin-top: 2px;
       }
     }
   }
+
+  .discount-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #dc2626;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+
   .features {
     list-style: none;
     margin: 15px 0;
     flex-grow: 1;
+  }
+
+  .guarantee {
+    text-align: center;
+    padding: 8px;
+    background: #f0fdf4;
+    border-radius: 6px;
+    margin-top: 10px;
+    border: 1px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    i {
+      color: var(--secondary);
+    }
   }
 }
 

@@ -19,7 +19,7 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
 
 <template>
   <div class="button-container">
-    <button class="btn btn-primary" :class="`${color}`" :disabled="isDisabled">
+    <button class="btn btn-primary text-medium" :class="`${color}`" :disabled="isDisabled">
       <slot></slot>
     </button>
   </div>
@@ -32,24 +32,33 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
   button {
     display: block;
     width: 100%;
-    padding: 16px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    padding: 12px;
+    background: linear-gradient(135deg, var(--primary), #7c3aed);
     color: white;
     text-decoration: none;
     border-radius: 10px;
     text-align: center;
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
     margin-top: auto;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &:hover {
       background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      transform: scale(0.96);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+    }
+
+    :active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
     }
 
     &[disabled] {
