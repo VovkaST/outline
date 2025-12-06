@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { TariffCard, TariffFeature, PaymentInfoComponent } from '@/components/tariffs';
+import {
+  TariffCard,
+  StatsList,
+  Support,
+  TariffFeature,
+  PaymentInfoComponent,
+} from '@/components/tariffs';
 import { ref } from 'vue';
 
 const props = withDefaults(
@@ -110,7 +116,13 @@ const onActionClick = (price: number) => {
         <template #guarantee> SSL защита • Безопасные платежи </template>
       </TariffCard>
     </div>
+    <StatsList />
     <PaymentInfoComponent />
+    <Support
+      email="Tagir1117@mail.ru"
+      subject="Вопрос по Halal VPN"
+      body="Здравствуйте! У меня вопрос по услугам VPN:"
+    />
   </div>
 </template>
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Header, TariffsList } from '@/components/tariffs';
+import { Header, TariffsList, StatsList, PaymentInfoComponent } from '@/components/tariffs';
 import { usePaymentStore } from '@/stores/payment';
 import { useToggle } from '@vueuse/core';
 import { computed } from 'vue';
