@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Header, TariffsList, StatsList, PaymentInfoComponent } from '@/components/tariffs';
+import { Header, TariffsList, Footer } from '@/components/tariffs';
 import { usePaymentStore } from '@/stores/payment';
 import { useToggle } from '@vueuse/core';
 import { computed } from 'vue';
@@ -35,7 +35,7 @@ const onActionClick = (price: number) => {
     <div class="card">
       <Header />
       <TariffsList ref="tariffsListRef" @actionClick="onActionClick" :wait="formSubmitting" />
-      <footer>© 2025 — Все права защищены</footer>
+      <Footer />
     </div>
   </div>
 </template>

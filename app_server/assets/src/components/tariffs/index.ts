@@ -1,4 +1,5 @@
 import Delimiter from "./Delimiter.component.vue";
+import Footer from "./Footer.component.vue";
 import Header from "./Header.component.vue";
 import InputText from "./InputText.component.vue";
 import MainButton from './MainButton.component.vue';
@@ -11,5 +12,5 @@ import TariffCard from "./TariffCard.component.vue";
 import TariffFeature from "./TariffFeature.component.vue";
 import TariffsList from "./TariffsList.component.vue";
 
-export { Delimiter, Header, InputText, MainButton, PayForm, PaymentInfoComponent, Stat, StatsList, Support, TariffCard, TariffFeature, TariffsList };
+export { Delimiter, Footer, Header, InputText, MainButton, PayForm, PaymentInfoComponent, Stat, StatsList, Support, TariffCard, TariffFeature, TariffsList };
 
