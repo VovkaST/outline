@@ -8,13 +8,14 @@ const props = defineProps<{
 }>();
 
 const emailHref = computed<string>(() => {
-  return encodeURIComponent(`mailto:${props.email}?subject=${props.subject}&body=${props.body}`);
+  const url = encodeURIComponent(`subject=${props.subject}&body=${props.body}`);
+  return `mailto:${props.email}?${url}`;
 });
 </script>
 <template>
   <div class="support-section">
     <div class="support-title text-medium">💬 Остались вопросы? Напишите нам!</div>
-    <a :href="emailHref" class="email-btn text-medium"> 📧 {{ props.email }} </a>
+    <a :href="emailHref" class="email-btn text-medium" target="_blank"> 📧 {{ props.email }} </a>
     <p class="text-xsmall" style="margin-top: 8px; color: #6b7280">Ответим в течение 24 часов</p>
   </div>
 </template>
