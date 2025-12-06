@@ -30,6 +30,7 @@ const onPublicOfferClose = () => {
       <p>Расчётный счёт: {{ bankAccount }}</p>
     </div>
     <Modal
+      key="publicOffer"
       title="Публичная оферта"
       :show="isPublicOfferShow"
       closeOnEsc
