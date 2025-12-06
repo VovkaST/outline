@@ -1,21 +1,44 @@
 <script setup lang="ts">
+import { Modal } from '@/components';
+import { useToggle } from '@vueuse/core';
+import { PublicOffer } from '@/components/tariffs';
+
 const orgName = 'АЛИМУРЗАЕВ ГАДЖИ АЛИЕВИЧ';
 const inn = '056003385136';
 const bankAccount = '40802810700810195110';
+
+const [isPublicOfferShow, isPublicOfferShowToggle] = useToggle(false);
+
+const onPublicOfferClick = () => {
+  isPublicOfferShowToggle(true);
+};
+const onPublicOfferClose = () => {
+  isPublicOfferShowToggle(false);
+};
 </script>
 <template>
   <div class="footer">
     <p class="text-xsmall">© 2024 Halal VPN — Ваша приватность под защитой</p>
     <div class="footer-links">
-      <a href="https://site.whitemight.ru/#" id="offer-link" class="text-xsmall"
-        >Публичная оферта</a
-      >
+      <a href="#" id="offer-link" class="text-xsmall" @click.prevent="onPublicOfferClick">
+        Публичная оферта
+      </a>
     </div>
     <div class="requisites text-xsmall">
       <p>ИП {{ orgName }}</p>
       <p>ИНН: {{ inn }}</p>
       <p>Расчётный счёт: {{ bankAccount }}</p>
     </div>
+    <Modal
+      title="Публичная оферта"
+      :show="isPublicOfferShow"
+      closeOnEsc
+      closeOnClickOutside
+      @close="onPublicOfferClose"
+    >
+      <template #title>Публичная оферта</template>
+      <template #body> <PublicOffer /> </template>
+    </Modal>
   </div>
 </template>
 <style scoped lang="scss">
