@@ -75,18 +75,13 @@ defineExpose({ price: props.price });
   display: flex;
   flex-direction: column;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  &:active {
+    transform: scale(0.98);
   }
 
   &.popular {
     border: 2px solid var(--secondary);
     background: var(--light);
-
-    &:hover {
-      transform: translateY(-5px);
-    }
 
     .popular-badge {
       position: absolute;
