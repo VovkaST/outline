@@ -1,9 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    bold: boolean;
+  }>(),
+  { bold: false },
+);
+</script>
 
 <template>
-  <li>
+  <li class="text-small">
     <i class="fas fa-check"></i>
-    <slot />
+    <strong v-if="props.bold"><slot /></strong>
+    <slot v-else />
   </li>
 </template>
 

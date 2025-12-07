@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { Header, TariffsList } from '@/components/tariffs';
+import { Header, TariffsList, Footer } from '@/components/tariffs';
 import { usePaymentStore } from '@/stores/payment';
 import { useToggle } from '@vueuse/core';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const paymentStore = usePaymentStore();
-
-const tariffsListRef = ref<typeof TariffsList | null>(null);
 
 const taskId = computed<string>(() => (route.query['task'] as string) || 'empty');
 const returnUrl = computed<string>(() => route.query['returnUrl'] as string);
@@ -37,7 +35,7 @@ const onActionClick = (price: number) => {
     <div class="card">
       <Header />
       <TariffsList ref="tariffsListRef" @actionClick="onActionClick" :wait="formSubmitting" />
-      <footer>© 2025 — Все права защищены</footer>
+      <Footer />
     </div>
   </div>
 </template>

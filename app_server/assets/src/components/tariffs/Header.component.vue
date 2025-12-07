@@ -2,42 +2,108 @@
 
 <template>
   <header>
-    <div class="logo">Halal<span>_VPN</span></div>
-    <h1>Тарифы и оплата</h1>
-    <p class="subtitle">Выберите подходящий период. Без автопродления — оплата разовая.</p>
+    <div class="logo-container">
+      <div class="logo-icon">
+        <i class="fas fa-user-shield"></i>
+      </div>
+      <div class="logo">Halal <span>VPN</span></div>
+    </div>
+    <div class="title-container">
+      <div class="main-title">🔒 Премиум защита</div>
+      <div class="price-title">от 128₽/мес!</div>
+    </div>
+
+    <p class="text-medium">
+      Полная анонимность и доступ ко всем ресурсам. Подключение за 60 секунд!
+    </p>
+
+    <div class="benefits">
+      <div class="benefit text-small"><i class="fas fa-shield-alt"></i> 100% анонимность</div>
+      <div class="benefit text-small"><i class="fas fa-bolt"></i> Макс. скорость</div>
+      <div class="benefit text-small"><i class="fas fa-headset"></i> Поддержка 24/7</div>
+    </div>
   </header>
 </template>
 
 <style scoped lang="scss">
 header {
-  padding: 30px 20px 15px;
+  padding: 20px 15px 15px;
   text-align: center;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: linear-gradient(135deg, var(--primary), #7c3aed);
   color: white;
 
-  .logo {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-    color: white;
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
 
-    span {
-      color: #10b981;
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+
+      i {
+        font-size: 1.3rem;
+        color: #f59e0b;
+      }
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .logo span {
+      color: #f59e0b;
     }
   }
 
-  h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
+  .title-container {
     margin-bottom: 8px;
+
+    .main-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .price-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #f59e0b;
+    }
   }
 
-  .subtitle {
-    font-size: 1rem;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.3;
+  .benefits {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+
+    .benefit {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+
+      i {
+        color: #f59e0b;
+      }
+    }
   }
 }
 
@@ -72,6 +138,15 @@ header {
 
   h1 {
     font-size: 1.3rem;
+  }
+}
+@media (max-width: 360px) {
+  .main-title {
+    font-size: 1.3rem;
+  }
+
+  .price-title {
+    font-size: 1.4rem;
   }
 }
 </style>

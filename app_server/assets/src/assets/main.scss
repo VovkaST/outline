@@ -1,4 +1,16 @@
-@import "./base.scss";
+:root {
+  --primary: #8B5CF6;
+  --secondary: #10B981;
+  --dark: #1F2937;
+  --light: #F9FAFB;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
 body {
   margin: 0;
@@ -10,7 +22,6 @@ body {
   align-items: center;
   justify-content: center;
 
-  font-family: var(--font-family-default);
   color: var(--dark);
   word-break: break-word;
   text-rendering: optimizeLegibility;
@@ -24,8 +35,24 @@ body {
   user-select: none;
 }
 
+.text-large {
+  font-size: 1.4rem;
+}
+
+.text-medium {
+  font-size: 1rem;
+}
+
+.text-small {
+  font-size: 0.8rem;
+}
+
+.text-xsmall {
+  font-size: 0.7rem;
+}
+
 @media (max-width: 768px) {
   body {
-    padding: 10px;
+    padding: 8px 6px;
   }
 }
