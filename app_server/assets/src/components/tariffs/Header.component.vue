@@ -114,7 +114,6 @@ header {
 
   .logo {
     font-size: 1.6rem;
-    margin-bottom: 10px;
   }
 
   h1 {
