@@ -158,4 +158,10 @@ const onActionClick = (price: number) => {
     padding: 18px 12px;
   }
 }
+
+@media (max-width: 360px) {
+  .tariffs-container {
+    padding: 12px 8px;
+  }
+}
 </style>

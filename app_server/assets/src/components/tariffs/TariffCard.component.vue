@@ -207,4 +207,9 @@ defineExpose({ price: props.price });
     }
   }
 }
+@media (max-width: 360px) {
+  .tariff {
+    padding: 14px 12px;
+  }
+}
 </style>

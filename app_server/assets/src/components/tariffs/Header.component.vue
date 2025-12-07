@@ -140,4 +140,13 @@ header {
     font-size: 1.3rem;
   }
 }
+@media (max-width: 360px) {
+  .main-title {
+    font-size: 1.3rem;
+  }
+
+  .price-title {
+    font-size: 1.4rem;
+  }
+}
 </style>
