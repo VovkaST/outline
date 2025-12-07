@@ -4,7 +4,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/app/',
+      path: '/payment/app/',
       name: 'app-main',
       children: [
         {

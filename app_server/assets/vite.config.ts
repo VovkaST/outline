@@ -13,7 +13,6 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 8080,
   },
-  base: '/payment',
   define: {
     'process.env': {},
   },
@@ -27,17 +26,17 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, './src/main.ts'),
       name: 'Assets',
-      // the proper extensions will be added
       fileName: 'assets',
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
+      input: {
+        main: resolve(__dirname, 'index.html'),
+      },
       external: [],
       output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {},
+        entryFileNames: `[name].[hash].js`,
+        chunkFileNames: `[name].[hash].js`,
+        assetFileNames: `[name].[hash].[ext]`
       },
     },
   },
