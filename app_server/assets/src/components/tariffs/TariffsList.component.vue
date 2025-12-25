@@ -119,7 +119,7 @@ const onActionClick = (price: number) => {
     <StatsList />
     <PaymentInfoComponent />
     <Support
-      email="Tagir1117@mail.ru"
+      vk="https://vk.com/halal_it"
       subject="Вопрос по Halal VPN"
       body="Здравствуйте! У меня вопрос по услугам VPN:"
     />
