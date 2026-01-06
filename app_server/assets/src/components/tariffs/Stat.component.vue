@@ -6,8 +6,8 @@ const props = defineProps<{
 </script>
 <template>
   <div class="stat">
-    <div class="stat-number text-large">{{ props.number }}</div>
-    <div class="stat-text text-xsmall">{{ props.text }}</div>
+    <div class="stat-number text-large" v-html="props.number"></div>
+    <div class="stat-text text-xsmall" v-html="props.text"></div>
   </div>
 </template>
 <style lang="scss" scoped>
