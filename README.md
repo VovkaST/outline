@@ -84,6 +84,9 @@ $ /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
 * `TBANK_TERMINAL_PASSWORD` &ndash; пароль терминала
 * `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей
 * `TBANK_USE_FAIL_PAYMENT_REDIRECT_URL` &ndash; url для редиректов платежей, завершившихся ошибкой
+* `YOOKASSA_ACCOUNT_ID` &ndash; идентификатор аккаунта Yookassa
+* `YOOKASSA_TOKEN` &ndash; токен API Yookassa
+* `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей 
 * `PLANFIX_ACCOUNT` &ndash; имя аккаунта PlanFix
 * `PLANFIX_TOKEN` &ndash; токен API PlanFix
 * `DEFAULT_PAYMENT_DEADLINE` &ndash; время жизни ссылки платежа (необязательный).
@@ -98,6 +101,14 @@ $ chmod +x run_server.sh
 Затем для запустить его:
 ```commandline
 $ ./run_server.sh
+```
+
+### Перезапуск приложения после простого изменения переменных окружения
+После изменения переменных окружения в `.env`-файле необходимо перезапустить целевой контейнер:
+```commandline
+$ docker compose up -d server    # Приложение API
+$ docker compose up -d bot       # Telegram-бот
+$ docker compose up -d assets    # Пересобрать фронт
 ```
 
 ## _Только для локальной разработки. Для доступа на продуктовом сервере необходима соответствующая настройка Nginx._
