@@ -6,7 +6,7 @@
       <div class="logo-icon">
         <i class="fas fa-user-shield"></i>
       </div>
-      <div class="logo">Halal <span>VPN</span></div>
+      <div class="logo">Halal</div>
     </div>
     <div class="title-container">
       <div class="main-title">🔒 Премиум защита</div>
