@@ -18,7 +18,7 @@ const onPublicOfferClose = () => {
 </script>
 <template>
   <div class="footer">
-    <p class="text-xsmall">© 2024 Halal VPN — Ваша приватность под защитой</p>
+    <p class="text-xsmall">© 2024 Halal — Ваша приватность под защитой</p>
     <div class="footer-links">
       <a href="#" id="offer-link" class="text-xsmall" @click.prevent="onPublicOfferClick">
         Публичная оферта

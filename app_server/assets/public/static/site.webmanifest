@@ -1,6 +1,6 @@
 {
-  "name": "Halal VPN",
-  "short_name": "Halal VPN",
+  "name": "Halal",
+  "short_name": "Halal",
   "icons": [
     {
       "src": "/static/web-app-manifest-192x192.png",

@@ -120,8 +120,8 @@ const onActionClick = (price: number) => {
     <PaymentInfoComponent />
     <Support
       vk="https://vk.com/halal_it"
-      subject="Вопрос по Halal VPN"
-      body="Здравствуйте! У меня вопрос по услугам VPN:"
+      subject="Вопрос по Halal"
+      body="Здравствуйте! У меня вопрос по услугам Halal:"
     />
   </div>
 </template>
