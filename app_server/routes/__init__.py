@@ -5,6 +5,7 @@ __all__ = [
     "payments_routes_v2",
     "server_routes",
     "subscription_routes",
+    "tasks_routes",
 ]
 
 from .keys import routes as keys_routes
@@ -13,3 +14,4 @@ from .payments import routes as payments_routes
 from .payments_2 import routes as payments_routes_v2
 from .server import routes as server_routes
 from .subscription import routes as subscription_routes
+from .tasks import routes as tasks_routes

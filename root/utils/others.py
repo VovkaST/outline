@@ -2,6 +2,7 @@ import re
 from datetime import datetime, timedelta
 
 import aiohttp
+from fastapi.routing import APIRoute
 from starlette import status
 
 
@@ -12,7 +13,7 @@ def str2bool(s: str) -> bool:
     return False
 
 
-def str2int(s: str) -> int:
+def str2int(s: str | None) -> int:
     """Гарантированно вернёт число из строки."""
     if s is None:
         return 0
@@ -23,7 +24,7 @@ def str2int(s: str) -> int:
         return int(nums[0]) if len(nums) else 0
 
 
-def get_route_name(route) -> str:
+def get_route_name(route: APIRoute) -> str:
     return route.name
 
 

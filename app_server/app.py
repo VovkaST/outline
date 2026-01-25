@@ -46,6 +46,7 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
     app.include_router(routes.payments_routes_v2, prefix="/api")
     app.include_router(routes.server_routes, prefix="/api")
     app.include_router(routes.subscription_routes, prefix="/api")
+    app.include_router(routes.tasks_routes, prefix="/api")
     app.include_router(bot_routes, prefix="/api")
     app.mount("/", StaticFiles(directory="app_server/assets", html=True, check_dir=True), name="static")
     return app

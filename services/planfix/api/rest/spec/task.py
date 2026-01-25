@@ -1,3 +1,5 @@
+from typing import Any
+
 from services.planfix.api.base import BaseAPIEntity
 from services.planfix.api.interfaces.task import ITask
 from services.planfix.api.rest.enums import OrderDirection
@@ -67,7 +69,7 @@ class Task(BaseAPIEntity, ITask):
     def build_fields_list(self, fields: list[str]) -> str:
         return ",".join(self.default_fields + (fields or []))
 
-    def extract_default_filters(self, **kwargs) -> dict:
+    def extract_default_filters(self, **kwargs: dict[str, Any]) -> dict[str, int | str]:
         _kwargs = {}
         if offset := kwargs.pop("offset", None):
             _kwargs["offset"] = offset
@@ -75,7 +77,15 @@ class Task(BaseAPIEntity, ITask):
             _kwargs["pageSize"] = page_size
         return _kwargs
 
-    async def get(self, task_id: int, fields: list[str] = None):
+    async def create_with_set_custom_field(
+        self, *args: models.CustomFieldValueRequest, name: str, template: int, description: str = ""
+    ):
+        payload = models.TaskCreateWithSetFieldRequest(
+            name=name, description=description, template={"id": template}, customFieldData=[*args]
+        )
+        return await self.api.make_request("create", method="post", json=payload.model_dump(mode="json"))
+
+    async def get(self, task_id: int, fields: list[str] | None = None):
         return await self.api.make_request(
             "get_task", method="get", task_id=task_id, params={"fields": self.build_fields_list(fields)}
         )

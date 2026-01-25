@@ -55,6 +55,7 @@ class PlanfixXMLAPI(BaseHTTPService):
 
 class PlanfixRestAPI(BaseHTTPService):
     urls = {
+        "create": "task",
         "get_task": "task/{task_id}",
         "update_task": "task/{task_id}",
         "task_list": "task/list",
