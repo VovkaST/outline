@@ -21,8 +21,6 @@ const emit = defineEmits<{
   (e: 'deviceSelect', device: DeviceType): void;
   (e: 'stepChange', step: number): void;
   (e: 'storeClick', store: StoreLink): void;
-  (e: 'subscriptionClick'): void;
-  (e: 'videoLoad'): void;
 }>();
 
 const deviceSelectionTranslations = computed(() => ({
@@ -72,14 +70,6 @@ const handleStepChange = (step: number) => {
 
 const handleStoreClick = (store: StoreLink) => {
   emit('storeClick', store);
-};
-
-const handleSubscriptionClick = () => {
-  emit('subscriptionClick');
-};
-
-const handleVideoLoad = () => {
-  emit('videoLoad');
 };
 </script>
 
@@ -133,7 +123,6 @@ const handleVideoLoad = () => {
       <SubscriptionCard
         :subscription-url="subscriptionUrl"
         :translations="subscriptionTranslations"
-        @subscription-click="handleSubscriptionClick"
       />
 
       <div class="buttons-container">
@@ -155,7 +144,7 @@ const handleVideoLoad = () => {
       :title="translations.steps.step4.title"
       :instruction="translations.steps.step4.instruction"
     >
-      <VideoPlayer :translations="videoTranslations" @video-load="handleVideoLoad" />
+      <VideoPlayer :translations="videoTranslations" />
 
       <div class="info-note">
         <i class="fas fa-info-circle"></i>

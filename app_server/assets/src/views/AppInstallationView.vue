@@ -6,10 +6,10 @@ import type { StoreLink } from '@/components/installation/AppStores.component.vu
 import { getTranslations, detectLanguage, type Language, type Translations } from '@/utils/translations';
 import { appLinks } from '@/config/appLinks';
 
-const currentStep = ref(1);
+const currentStep = ref<number>(1);
 const selectedDevice = ref<DeviceType | null>(null);
 const currentLanguage = ref<Language>('ru');
-const isLoading = ref(true);
+const isLoading = ref<boolean>(true);
 
 const translations = computed<Translations>(() => getTranslations(currentLanguage.value));
 
@@ -73,14 +73,6 @@ const handleStoreClick = (_store: StoreLink) => {
     message = translations.value.notifications.general;
   }
   setTimeout(() => showNotification(message), 300);
-};
-
-const handleSubscriptionClick = () => {
-  // Track subscription link click
-};
-
-const handleVideoLoad = () => {
-  // Track video load
 };
 
 const handleLanguageChange = (lang: Language) => {
@@ -152,8 +144,6 @@ onUnmounted(() => {
         @device-select="handleDeviceSelect"
         @step-change="handleStepChange"
         @store-click="handleStoreClick"
-        @subscription-click="handleSubscriptionClick"
-        @video-load="handleVideoLoad"
       />
     </div>
   </div>

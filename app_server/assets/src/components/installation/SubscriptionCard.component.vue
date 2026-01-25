@@ -8,14 +8,6 @@ const props = defineProps<{
     note: string;
   };
 }>();
-
-const emit = defineEmits<{
-  (e: 'subscriptionClick'): void;
-}>();
-
-const handleClick = () => {
-  emit('subscriptionClick');
-};
 </script>
 
 <template>
@@ -31,7 +23,6 @@ const handleClick = () => {
       class="btn"
       target="_blank"
       rel="noopener noreferrer"
-      @click="handleClick"
     >
       <i class="fas fa-external-link-alt"></i>
       {{ translations.buttonText }}

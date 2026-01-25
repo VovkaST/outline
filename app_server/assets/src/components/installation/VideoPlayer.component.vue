@@ -16,10 +16,6 @@ const props = defineProps<{
   };
 }>();
 
-const emit = defineEmits<{
-  (e: 'videoLoad'): void;
-}>();
-
 const videoElement = ref<HTMLVideoElement | null>(null);
 const videoWrapper = ref<HTMLDivElement | null>(null);
 
@@ -67,7 +63,6 @@ const loadVideo = () => {
 
   currentSourceIndex = 0;
   tryNextSource();
-  emit('videoLoad');
 };
 
 const tryNextSource = () => {
