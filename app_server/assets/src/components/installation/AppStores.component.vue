@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { DeviceType } from './DeviceSelection.component.vue';
-import { appLinks } from '@/config/appLinks';
+import { AppConfig } from '@/config/envConfig';
 
 export interface StoreLink {
   url: string;
@@ -22,40 +22,40 @@ const props = defineProps<{
 
 const deviceLinks: Record<DeviceType, StoreLink[] | StoreLink> = {
   android: {
-    url: appLinks.android.url,
+    url: AppConfig.android.url,
     text: 'Google Play',
     icon: 'fab fa-google-play',
     type: 'android',
   },
   iphone: [
     {
-      url: appLinks.iphone.appStoreUs,
+      url: AppConfig.iphone.appStoreUs,
       text: 'App Store (US)',
       icon: 'fab fa-apple',
       type: 'apple',
     },
     {
-      url: appLinks.iphone.appStoreRu,
+      url: AppConfig.iphone.appStoreRu,
       text: 'App Store (RU)',
       icon: 'fab fa-apple',
       type: 'apple',
     },
   ],
   windows: {
-    url: appLinks.windows.url,
+    url: AppConfig.windows.url,
     text: 'Скачать Happ для Windows',
     icon: 'fab fa-windows',
     type: 'windows',
   },
   mac: [
     {
-      url: appLinks.mac.appStoreUs,
+      url: AppConfig.mac.appStoreUs,
       text: 'App Store (US)',
       icon: 'fab fa-apple',
       type: 'apple',
     },
     {
-      url: appLinks.mac.appStoreRu,
+      url: AppConfig.mac.appStoreRu,
       text: 'App Store (RU)',
       icon: 'fab fa-apple',
       type: 'apple',

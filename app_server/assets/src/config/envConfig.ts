@@ -1,4 +1,6 @@
-export interface AppLinksConfig {
+import { getEnvVar } from "./utils";
+
+export interface AppConfigType {
   android: {
     url: string;
   };
@@ -13,21 +15,12 @@ export interface AppLinksConfig {
     appStoreUs: string;
     appStoreRu: string;
   };
-  subscription: {
-    url: string;
-  };
+  poolingInterval: number;
 }
 
-const getEnvVar = (key: string, defaultValue: string): string => {
-  const value = import.meta.env[key];
-  if (!value) {
-    console.warn(`Environment variable ${key} is not set, using default value`);
-    return defaultValue;
-  }
-  return value;
-};
 
-export const appLinks: AppLinksConfig = {
+
+export const AppConfig: AppConfigType = {
   android: {
     url: getEnvVar(
       'VITE_APP_LINK_ANDROID',
@@ -60,10 +53,5 @@ export const appLinks: AppLinksConfig = {
       'https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973',
     ),
   },
-  subscription: {
-    url: getEnvVar(
-      'VITE_SUBSCRIPTION_URL',
-      'https://sub.halal-white.xyz/6FJ3_W6HGZTYbZ72',
-    ),
-  },
+  poolingInterval: Number(getEnvVar('VITE_APP_POOLING_INTERVAL', '1500')),
 };

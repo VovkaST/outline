@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia';
 import {
   OpenAPI,
   OrdersService,
@@ -6,9 +5,11 @@ import {
   PaymentsV2Service,
   SubscriptionService,
 } from '@/api/generated/public';
+import { getEnvVar } from '@/config/utils';
+import { defineStore } from 'pinia';
 
 if (import.meta.env.DEV) {
-  OpenAPI.BASE = 'http://127.0.0.1:8000';
+  OpenAPI.BASE = getEnvVar("VITE_BASE_URL", 'http://127.0.0.1:8000');
 }
 
 export const usePaymentStore = defineStore('payment', {

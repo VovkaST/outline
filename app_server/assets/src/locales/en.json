@@ -52,7 +52,8 @@
     "desc": "For full access to application features",
     "button": "Add subscription",
     "note": "After adding the subscription, return to this page and click the \"I have already added a subscription\" button.",
-    "paymentNote": "You can pay for the subscription in the Happ app"
+    "paymentNote": "You can pay for the subscription in the Happ app",
+    "wait": "Your key is being processed, please wait for it to be issued..."
   },
   "video": {
     "title": "Watch the video tutorial",

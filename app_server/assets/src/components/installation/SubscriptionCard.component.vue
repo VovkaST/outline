@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 const props = defineProps<{
   subscriptionUrl: string;
   translations: {
@@ -6,8 +8,11 @@ const props = defineProps<{
     desc: string;
     buttonText: string;
     note: string;
+    wait: string;
   };
 }>();
+
+const isWaiting = computed<boolean>(() => !props.subscriptionUrl);
 </script>
 
 <template>
@@ -18,7 +23,11 @@ const props = defineProps<{
     <div class="subscription-title">{{ translations.title }}</div>
     <div class="subscription-desc">{{ translations.desc }}</div>
 
+    <div v-if="isWaiting" class="btn">
+      {{ translations.wait }}
+    </div>
     <a
+      v-else
       :href="subscriptionUrl"
       class="btn"
       target="_blank"

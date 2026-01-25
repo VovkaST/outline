@@ -4,16 +4,21 @@ import { InstallationSteps, ProgressBar, LanguageSwitcher } from '@/components/i
 import type { DeviceType } from '@/components/installation/DeviceSelection.component.vue';
 import type { StoreLink } from '@/components/installation/AppStores.component.vue';
 import { getTranslations, detectLanguage, type Language, type Translations } from '@/utils/translations';
-import { appLinks } from '@/config/appLinks';
+import { AppConfig } from '@/config/envConfig';
+import { useTasksStore } from '@/stores/tasks';
+import { useToggle } from '@vueuse/core';
 
 const currentStep = ref<number>(1);
 const selectedDevice = ref<DeviceType | null>(null);
 const currentLanguage = ref<Language>('ru');
 const isLoading = ref<boolean>(true);
 
+const tasksStore = useTasksStore();
+const [isKeyFetching, isKeyFetchingToggle] = useToggle();
+
 const translations = computed<Translations>(() => getTranslations(currentLanguage.value));
 
-const subscriptionUrl = appLinks.subscription.url;
+const subscriptionUrl = ref<string>('');
 
 const setVH = () => {
   const vh = window.innerHeight * 0.01;
@@ -45,6 +50,29 @@ const handleDeviceSelect = (device: DeviceType) => {
   setTimeout(() => {
     currentStep.value = 2;
   }, 300);
+  if (!isKeyFetching.value) {
+    isKeyFetchingToggle(true);
+    tasksStore.createTask().then((response) => {
+      pollingStart(response.id)
+    });
+  }
+};
+
+const pollingInterval = ref();
+const pollingStart = (taskId: number) => {
+  pollingInterval.value = setInterval(() => polling(taskId), AppConfig.poolingInterval);
+};
+const pollingStop = () => {
+  clearInterval(pollingInterval.value);
+  isKeyFetchingToggle(false);
+};
+const polling = async (taskId: number) => {
+  await tasksStore.getTaskKey({ taskId }).then((response) => {
+    if (response.key) {
+      subscriptionUrl.value = response.key;
+      pollingStop();
+    }
+  });
 };
 
 const handleStepChange = (step: number) => {
@@ -91,26 +119,14 @@ onMounted(() => {
   setVH();
   window.addEventListener('resize', setVH);
   window.addEventListener('orientationchange', setVH);
-
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        navigator.serviceWorker
-          .register('/sw.js')
-          .then(() => {
-            console.log('ServiceWorker зарегистрирован');
-          })
-          .catch((err) => {
-            console.log('Ошибка регистрации ServiceWorker:', err);
-          });
-      }, 1000);
-    });
-  }
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', setVH);
   window.removeEventListener('orientationchange', setVH);
+  if (pollingInterval.value) {
+    clearInterval(pollingInterval.value);
+  }
 });
 </script>
 

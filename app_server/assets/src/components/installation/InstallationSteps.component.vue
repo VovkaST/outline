@@ -46,6 +46,7 @@ const subscriptionTranslations = computed(() => ({
   desc: props.translations.subscription.desc,
   buttonText: props.translations.subscription.button,
   note: props.translations.subscription.note,
+  wait: props.translations.subscription.wait,
 }));
 
 const videoTranslations = computed(() => ({
