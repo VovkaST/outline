@@ -1,0 +1,80 @@
+{
+  "header": {
+    "title": "Installation",
+    "subtitle": "Step-by-step guide for your device"
+  },
+  "common": {
+    "loading": "Loading...",
+    "back": "Back"
+  },
+  "steps": {
+    "step1": {
+      "title": "Select your device",
+      "instruction": "Tap on your device model to continue:"
+    },
+    "step2": {
+      "title": "Install the app",
+      "instruction": "Click the button below to download and install the application on your device."
+    },
+    "step3": {
+      "title": "Subscription activation"
+    },
+    "step4": {
+      "title": "Installation complete",
+      "instruction": "You have successfully completed the installation of the Happ test subscription. Before starting work, watch the video tutorial."
+    }
+  },
+  "devices": {
+    "android": {
+      "label": "Android",
+      "desc": "Tap to proceed with installation"
+    },
+    "iphone": {
+      "label": "iPhone or iPad",
+      "desc": "Tap to proceed with installation"
+    },
+    "windows": {
+      "label": "Windows",
+      "desc": "Tap to proceed with installation"
+    },
+    "mac": {
+      "label": "macOS",
+      "desc": "Tap to proceed with installation"
+    }
+  },
+  "buttons": {
+    "installed": "I have installed the Happ app",
+    "next": "I have already added a subscription",
+    "restart": "Start over"
+  },
+  "subscription": {
+    "title": "Add subscription",
+    "desc": "For full access to application features",
+    "button": "Add subscription",
+    "note": "After adding the subscription, return to this page and click the \"I have already added a subscription\" button.",
+    "paymentNote": "You can pay for the subscription in the Happ app"
+  },
+  "video": {
+    "title": "Watch the video tutorial",
+    "description": "Tap to view the final setup instructions",
+    "loadButton": "Load and play",
+    "loading": "Loading video...",
+    "errorTitle": "Failed to load video",
+    "errorDescription": "Please check access to the file \"video/video.MP4\"",
+    "retry": "Try again",
+    "fullscreen": "Full screen",
+    "exitFullscreen": "Exit"
+  },
+  "stores": {
+    "android": "Google Play",
+    "windows": "Download Happ for Windows",
+    "appStoreUs": "App Store (US)",
+    "appStoreRu": "App Store (RU)"
+  },
+  "notifications": {
+    "appStore": "Opening App Store",
+    "playStore": "Opening Google Play",
+    "windows": "Starting file download",
+    "general": "Opening download page"
+  }
+}

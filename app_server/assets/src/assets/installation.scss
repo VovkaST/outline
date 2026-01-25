@@ -1,0 +1,199 @@
+// Стили для страницы установки
+:root {
+  --card-bg: rgba(255, 255, 255, 0.98);
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --radius: 16px;
+  --transition: all 0.2s ease;
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --vh: 1vh;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: pan-y;
+}
+
+html {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  color: var(--dark);
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card-bg: rgba(30, 41, 59, 0.98);
+  }
+
+  body {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  }
+}
+
+.installation-container {
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: auto;
+  padding: 20px;
+  padding-left: calc(20px + var(--safe-area-inset-left));
+  padding-right: calc(20px + var(--safe-area-inset-right));
+  padding-top: calc(20px + var(--safe-area-inset-top));
+  padding-bottom: calc(20px + var(--safe-area-inset-bottom));
+}
+
+.installation-header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-top: 10px;
+}
+
+.installation-logo {
+  width: 56px;
+  height: 56px;
+  background: var(--light);
+  border-radius: 16px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+
+  i {
+    font-size: 24px;
+    color: var(--primary);
+  }
+}
+
+.installation-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--light);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
+.installation-subtitle {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.loading-placeholder {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  z-index: 1000;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+  animation: fadeInOut 2s ease forwards;
+  max-width: 90%;
+  text-align: center;
+  word-break: break-word;
+  opacity: 0;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  85% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+}
+
+@media (max-width: 360px) {
+  .installation-container {
+    padding: 16px;
+    padding-left: calc(16px + var(--safe-area-inset-left));
+    padding-right: calc(16px + var(--safe-area-inset-right));
+    padding-top: calc(16px + var(--safe-area-inset-top));
+    padding-bottom: calc(16px + var(--safe-area-inset-bottom));
+  }
+
+  .installation-title {
+    font-size: 22px;
+  }
+}
+
+@media (min-height: 800px) {
+  .installation-header {
+    margin-bottom: 28px;
+    padding-top: 20px;
+  }
+
+  .installation-logo {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+
+    i {
+      font-size: 28px;
+    }
+  }
+
+  .installation-title {
+    font-size: 26px;
+  }
+
+  .installation-subtitle {
+    font-size: 15px;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .installation-container {
+    padding-top: calc(30px + var(--safe-area-inset-top));
+  }
+}

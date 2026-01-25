@@ -22,7 +22,11 @@
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "schema:generate": "openapi --input src/api/schema.json --output ./src/api/generated/public --indent 2 --useOptions"
+    "schema:generate": "openapi --input src/api/schema.json --output ./src/api/generated/public --indent 2 --useOptions",
+    "dev:installation": "vite --config vite.config.installation.ts --mode=development",
+    "build:installation": "run-p type-check \"build-only:installation {@}\" --",
+    "build-only:installation": "vite build --config vite.config.installation.ts --emptyOutDir",
+    "preview:installation": "vite preview --config vite.config.installation.ts --port 8081"
   },
   "dependencies": {
     "@jridgewell/sourcemap-codec": "^1.5.0",
