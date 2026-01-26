@@ -20,7 +20,7 @@ class BaseRequest(BaseModel):
         return ",".join(list(self._fields) + field_names)
 
     def with_fields(self, *fields: list[str]) -> Self:
-        instance = self.copy(deep=True)
+        instance = self.model_copy(deep=True)
         cleared_list = []
         for field in fields:
             if field not in self._fields:
@@ -85,6 +85,23 @@ class AddComment(BaseModel):
 class CustomFieldValueRequest(BaseModel):
     field: BaseEntity | None = Field(default_factory=BaseEntity)
     value: Any | None = None
+
+
+class TaskCreateRequest(BaseModel):
+    name: str
+    description: str | None = Field(default=None)
+    customFieldData: list[CustomFieldValueRequest] | None = Field(default_factory=list)
+
+
+class TaskCreateByObjectRequest(TaskCreateRequest):
+    class Object(BaseModel):
+        id: int
+
+    object: Object
+
+
+class TaskCreateWithSetFieldRequest(TaskCreateByObjectRequest):
+    customFieldData: list[CustomFieldValueRequest] | None = Field(default_factory=list)
 
 
 class TaskUpdateRequest(BaseModel):

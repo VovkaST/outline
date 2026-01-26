@@ -1,4 +1,5 @@
 from enum import IntEnum
+from typing import Any, TypeAlias
 
 from pydantic import PositiveInt
 
@@ -18,6 +19,7 @@ class CustomFields(IntEnum):
     VPN_KEY_LINK = 140352
     PAYMENT_SUM = 149932
     PAYMENT_SUM2 = 140326
+    USER_KEY = 139978
 
 
 class VPNKeyF(CustF):
@@ -70,29 +72,42 @@ class PaymentSum2F(CustF):
     field: PositiveInt = CustomFields.PAYMENT_SUM2
 
 
-def TelegramIdUpdate(value: str | int) -> dict:
+class UserKeyF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
+    field: PositiveInt = CustomFields.USER_KEY
+
+
+CustomFieldUpdateBody: TypeAlias = dict[str, str | int | dict[str, CustomFields]]
+CustomCompositeFieldUpdateBody: TypeAlias = dict[str, dict[str, CustomFields] | dict[str, Any]]
+
+
+def TelegramIdUpdate(value: str | int) -> CustomFieldUpdateBody:
     return {"field": {"id": CustomFields.TELEGRAM_ID}, "value": value}
 
 
-def RebillIdUpdate(value: str | int) -> dict:
+def RebillIdUpdate(value: str | int) -> CustomFieldUpdateBody:
     return {"field": {"id": CustomFields.REBILL_ID}, "value": value}
 
 
-def AccountTokenUpdate(value: str) -> dict:
+def AccountTokenUpdate(value: str) -> CustomFieldUpdateBody:
     return {"field": {"id": CustomFields.ACCOUNT_TOKEN}, "value": value}
 
 
-def RequestKeyUpdate(value: str) -> dict:
+def RequestKeyUpdate(value: str) -> CustomFieldUpdateBody:
     return {"field": {"id": CustomFields.REQUEST_KEY}, "value": value}
 
 
-def SubscriptionStatusUpdate(status: SubscriptionStatus) -> dict:
+def SubscriptionStatusUpdate(status: SubscriptionStatus) -> CustomCompositeFieldUpdateBody:
     return {"field": {"id": CustomFields.SUBSCRIPTION_STATUS_ID}, "value": {"id": status}}
 
 
-def PaymentSumUpdate(value: int) -> dict:
+def PaymentSumUpdate(value: int) -> CustomFieldUpdateBody:
     return {"field": {"id": CustomFields.PAYMENT_SUM}, "value": value}
 
 
-def PaymentSum2Update(value: int) -> dict:
+def PaymentSum2Update(value: int) -> CustomFieldUpdateBody:
     return {"field": {"id": CustomFields.PAYMENT_SUM2}, "value": value}
+
+
+def UserKeyUpdate(value: int) -> CustomCompositeFieldUpdateBody:
+    return {"field": {"id": CustomFields.USER_KEY}, "value": {"id": value}}

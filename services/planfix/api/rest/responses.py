@@ -10,6 +10,12 @@ from services.planfix.filters import CustomFields
 ObjectId: TypeAlias = int | str
 
 
+class ErrorResponse(BaseModel):
+    result: str
+    code: int
+    error: str
+
+
 class BaseEntity(BaseModel):
     id: ObjectId | None = None
     name: str | None = None
@@ -176,3 +182,8 @@ class TaskResponse(BaseModel):
 class TaskFilterResponse(BaseModel):
     result: str
     tasks: list[TaskResponse]
+
+
+class CreateTaskResponse(BaseModel):
+    result: str
+    id: int
