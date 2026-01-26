@@ -42,3 +42,12 @@ services:
       - ./static:/static
     working_dir: /app_server/assets/
     command: bash -c "yarn install && yarn schema:generate && yarn run build-only"
+
+  assets-installation:
+    image: node:22.14
+    container_name: outline-assets-installation
+    volumes:
+      - ./app_server/assets:/app_server/assets
+      - ./static:/static
+    working_dir: /app_server/assets/
+    command: bash -c "yarn install && yarn schema:generate && yarn run build-only:installation"
