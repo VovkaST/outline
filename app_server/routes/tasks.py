@@ -21,8 +21,7 @@ async def create(request: Request):
     """Создать задачу."""
     result = await planfix_api.task.create_with_set_custom_field(
         CustomFieldValueRequest.model_validate(UserKeyUpdate(42)),
-        template=42924,
-        name="Ключ с сайта",
+        object_id=259510,
         description="Ключ с сайта",
     )
     response = planfix_reponses.CreateTaskResponse.model_validate(result)

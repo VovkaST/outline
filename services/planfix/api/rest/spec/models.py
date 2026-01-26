@@ -93,14 +93,14 @@ class TaskCreateRequest(BaseModel):
     customFieldData: list[CustomFieldValueRequest] | None = Field(default_factory=list)
 
 
-class TaskCreateByTemplateRequest(TaskCreateRequest):
-    class Template(BaseModel):
+class TaskCreateByObjectRequest(TaskCreateRequest):
+    class Object(BaseModel):
         id: int
 
-    template: Template
+    object: Object
 
 
-class TaskCreateWithSetFieldRequest(TaskCreateByTemplateRequest):
+class TaskCreateWithSetFieldRequest(TaskCreateByObjectRequest):
     customFieldData: list[CustomFieldValueRequest] | None = Field(default_factory=list)
 
 

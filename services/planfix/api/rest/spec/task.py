@@ -78,10 +78,10 @@ class Task(BaseAPIEntity, ITask):
         return _kwargs
 
     async def create_with_set_custom_field(
-        self, *args: models.CustomFieldValueRequest, name: str, template: int, description: str = ""
+        self, *args: models.CustomFieldValueRequest, object_id: int, name: str = "", description: str = ""
     ):
         payload = models.TaskCreateWithSetFieldRequest(
-            name=name, description=description, template={"id": template}, customFieldData=[*args]
+            name=name, description=description, object={"id": object_id}, customFieldData=[*args]
         )
         return await self.api.make_request("create", method="post", json=payload.model_dump(mode="json"))
 

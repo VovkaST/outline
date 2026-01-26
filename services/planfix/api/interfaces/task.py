@@ -7,7 +7,7 @@ from services.planfix.api.rest.spec.models import CustomFieldValueRequest
 class ITask:
     @abstractmethod
     async def create_with_set_custom_field(
-        self, *args: CustomFieldValueRequest, name: str, template: int, description: str = ""
+        self, *args: CustomFieldValueRequest, object_id: int, name: str = "", description: str = ""
     ):
         """Функция получения карточки задачи"""
 
