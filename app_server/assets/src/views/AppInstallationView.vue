@@ -3,7 +3,12 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { InstallationSteps, ProgressBar, LanguageSwitcher } from '@/components/installation';
 import type { DeviceType } from '@/components/installation/DeviceSelection.component.vue';
 import type { StoreLink } from '@/components/installation/AppStores.component.vue';
-import { getTranslations, detectLanguage, type Language, type Translations } from '@/utils/translations';
+import {
+  getTranslations,
+  detectLanguage,
+  type Language,
+  type Translations,
+} from '@/utils/translations';
 import { AppConfig } from '@/config/envConfig';
 import { useTasksStore } from '@/stores/tasks';
 import { useToggle } from '@vueuse/core';
@@ -53,7 +58,7 @@ const handleDeviceSelect = (device: DeviceType) => {
   if (!isKeyFetching.value) {
     isKeyFetchingToggle(true);
     tasksStore.createTask().then((response) => {
-      pollingStart(response.id)
+      pollingStart(response.id);
     });
   }
 };
@@ -81,7 +86,7 @@ const handleStepChange = (step: number) => {
     selectedDevice.value = null;
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  
+
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   if (isIOS) {
     document.body.scrollTop = 0;
@@ -144,13 +149,18 @@ onUnmounted(() => {
 
       <div class="installation-header">
         <div class="installation-logo">
-          <i class="fas fa-rocket"></i>
+          <img
+            src="/static/logo.jpg"
+            :alt="translations.header.logoAlt"
+            class="logo-img"
+            id="logoImage"
+          />
         </div>
         <h1 class="installation-title">{{ translations.header.title }}</h1>
         <p class="installation-subtitle">{{ translations.header.subtitle }}</p>
       </div>
 
-      <ProgressBar :current-step="currentStep" :total-steps="4" />
+      <ProgressBar :current-step="currentStep" :total-steps="3" />
 
       <InstallationSteps
         :current-step="currentStep"
@@ -181,11 +191,24 @@ onUnmounted(() => {
   position: relative;
   -webkit-user-select: none;
   user-select: none;
+
+  .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 12px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   .installation-view {
     background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .logo-img {
+    object-fit: cover;
   }
 }
 </style>

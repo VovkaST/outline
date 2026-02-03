@@ -1,5 +1,14 @@
 // Стили для страницы установки
 :root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --secondary: #10b981;
+  --warning: #f59e0b;
+  --warning-dark: #d97706;
+  --dark: #0f172a;
+  --light: #ffffff;
+  --gray: #64748b;
+  --gray-light: #e2e8f0;
   --card-bg: rgba(255, 255, 255, 0.98);
   --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   --radius: 16px;
@@ -9,6 +18,66 @@
   --safe-area-inset-left: env(safe-area-inset-left, 0px);
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
   --vh: 1vh;
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --dark: #f8fafc;
+    --light: #1e293b;
+    --card-bg: rgba(30, 41, 59, 0.98);
+    --gray-light: #334155;
+    --gray: #94a3b8;
+  }
+
+  body {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  }
+
+  .device-option,
+  .store-btn,
+  .btn-back {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--dark);
+  }
+
+  .device-option .device-desc,
+  .instruction-text,
+  .subscription-desc {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .subscription-card,
+  .info-note {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(16, 185, 129, 0.4);
+  }
+
+  .btn-back {
+    border-color: var(--gray-light);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .btn-back:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .video-placeholder,
+  .video-loading,
+  .video-error {
+    background: rgba(0, 0, 0, 0.9);
+  }
+
+  .fullscreen-btn {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+  }
+
+  .critical-notice {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.15) 100%);
+    color: #fef3c7;
+    border-color: rgba(245, 158, 11, 0.4);
+  }
 }
 
 * {
@@ -139,14 +208,17 @@ body {
     opacity: 0;
     transform: translateX(-50%) translateY(-20px);
   }
+
   15% {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
+
   85% {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
+
   100% {
     opacity: 0;
     transform: translateX(-50%) translateY(-20px);

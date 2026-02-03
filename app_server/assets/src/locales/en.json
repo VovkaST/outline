@@ -1,7 +1,8 @@
 {
   "header": {
-    "title": "Installation",
-    "subtitle": "Step-by-step guide for your device"
+    "title": "Installation Halal_VPN",
+    "subtitle": "Step-by-step guide for your device",
+    "logoAlt": "Halal_VPN logo"
   },
   "common": {
     "loading": "Loading...",
@@ -51,9 +52,11 @@
     "title": "Add subscription",
     "desc": "For full access to application features",
     "button": "Add subscription",
-    "note": "After adding the subscription, return to this page and click the \"I have already added a subscription\" button.",
+    "note": "To activate, pay for the subscription in the HALAL_VPN app",
     "paymentNote": "You can pay for the subscription in the Happ app",
-    "wait": "Your key is being processed, please wait for it to be issued..."
+    "wait": "Your key is being processed, please wait for it to be issued...",
+    "imagePaymentNote": "Instructions on how to pay for the subscription in the HALAL_VPN app",
+    "imagePaymentDescription": "Subscription payment in the HALAL_VPN app"
   },
   "video": {
     "title": "Watch the video tutorial",

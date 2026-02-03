@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { Notice } from '@/components/ui';
 
 const props = defineProps<{
   subscriptionUrl: string;
@@ -9,6 +10,8 @@ const props = defineProps<{
     buttonText: string;
     note: string;
     wait: string;
+    imagePaymentNote: string;
+    imagePaymentDescription: string;
   };
 }>();
 
@@ -26,22 +29,21 @@ const isWaiting = computed<boolean>(() => !props.subscriptionUrl);
     <div v-if="isWaiting" class="btn">
       {{ translations.wait }}
     </div>
-    <a
-      v-else
-      :href="subscriptionUrl"
-      class="btn"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <a v-else :href="subscriptionUrl" class="btn" target="_blank" rel="noopener noreferrer">
       <i class="fas fa-external-link-alt"></i>
       {{ translations.buttonText }}
     </a>
   </div>
 
-  <div class="info-note">
-    <i class="fas fa-info-circle"></i>
-    <span>{{ translations.note }}</span>
-  </div>
+  <Notice notification-type="critical">{{ translations.note }}</Notice>
+
+  <img
+    src="/static/happ-subscription-payment.jpg"
+    :alt="translations.imagePaymentNote"
+    class="payment-image"
+    id="paymentImage"
+  />
+  <div class="image-caption" id="imageCaption">{{ translations.imagePaymentDescription }}</div>
 </template>
 
 <style scoped lang="scss">
@@ -138,6 +140,32 @@ const isWaiting = computed<boolean>(() => !props.subscriptionUrl);
   }
 }
 
+.payment-image {
+  width: 100%;
+  max-width: 100%;
+  margin: 20px 0;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border: 4px solid var(--light);
+  height: auto;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+  }
+}
+
+.image-caption {
+  text-align: center;
+  font-size: 12px;
+  color: var(--gray);
+  margin-top: 8px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
 @media (prefers-color-scheme: dark) {
   .subscription-card {
     background: rgba(255, 255, 255, 0.1);
@@ -154,6 +182,13 @@ const isWaiting = computed<boolean>(() => !props.subscriptionUrl);
 
   .info-note {
     background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .payment-image {
+    max-height: 400px;
+    object-fit: contain;
   }
 }
 </style>
