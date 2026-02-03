@@ -1,4 +1,6 @@
-import Spinner from './Spinner.component.vue';
+import Notice from './Notice.component.vue';
 import OverflowLayer from './OverflowLayer.vue';
+import Spinner from './Spinner.component.vue';
 
-export { OverflowLayer, Spinner };
+export { Notice, OverflowLayer, Spinner };
+

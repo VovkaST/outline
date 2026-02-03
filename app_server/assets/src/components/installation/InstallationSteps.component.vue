@@ -6,7 +6,6 @@ import type { DeviceType } from './DeviceSelection.component.vue';
 import DeviceSelection from './DeviceSelection.component.vue';
 import Step from './Step.component.vue';
 import SubscriptionCard from './SubscriptionCard.component.vue';
-import VideoPlayer from './VideoPlayer.component.vue';
 
 import type { Translations } from '@/utils/translations';
 
@@ -47,18 +46,8 @@ const subscriptionTranslations = computed(() => ({
   buttonText: props.translations.subscription.button,
   note: props.translations.subscription.note,
   wait: props.translations.subscription.wait,
-}));
-
-const videoTranslations = computed(() => ({
-  title: props.translations.video.title,
-  description: props.translations.video.description,
-  loadButtonText: props.translations.video.loadButton,
-  loadingText: props.translations.video.loading,
-  errorTitle: props.translations.video.errorTitle,
-  errorDescription: props.translations.video.errorDescription,
-  retryButtonText: props.translations.video.retry,
-  fullscreenButtonText: props.translations.video.fullscreen,
-  exitFullscreenText: props.translations.video.exitFullscreen,
+  imagePaymentNote: props.translations.subscription.imagePaymentNote,
+  imagePaymentDescription: props.translations.subscription.imagePaymentDescription,
 }));
 
 const handleDeviceSelect = (device: DeviceType) => {
@@ -116,48 +105,14 @@ const handleStoreClick = (store: StoreLink) => {
     </Step>
 
     <!-- Шаг 3: Активация подписки -->
-    <Step
-      v-show="currentStep === 3"
-      :step-number="3"
-      :title="translations.steps.step3.title"
-    >
+    <Step v-show="currentStep === 3" :step-number="3" :title="translations.steps.step3.title">
       <SubscriptionCard
         :subscription-url="subscriptionUrl"
         :translations="subscriptionTranslations"
       />
 
       <div class="buttons-container">
-        <button class="btn" @click="handleStepChange(4)">
-          <i class="fas fa-check"></i>
-          {{ translations.buttons.next }}
-        </button>
         <button class="btn btn-back" @click="handleStepChange(2)">
-          <i class="fas fa-arrow-left"></i>
-          {{ translations.common.back }}
-        </button>
-      </div>
-    </Step>
-
-    <!-- Шаг 4: Завершение установки -->
-    <Step
-      v-show="currentStep === 4"
-      :step-number="4"
-      :title="translations.steps.step4.title"
-      :instruction="translations.steps.step4.instruction"
-    >
-      <VideoPlayer :translations="videoTranslations" />
-
-      <div class="info-note">
-        <i class="fas fa-info-circle"></i>
-        <span>{{ translations.subscription.paymentNote }}</span>
-      </div>
-
-      <div class="buttons-container">
-        <button class="btn" @click="handleStepChange(1)">
-          <i class="fas fa-redo"></i>
-          {{ translations.buttons.restart }}
-        </button>
-        <button class="btn btn-back" @click="handleStepChange(3)">
           <i class="fas fa-arrow-left"></i>
           {{ translations.common.back }}
         </button>

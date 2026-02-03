@@ -100,8 +100,8 @@ const handleClick = (deviceType: DeviceType) => {
   align-items: center;
   gap: 14px;
   cursor: pointer;
-  border: 2px solid var(--border);
-  transition: all 0.2s ease;
+  border: 2px solid var(--gray-light);
+  transition: var(--transition);
   -webkit-tap-highlight-color: rgba(99, 102, 241, 0.1);
   user-select: none;
   -webkit-user-select: none;
@@ -166,7 +166,6 @@ const handleClick = (deviceType: DeviceType) => {
   flex: 1;
   min-width: 0;
 }
-
 
 @media (prefers-color-scheme: dark) {
   .device-option {
