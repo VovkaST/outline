@@ -55,7 +55,7 @@ const onActionClick = (price: number) => {
       <TariffCard
         guaranteeIcon="crown"
         :price="49900"
-        :old-price="747700"
+        :old-price="147700"
         :per-month="16800"
         :economy="248"
         :wait="isTariffSelected(49900)"
