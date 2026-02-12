@@ -8,8 +8,11 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const paymentStore = usePaymentStore();
 
-const taskId = computed<string>(() => (route.query['task'] as string) || 'empty');
-const returnUrl = computed<string>(() => route.query['returnUrl'] as string);
+const props = defineProps<{
+  taskId: string;
+}>();
+
+const returnUrl = computed<string>(() => (route.query['returnUrl'] as string) || '');
 
 const [formSubmitting, formSubmittingToggle] = useToggle(false);
 
@@ -17,7 +20,7 @@ const onActionClick = (price: number) => {
   formSubmitting.value = true;
   paymentStore
     .initYooKassaPayment({
-      taskId: taskId.value,
+      taskId: props.taskId,
       amount: price,
       returnUrl: returnUrl.value,
     })
