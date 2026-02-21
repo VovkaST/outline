@@ -91,6 +91,20 @@ $ /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
 * `PLANFIX_TOKEN` &ndash; токен API PlanFix
 * `DEFAULT_PAYMENT_DEADLINE` &ndash; время жизни ссылки платежа (необязательный).
 
+### site-config.json
+
+В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `/app_server/assets/site-config.json.example` в `site-config.json` в этом же каталоге и заполнить.
+
+**Структура:**
+
+| Блок | Поля | Примечание |
+|------|------|------------|
+| `site` | `name`, `copyrightSuffix?`, `url`, `title` | Название сайта, суффикс копирайта в футере, URL и заголовок страницы |
+| `organisation` | `fullName`, `inn`, `ogrn?`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты |
+| `publicOffer` | `city`, `representativeName`, `representativeBasis` | Город, ФИО представителя в род. падеже, основание (напр. «Устава») |
+| `supportItems` | массив `{ "url", "text" }` | Ссылки поддержки (кнопки в блоке «Напишите нам») |
+
+
 
 ### Запуск приложения
 Перед первым запуском необходимо дать права на исполнение файлу скрипта:
