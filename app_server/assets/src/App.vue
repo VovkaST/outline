@@ -1,5 +1,14 @@
 <script setup lang="ts">
+import { useConfig } from '@/composables/useConfig';
+import { watchEffect } from 'vue';
 import { RouterView } from 'vue-router';
+
+const config = useConfig();
+watchEffect(() => {
+  if (config.value?.site?.name) {
+    document.title = config.value.site.title;
+  }
+});
 </script>
 
 <template>

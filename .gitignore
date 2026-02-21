@@ -176,3 +176,6 @@ logs/
 
 *-local.*
 /media
+
+# Индивидуальные настройки сайта: app_server/assets/site-config.json (копировать из site-config.json.example)
+site-config.json

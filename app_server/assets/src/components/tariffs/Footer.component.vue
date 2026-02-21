@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { Modal } from '@/components';
-import { useToggle } from '@vueuse/core';
 import { PublicOffer } from '@/components/tariffs';
+import { useConfig } from '@/composables/useConfig';
+import { useToggle } from '@vueuse/core';
 
-const orgName = 'АЛИМУРЗАЕВ ГАДЖИ АЛИЕВИЧ';
-const inn = '056003385136';
-const bankAccount = '40802810700810195110';
+const config = useConfig();
 
 const [isPublicOfferShow, isPublicOfferShowToggle] = useToggle(false);
 
@@ -18,16 +17,19 @@ const onPublicOfferClose = () => {
 </script>
 <template>
   <div class="footer">
-    <p class="text-xsmall">© 2024 Halal — Ваша приватность под защитой</p>
+    <p class="text-xsmall">
+      © {{ new Date().getFullYear() }} {{ config.site.name }}
+      {{ config.site.copyrightSuffix ? ` — ${config.site.copyrightSuffix}` : '' }}
+    </p>
     <div class="footer-links">
       <a href="#" id="offer-link" class="text-xsmall" @click.prevent="onPublicOfferClick">
         Публичная оферта
       </a>
     </div>
     <div class="requisites text-xsmall">
-      <p>ИП {{ orgName }}</p>
-      <p>ИНН: {{ inn }}</p>
-      <p>Расчётный счёт: {{ bankAccount }}</p>
+      <p>{{ config.organisation.fullName }}</p>
+      <p>ИНН: {{ config.organisation.inn }}</p>
+      <p>Расчётный счёт: {{ config.organisation.bankAccount }}</p>
     </div>
     <Modal
       key="publicOffer"

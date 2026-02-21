@@ -1,0 +1,19 @@
+---
+alwaysApply: true
+---
+
+# Архитектура
+В проекте реализованы два приложения:
+
+* Telegram-бот в каталоге (`/app_bot/`)
+  - Входная точка через модуль /bot.py
+
+* API-приложение (`/app_server/`)
+  - Входная точка через модуль /server.py
+  - Внутри размещено Front-приложение (`/app_server/assets/`).
+
+Также реализована интеграция с PlanFix.
+
+## Стэк
+* frontend: Vite, VueJS 3
+* backend: Python 3.10, FastAPI, python-telegram-bot

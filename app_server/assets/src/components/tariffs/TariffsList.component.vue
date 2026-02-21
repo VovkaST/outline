@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {
-  TariffCard,
+  PaymentInfoComponent,
   StatsList,
   Support,
+  TariffCard,
   TariffFeature,
-  PaymentInfoComponent,
 } from '@/components/tariffs';
 import { ref } from 'vue';
 
@@ -118,11 +118,7 @@ const onActionClick = (price: number) => {
     </div>
     <StatsList />
     <PaymentInfoComponent />
-    <Support
-      vk="https://vk.com/halal_it"
-      subject="Вопрос по Halal"
-      body="Здравствуйте! У меня вопрос по услугам Halal:"
-    />
+    <Support />
   </div>
 </template>
 <style lang="scss" scoped>

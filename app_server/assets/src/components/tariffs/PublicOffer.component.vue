@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useConfig } from '@/composables/useConfig';
+
+const config = useConfig();
+</script>
 <template>
   <div class="text-small">
     <div class="section">
@@ -6,13 +10,17 @@
         ПУБЛИЧНАЯ ОФЕРТА<br />на оказание услуг с использованием автоматических списаний
         (автоплатеж)
       </h3>
-      <p><strong>г. Махачкала</strong></p>
       <p>
-        <strong>Halal</strong>, именуемое в дальнейшем «Исполнитель», в лице Алимурзаева Г.А.,
-        действующего на основании Устава, с одной стороны, предлагает заключить Договор на оказание
-        услуг любому дееспособному физическому лицу, достигшему 18-летнего возраста, а также
-        юридическому лицу или индивидуальному предпринимателю, именуемому в дальнейшем «Заказчик»,
-        на условиях настоящей Публичной оферты (далее – «Договор» или «Оферта»).
+        <strong>{{ config.publicOffer.city }}</strong>
+      </p>
+      <p>
+        <strong>{{ config.site.name }}</strong
+        >, именуемое в дальнейшем «Исполнитель», в лице {{ config.publicOffer.representativeName }},
+        действующего на основании {{ config.publicOffer.representativeBasis }}, с одной стороны,
+        предлагает заключить Договор на оказание услуг любому дееспособному физическому лицу,
+        достигшему 18-летнего возраста, а также юридическому лицу или индивидуальному
+        предпринимателю, именуемому в дальнейшем «Заказчик», на условиях настоящей Публичной оферты
+        (далее – «Договор» или «Оферта»).
       </p>
     </div>
 
@@ -20,7 +28,7 @@
       <h3 class="text-small">1. ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ</h3>
       <p>
         <strong>Сайт</strong> — интернет-сайт Исполнителя, расположенный по адресу:
-        https://shop.musacrm.ru.
+        {{ config.site.url }}.
       </p>
       <p>
         <strong>Услуга</strong> — комплекс услуг и функциональных возможностей, предоставляемых
@@ -140,16 +148,16 @@
 
     <div class="section">
       <h3 class="text-small">РЕКВИЗИТЫ ИСПОЛНИТЕЛЯ:</h3>
-      <p><strong>Полное наименование организации:</strong> Halal</p>
-      <p><strong>Юридический адрес:</strong> г. Махачкала ул. Магомедтагирова 161 г</p>
-      <p><strong>ИНН:</strong> 056003385136</p>
-      <p><strong>ОГРН:</strong> 325050000167471</p>
-      <p><strong>Банк:</strong> ФИЛИАЛ "ЦЕНТРАЛЬНЫЙ" БАНКА ВТБ (ПАО)</p>
-      <p><strong>Р/с:</strong> 40802810700810195110</p>
-      <p><strong>К/с:</strong> 30101810145250000411</p>
-      <p><strong>БИК:</strong> 044525411</p>
-      <p><strong>Телефон:</strong> +79882705541</p>
-      <p><strong>E-mail:</strong> Tagir1117@mail.ru</p>
+      <p><strong>Полное наименование организации:</strong> {{ config.site.name }}</p>
+      <p><strong>Юридический адрес:</strong> {{ config.organisation.legalAddress }}</p>
+      <p><strong>ИНН:</strong> {{ config.organisation.inn }}</p>
+      <p v-if="config.organisation.ogrn"><strong>ОГРН:</strong> {{ config.organisation.ogrn }}</p>
+      <p><strong>Банк:</strong> {{ config.organisation.bank }}</p>
+      <p><strong>Р/с:</strong> {{ config.organisation.bankAccount }}</p>
+      <p><strong>К/с:</strong> {{ config.organisation.correspondentAccount }}</p>
+      <p><strong>БИК:</strong> {{ config.organisation.bik }}</p>
+      <p><strong>Телефон:</strong> {{ config.organisation.phone }}</p>
+      <p><strong>E-mail:</strong> {{ config.organisation.email }}</p>
     </div>
   </div>
 </template>
