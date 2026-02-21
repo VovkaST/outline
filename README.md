@@ -22,11 +22,11 @@ usermod -aG docker $USER
 ### Nginx:
 Установка nginx:
 ```commandline
-$ apt update && apt install nginx -y
+apt update && apt install nginx -y
 ```
 Закинуть файл настроек nginx для сайта.
 ```commandline
-$ cp nginx/api-server /etc/nginx/sites-available/api-server
+cp nginx/api-server /etc/nginx/sites-available/api-server
 ```
 **В целевом файле необходимо изменить**:
 * `HOST_NAME_OR_IP` &ndash; ip-адрес или имя домена (при наличии, _обязательно для HTTPS_).
@@ -34,46 +34,64 @@ $ cp nginx/api-server /etc/nginx/sites-available/api-server
 
 И создать символическую ссылку на него в каталоге доступных сайтов:
 ```commandline
-$ ln -s /etc/nginx/sites-available/api-server /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/api-server /etc/nginx/sites-enabled/
 ```
 Проверить корректность настроек:
 ```commandline
-$ nginx -t
+nginx -t
 ```
 Если все ок, перезапускаем:
 ```commandline
-$ systemctl restart nginx.service
+systemctl restart nginx.service
 ```
 
 ### Certbot (только при наличии доменного имени)
 Установить зависимости:
 ```commandline
-$ apt update && apt install python3 python3-dev python3-venv libaugeas-dev gcc
+apt update && apt install python3 python3-dev python3-venv libaugeas-dev gcc
 ```
 Создадим виртуальное окружение:
 ```commandline
-$ python3 -m venv /opt/certbot/
-$ /opt/certbot/bin/pip install --upgrade pip
+python3 -m venv /opt/certbot/
+/opt/certbot/bin/pip install --upgrade pip
 ```
 И установим Certbot:
 ```commandline
-$ /opt/certbot/bin/pip install certbot certbot-nginx
+/opt/certbot/bin/pip install certbot certbot-nginx
 ```
 Создадим символическую ссылку для корректного запуска:
 ```commandline
-$ ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 ```
 Запросим сертификат:
 ```commandline
-$ certbot --nginx
+certbot --nginx
 ```
 Настроим автоматическое обновление сертификата:
 ```commandline
-$ echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; time.sleep(random.random() * 3600)' && sudo certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
+echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; time.sleep(random.random() * 3600)' && sudo certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
 ```
 Обновление до актуальной версии (опционально с течением времени):
 ```commandline
-$ /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
+/opt/certbot/bin/pip install --upgrade certbot certbot-nginx
+```
+
+### Несколько сайтов на одном сервере
+Для каждого дополнительного сайта повторить шаги из раздела «Nginx»:
+
+1. Скопировать конфиг под новое имя (например, второй сайт — `api-server-second`):
+   ```commandline
+   cp nginx/api-server /etc/nginx/sites-available/api-server-second
+   ```
+2. В новом файле заменить `HOST_NAME_OR_IP` на домен/IP второго сайта и `PATH_TO_APP` на путь к каталогу приложения этого сайта (отдельная копия приложения со своим `.env` и `app_server/assets/site-config.json`).
+3. Включить сайт и перезапустить Nginx:
+   ```commandline
+   ln -s /etc/nginx/sites-available/api-server-second /etc/nginx/sites-enabled/
+   nginx -t && systemctl restart nginx.service
+   ```
+4. Для настройки HTTPS по новому домену просто запросить сертификат и выбрать нужный домен из списка:
+```commandline
+certbot --nginx
 ```
 
 ### Переменные окружения
@@ -109,20 +127,20 @@ $ /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
 ### Запуск приложения
 Перед первым запуском необходимо дать права на исполнение файлу скрипта:
 ```commandline
-$ chmod +x run_server.sh
+chmod +x run_server.sh
 ```
 
 Затем для запустить его:
 ```commandline
-$ ./run_server.sh
+./run_server.sh
 ```
 
 ### Перезапуск приложения после простого изменения переменных окружения
 После изменения переменных окружения в `.env`-файле необходимо перезапустить целевой контейнер:
 ```commandline
-$ docker compose up -d server    # Приложение API
-$ docker compose up -d bot       # Telegram-бот
-$ docker compose up -d assets    # Пересобрать фронт
+docker compose up -d server    # Приложение API
+docker compose up -d bot       # Telegram-бот
+docker compose up -d assets    # Пересобрать фронт
 ```
 
 ## _Только для локальной разработки. Для доступа на продуктовом сервере необходима соответствующая настройка Nginx._
