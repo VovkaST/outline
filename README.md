@@ -167,15 +167,15 @@ API-документация:
 * Redoc: http://127.0.0.1:8000/redoc/
 
 
-## Проверка состония сервисов
-### Состяние контейнеров
+## Проверка состояния сервисов
+### Состояние контейнеров
 ```commandline
 docker ps
 CONTAINER ID   IMAGE                            COMMAND                  CREATED         STATUS         PORTS                      NAMES
 fdbda06e0bbb   outline-app-python-3.10:latest   "python -m server --…"   5 minutes ago   Up 5 minutes   127.0.0.1:8000->8000/tcp   outline-api-server
 0820cabc2512   outline-app-python-3.10:latest   "python -m bot run"      5 minutes ago   Up 5 minutes                              outline-bot
 ```
-В зависимости от целевого решения, должны быть запущены контейнеры `outline-bot` (Telegram-бот) и `outline-api-server` (API плетежного сервиса). Имя последнего моежт меняться в зависимости от настроек п.5 раздела **Несколько сайтов на одном сервере**.
+В зависимости от целевого решения, должны быть запущены контейнеры `outline-bot` (Telegram-бот) и/или `outline-api-server` (API плетежного сервиса). Имя последнего может меняться в зависимости от настроек п.5 раздела **Несколько сайтов на одном сервере**.
 Для вывода всех, даже остановленных контейнеров, добавить ключ `-a`.
 
 ### Просмотр логов контейнера
