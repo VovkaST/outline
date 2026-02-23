@@ -93,6 +93,17 @@ echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; 
 ```commandline
 certbot --nginx
 ```
+5. Для каждого приложения будет запускаться свой Docker-контейнер для обработки API. Т.к. используются одинаковые по структуре docker-compose-файлы, **необходимо изменить имя контейнера сервера** в `docker-compose.yaml`:
+```yaml
+services:
+  server:
+    image: outline-app-python-3.10:latest
+    container_name: outline-api-server  # Задать уникальное имя контейнера
+    env_file:
+      - .env
+    environment:
+...
+```
 
 ### Переменные окружения
 Для передачи настроек в приложение необходимо создать файл `.env` по образцу `.env.example`:
@@ -111,7 +122,7 @@ certbot --nginx
 
 ### site-config.json
 
-В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `app_server/assets/site-config.json.example` в `site-config.json` в каталоге `app_server/assets/` и заполнить. При сборке фронта файл копируется в `dist/`, чтобы работал и в production. Поэтому **после изменения на продуктовом стенед необходимо пересобрать фронт** (см. ниже).
+В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `app_server/assets/site-config.json.example` в `site-config.json` в каталоге `app_server/assets/` и заполнить. При сборке фронта файл копируется в `dist/`, чтобы работал и в production. Поэтому **после изменения на продуктовом стенде необходимо пересобрать фронт** (см. ниже).
 
 **Структура:**
 
