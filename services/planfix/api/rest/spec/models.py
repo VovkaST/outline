@@ -16,7 +16,9 @@ class BaseRequest(BaseModel):
     @computed_field
     @property
     def fields(self) -> str:
-        field_names = [str(f.field.value) if isinstance(f, CustF) else f.type.label for f in self.filters]
+        field_names = [
+            str(f.field.value) if isinstance(f, CustF) and f.field is not None else f.type.label for f in self.filters
+        ]
         return ",".join(list(self._fields) + field_names)
 
     def with_fields(self, *fields: list[str]) -> Self:

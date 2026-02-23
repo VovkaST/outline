@@ -4,7 +4,7 @@ from collections import defaultdict
 from services import planfix_api
 from services.planfix.api.rest.responses import TaskFilterResponse, TaskResponse
 from services.planfix.exceptions import TaskNotFoundError
-from services.planfix.filters import GuidF, RequestKeyF, TelegramIdF
+from services.planfix.filters import BASE_TELEGRAM_OBJECT_ID, BaseTelegramObjectF, GuidF, RequestKeyF, TelegramIdF
 
 ATTACHMENTS_REGEXP = re.compile(r"^attachments\[(.+)\]$", re.IGNORECASE)
 
@@ -48,6 +48,8 @@ async def get_task(
         args.append(RequestKeyF(value=request_key))
     if telegram_id:
         args.append(TelegramIdF(value=telegram_id))
+        args.append(BaseTelegramObjectF(value=BASE_TELEGRAM_OBJECT_ID))
+
     response = await planfix_api.task.get_list(*args)
     response = TaskFilterResponse(**response)
 
