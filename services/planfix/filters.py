@@ -1,10 +1,12 @@
 from enum import IntEnum
 from typing import Any, TypeAlias
 
-from pydantic import PositiveInt
+from pydantic import Field, PositiveInt
 
 from services.planfix.api.rest.enums import SubscriptionStatus
 from services.planfix.api.rest.filters import CustF, FilterTypes
+
+BASE_TELEGRAM_OBJECT_ID = "21991848"
 
 
 class CustomFields(IntEnum):
@@ -75,6 +77,11 @@ class PaymentSum2F(CustF):
 class UserKeyF(CustF):
     type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
     field: PositiveInt = CustomFields.USER_KEY
+
+
+class BaseTelegramObjectF(CustF):
+    type: FilterTypes = FilterTypes.OBJECT
+    field: PositiveInt | None = Field(exclude=True, default=None)
 
 
 CustomFieldUpdateBody: TypeAlias = dict[str, str | int | dict[str, CustomFields]]
