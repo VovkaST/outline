@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useConfig } from '@/composables/useConfig';
+
+const config = useConfig();
+</script>
 
 <template>
   <header>
@@ -6,7 +10,7 @@
       <div class="logo-icon">
         <i class="fas fa-user-shield"></i>
       </div>
-      <div class="logo">Halal</div>
+      <div class="logo">{{ config.site.name }}</div>
     </div>
     <div class="title-container">
       <div class="main-title">🔒 Премиум защита</div>

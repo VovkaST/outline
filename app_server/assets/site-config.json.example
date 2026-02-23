@@ -1,0 +1,31 @@
+{
+  "site": {
+    "name": "Наименование сайта",
+    "copyrightSuffix": "Мы супер-пупер",
+    "url": "https://my-site.ru",
+    "title": "Заголовок сайта"
+  },
+  "organisation": {
+    "fullName": "ИП ИВАНОВ ИВАН ИВАНОВИЧ",
+    "inn": "7653476767776",
+    "ogrn": "654675624567657",
+    "legalAddress": "г. Москва, Красная Площадь",
+    "bank": "ФИЛИАЛ \"ЦЕНТРАЛЬНЫЙ\" БАНКА ВТБ (ПАО)",
+    "bankAccount": "40802810700000000000",
+    "correspondentAccount": "30101800000000000000",
+    "bik": "044525411",
+    "phone": "+79778883322",
+    "email": "email@mail.ru"
+  },
+  "publicOffer": {
+    "city": "г. Москва",
+    "representativeName": "Иванова И.И.",
+    "representativeBasis": "Устава"
+  },
+  "supportItems": [
+    {
+      "url": "https://vk.com/page",
+      "text": "ВКонтакте"
+    }
+  ]
+}

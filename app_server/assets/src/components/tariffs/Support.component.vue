@@ -1,27 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { useConfig } from '@/composables/useConfig';
 
-const props = defineProps<{
-  email?: string;
-  vk?: string;
-  subject: string;
-  body: string;
-}>();
-
-const emailHref = computed<string>(() => {
-  if (!props.email) return '';
-  const url = encodeURIComponent(`subject=${props.subject}&body=${props.body}`);
-  return `mailto:${props.email}?${url}`;
-});
+const config = useConfig();
 </script>
 <template>
   <div class="support-section">
     <div class="support-title text-medium">💬 Остались вопросы? Напишите нам!</div>
-    <a v-if="props.email" :href="emailHref" class="email-btn text-medium" target="_blank">
-      📧 {{ props.email }}
-    </a>
-    <a v-if="props.vk" :href="$props.vk" class="email-btn text-medium" target="_blank">
-      ВКонтакте
+    <a
+      v-for="support in config.supportItems"
+      :href="support.url"
+      class="email-btn text-medium"
+      target="_blank"
+    >
+      {{ support.text }}
     </a>
     <p class="text-xsmall" style="margin-top: 8px; color: #6b7280">Ответим в течение 24 часов</p>
   </div>
