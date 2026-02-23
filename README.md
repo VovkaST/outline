@@ -1,5 +1,3 @@
-# Сервис для генерации подписки
-
 ## Клонирование репозитория
 ```commandline
 git clone git@github.com:VovkaST/outline.git
@@ -167,3 +165,32 @@ docker compose up -d assets    # Пересобрать фронт
 API-документация:
 * Swagger: http://127.0.0.1:8000/docs/
 * Redoc: http://127.0.0.1:8000/redoc/
+
+
+## Проверка состония сервисов
+### Состяние контейнеров
+```commandline
+docker ps
+CONTAINER ID   IMAGE                            COMMAND                  CREATED         STATUS         PORTS                      NAMES
+fdbda06e0bbb   outline-app-python-3.10:latest   "python -m server --…"   5 minutes ago   Up 5 minutes   127.0.0.1:8000->8000/tcp   outline-api-server
+0820cabc2512   outline-app-python-3.10:latest   "python -m bot run"      5 minutes ago   Up 5 minutes                              outline-bot
+```
+В зависимости от целевого решения, должны быть запущены контейнеры `outline-bot` (Telegram-бот) и `outline-api-server` (API плетежного сервиса). Имя последнего моежт меняться в зависимости от настроек п.5 раздела **Несколько сайтов на одном сервере**.
+Для вывода всех, даже остановленных контейнеров, добавить ключ `-a`.
+
+### Просмотр логов контейнера
+Вывод всех логов контейнера `outline-api-server` (имя указано в последнем столбце вывода команды `docker ps` выше)
+```commandline
+docker logs outline-api-server
+```
+
+Вывод последних 100 строк логов контейнера `outline-api-server`:
+```commandline
+docker logs outline-api-server --tail 100
+```
+
+Вывод последних 100 строк логов контейнера `outline-api-server` и дальнейшее "живое" их отслеживание:
+```commandline
+docker logs outline-api-server --tail 100 --follow
+```
+Остановка отслеживания: `Ctrl+C`.
