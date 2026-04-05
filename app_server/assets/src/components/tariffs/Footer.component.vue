@@ -1,18 +1,38 @@
 <script setup lang="ts">
 import { Modal } from '@/components';
-import { PublicOffer } from '@/components/tariffs';
+import {
+  PublicOffer,
+  UserAgreement,
+  ConfidentialPolicy,
+} from '@/components/tariffs/legal-documents';
 import { useConfig } from '@/composables/useConfig';
 import { useToggle } from '@vueuse/core';
 
 const config = useConfig();
 
 const [isPublicOfferShow, isPublicOfferShowToggle] = useToggle(false);
+const [isUserAgreementShow, isUserAgreementShowToggle] = useToggle(false);
+const [isConfidentialPolicyShow, isConfidentialPolicyShowToggle] = useToggle(false);
 
 const onPublicOfferClick = () => {
   isPublicOfferShowToggle(true);
 };
 const onPublicOfferClose = () => {
   isPublicOfferShowToggle(false);
+};
+
+const onUserAgreementClick = () => {
+  isUserAgreementShowToggle(true);
+};
+const onUserAgreementClose = () => {
+  isUserAgreementShowToggle(false);
+};
+
+const onConfidentialPolicyClick = () => {
+  isConfidentialPolicyShowToggle(true);
+};
+const onConfidentialPolicyClose = () => {
+  isConfidentialPolicyShowToggle(false);
 };
 </script>
 <template>
@@ -25,12 +45,24 @@ const onPublicOfferClose = () => {
       <a href="#" id="offer-link" class="text-xsmall" @click.prevent="onPublicOfferClick">
         Публичная оферта
       </a>
+      <a href="#" id="agreement-link" class="text-xsmall" @click.prevent="onUserAgreementClick">
+        Пользовательское соглашение
+      </a>
+      <a
+        href="#"
+        id="confidential-policy-link"
+        class="text-xsmall"
+        @click.prevent="onConfidentialPolicyClick"
+      >
+        Политика конфиденциальности
+      </a>
     </div>
     <div class="requisites text-xsmall">
       <p>{{ config.organisation.fullName }}</p>
       <p>ИНН: {{ config.organisation.inn }}</p>
       <p>Расчётный счёт: {{ config.organisation.bankAccount }}</p>
     </div>
+
     <Modal
       key="publicOffer"
       title="Публичная оферта"
@@ -41,6 +73,30 @@ const onPublicOfferClose = () => {
     >
       <template #title>Публичная оферта</template>
       <template #body> <PublicOffer /> </template>
+    </Modal>
+
+    <Modal
+      key="userAgreement"
+      title="Пользовательское соглашение"
+      :show="isUserAgreementShow"
+      closeOnEsc
+      closeOnClickOutside
+      @close="onUserAgreementClose"
+    >
+      <template #title>Пользовательское соглашение</template>
+      <template #body> <UserAgreement /> </template>
+    </Modal>
+
+    <Modal
+      key="confidentialPolicy"
+      title="Политика конфиденциальности"
+      :show="isConfidentialPolicyShow"
+      closeOnEsc
+      closeOnClickOutside
+      @close="onConfidentialPolicyClose"
+    >
+      <template #title>Политика конфиденциальности</template>
+      <template #body> <ConfidentialPolicy /> </template>
     </Modal>
   </div>
 </template>
