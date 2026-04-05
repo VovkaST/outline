@@ -26,8 +26,8 @@ const fullPath = computed(() => `${window.location.origin}${route.fullPath}`);
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: var(--dark);
+  background: #3B0764;
+  color: var(--t1);
   text-align: center;
 }
 
@@ -38,25 +38,28 @@ const fullPath = computed(() => `${window.location.origin}${route.fullPath}`);
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.98);
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  padding: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  padding: 24px 20px;
 }
 
 .main-title {
   font-size: 1.4rem;
   font-weight: 800;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  color: var(--p);
 }
 
 .text-medium {
-  font-size: 1rem;
+  font-size: var(--md);
   margin-top: 5px;
+  color: var(--t1);
 }
 
 .text-small {
-  font-size: 0.9rem;
-  margin-top: 10px;
+  font-size: var(--sm);
+  margin-top: 12px;
+  color: var(--t2);
 }
 </style>
