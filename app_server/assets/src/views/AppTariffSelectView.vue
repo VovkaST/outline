@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Header, TariffsList, Footer } from '@/components/tariffs';
+import { Footer, Header, TariffsList } from '@/components/tariffs';
 import { usePaymentStore } from '@/stores/payment';
 import { useToggle } from '@vueuse/core';
-import { computed } from 'vue';
+import { computed, provide } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -11,6 +11,8 @@ const paymentStore = usePaymentStore();
 const props = defineProps<{
   taskId: string;
 }>();
+
+provide('taskId', props.taskId);
 
 const returnUrl = computed<string>(() => (route.query['returnUrl'] as string) || '');
 
