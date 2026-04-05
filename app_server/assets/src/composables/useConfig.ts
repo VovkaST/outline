@@ -6,7 +6,7 @@ const CONFIG_URL = '/site-config.json';
 function getDefaultConfig(): SiteConfig {
   return {
     site: { name: 'Сайт', copyrightSuffix: '', url: '', title: 'Сайт' },
-    organisation: {
+    organization: {
       fullName: '',
       inn: '',
       legalAddress: '',

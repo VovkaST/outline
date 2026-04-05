@@ -37,10 +37,7 @@ const onConfidentialPolicyClose = () => {
 </script>
 <template>
   <div class="footer">
-    <p class="text-xsmall">
-      © {{ new Date().getFullYear() }} {{ config.site.name }}
-      {{ config.site.copyrightSuffix ? ` — ${config.site.copyrightSuffix}` : '' }}
-    </p>
+    <p>© {{ new Date().getFullYear() }} {{ config.site.name }} — Ваша приватность под защитой</p>
     <div class="footer-links">
       <a href="#" id="offer-link" class="text-xsmall" @click.prevent="onPublicOfferClick">
         Публичная оферта
@@ -57,10 +54,8 @@ const onConfidentialPolicyClose = () => {
         Политика конфиденциальности
       </a>
     </div>
-    <div class="requisites text-xsmall">
-      <p>{{ config.organisation.fullName }}</p>
-      <p>ИНН: {{ config.organisation.inn }}</p>
-      <p>Расчётный счёт: {{ config.organisation.bankAccount }}</p>
+    <div class="req">
+      <p>{{ config.organization.fullName }} · ИНН {{ config.organization.inn }}</p>
     </div>
 
     <Modal
@@ -100,31 +95,54 @@ const onConfidentialPolicyClose = () => {
     </Modal>
   </div>
 </template>
+
 <style scoped lang="scss">
 .footer {
   text-align: center;
-  padding: 15px 12px;
-  color: #6b7280;
-  border-top: 1px solid #e5e7eb;
+  padding: 16px 12px;
+  border-top: 1px solid var(--border);
 
-  &-links {
-    margin-top: 6px;
+  p {
+    font-size: var(--xs);
+    font-weight: 400;
+    color: var(--t3);
+    line-height: 1.7;
+    margin-bottom: 2px;
+  }
+
+  .footer-links {
     margin-bottom: 8px;
 
     a {
-      color: var(--primary);
+      color: var(--p);
       text-decoration: none;
-      margin: 0 6px;
+      font-size: var(--xs);
+      font-weight: 400;
+      margin: 0 4px;
     }
   }
 
-  .requisites {
-    line-height: 1.3;
+  .req {
     margin-top: 8px;
-    padding: 0 5px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
 
     p {
-      margin-bottom: 2px;
+      color: var(--t3);
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .footer {
+    border-top-color: #2c2c2e;
+
+    p {
+      color: #48484a;
+    }
+
+    .req {
+      border-top-color: #2c2c2e;
     }
   }
 }

@@ -5,151 +5,114 @@ const config = useConfig();
 </script>
 
 <template>
-  <header>
-    <div class="logo-container">
-      <div class="logo-icon">
-        <i class="fas fa-user-shield"></i>
+  <header class="hdr">
+    <div class="logo-row">
+      <div class="logo-icon"><i class="fas fa-user-shield"></i></div>
+      <div class="logo-name">
+        {{ config.site.name.split(' ')[0] }} <span>{{ config.site.name.split(' ')[1] }}</span>
       </div>
-      <div class="logo">{{ config.site.name }}</div>
     </div>
-    <div class="title-container">
-      <div class="main-title">🔒 Премиум защита</div>
-      <div class="price-title">от 128₽/мес!</div>
-    </div>
-
-    <p class="text-medium">
-      Полная анонимность и доступ ко всем ресурсам. Подключение за 60 секунд!
+    <div class="hdr-title">🔒 Премиум защита</div>
+    <div class="hdr-price">от 128₽ в месяц</div>
+    <p class="hdr-sub">
+      Полная анонимность и доступ ко всем ресурсам. Работает в России. Подключение за 60 секунд!
     </p>
-
-    <div class="benefits">
-      <div class="benefit text-small"><i class="fas fa-shield-alt"></i> 100% анонимность</div>
-      <div class="benefit text-small"><i class="fas fa-bolt"></i> Макс. скорость</div>
-      <div class="benefit text-small"><i class="fas fa-headset"></i> Поддержка 24/7</div>
+    <div class="chips">
+      <span class="chip">100% анонимность</span>
+      <span class="chip">Макс. скорость</span>
+      <span class="chip">Работает в РФ</span>
     </div>
   </header>
 </template>
 
 <style scoped lang="scss">
-header {
-  padding: 20px 15px 15px;
+.hdr {
+  background: linear-gradient(160deg, #6d28d9 0%, #4c1d95 100%);
+  color: #fff;
+  padding: 24px 16px 20px;
   text-align: center;
-  background: linear-gradient(135deg, var(--primary), #7c3aed);
-  color: white;
+  border-radius: 16px 16px 0 0;
 
-  .logo-container {
+  .logo-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 9px;
+    margin-bottom: 14px;
 
     .logo-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
 
       i {
-        font-size: 1.3rem;
-        color: #f59e0b;
+        font-size: 16px;
+        color: var(--gold);
       }
     }
 
-    .logo {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: white;
-    }
+    .logo-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
 
-    .logo span {
-      color: #f59e0b;
-    }
-  }
-
-  .title-container {
-    margin-bottom: 8px;
-
-    .main-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 4px;
-    }
-
-    .price-title {
-      font-size: 1.6rem;
-      font-weight: 800;
-      line-height: 1.1;
-      color: #f59e0b;
+      span {
+        color: var(--gold);
+      }
     }
   }
 
-  .benefits {
+  .hdr-title {
+    font-size: var(--md);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 10px;
+  }
+
+  .hdr-price {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -0.8px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .hdr-sub {
+    font-size: var(--sm);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .chips {
     display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 12px;
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
 
-    .benefit {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 4px 8px;
-      border-radius: 12px;
-      white-space: nowrap;
-
-      i {
-        color: #f59e0b;
-      }
+    .chip {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: var(--xs);
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.95);
     }
   }
 }
 
-@media (max-width: 768px) {
-  header {
-    padding: 25px 15px 12px;
-  }
-
-  .logo {
-    font-size: 1.6rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 6px;
-  }
-
-  .subtitle {
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    padding: 20px 10px 10px;
-  }
-
-  .logo {
-    font-size: 1.4rem;
-  }
-
-  h1 {
-    font-size: 1.3rem;
-  }
-}
 @media (max-width: 360px) {
-  .main-title {
-    font-size: 1.3rem;
-  }
-
-  .price-title {
-    font-size: 1.4rem;
+  .hdr-price {
+    font-size: 26px;
   }
 }
 </style>

@@ -5,7 +5,7 @@ export interface SiteConfigSite {
   title: string;
 }
 
-export interface SiteConfigOrganisation {
+export interface SiteConfigOrganization {
   fullName: string;
   inn: string;
   ogrn?: string;
@@ -30,8 +30,8 @@ export interface SiteConfigSupportItem {
 }
 
 export interface SiteConfig {
-  site: SiteConfigSite;
-  organisation: SiteConfigOrganisation;
-  publicOffer: SiteConfigPublicOffer;
-  supportItems: SiteConfigSupportItem[];
+  readonly site: SiteConfigSite;
+  readonly organization: SiteConfigOrganization;
+  readonly publicOffer: SiteConfigPublicOffer;
+  readonly supportItems: readonly SiteConfigSupportItem[];
 }

@@ -49,11 +49,11 @@ const onActionClick = (price: number) => {
   margin: 0 auto;
 
   .card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+    overflow: visible;
+    margin-bottom: 14px;
   }
 
   footer {
