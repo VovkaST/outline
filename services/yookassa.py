@@ -41,7 +41,7 @@ class YooKassaService:
             },
             "receipt": {
                 "customer": {
-                    "email": customer_email or f"{task_id}@example.com",
+                    "email": customer_email or f"task+{task_id}@aspectgroup.planfix.ru",
                 },
                 "items": [
                     {
