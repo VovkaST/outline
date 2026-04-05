@@ -1,10 +1,10 @@
 server {
     server_name HOST_NAME_OR_IP;
 
-    root /PATH_TO_APP/app_server/assets;
+    root /PATH_TO_APP/app_server/assets/dist;
     index index.html;
 
-    location /payment {
+    location / {
         try_files $uri /index.html;
     }
 

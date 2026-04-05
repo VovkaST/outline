@@ -1,7 +1,61 @@
-## Клонирование репозитория
+# Общие требования
+Работать лучше через SSH. Для этого нужно создать ключ.
+Процесс создания описан в [документации GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent). Кратко:
+
+1. В терминале выполнить, заменив указанный в примере адрес электронной почты:
 ```commandline
-git clone git@github.com:VovkaST/outline.git
-cd outline
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+В результате будет создан новый ключ SSH, где в качестве метки будет использоваться указанный адрес электронной почты.
+
+Когда появится запрос "Ввести файл, в котором сохранить ключ", можно нажать клавишу ВВОД , чтобы принять расположение файла по умолчанию. Обратите внимание, что если вы создали ключи SSH ранее, ssh-keygen может попросить переписать другой ключ, в этом случае рекомендуется создать пользовательский ключ SSH. Для этого введите расположение файла по умолчанию и замените id_ALGORITHM на имя пользовательского ключа.
+
+```commandline
+Enter a file in which to save the key (/home/YOU/.ssh/id_ALGORITHM):[Press enter]
+```
+
+2. В командной строке введите безопасную парольную фразу (можно оставить пустой):
+```commandline
+Enter passphrase (empty for no passphrase): [Type a passphrase]
+Enter same passphrase again: [Type passphrase again]
+```
+
+### Добавление ключа SSH в ssh-agent
+Перед добавлением нового ключа SSH в ssh-agent для управления ключами необходимо проверить наличие существующих ключей SSH и создать новый ключ SSH.
+
+1. Запустите агент SSH в фоновом режиме.
+
+```commandline
+eval "$(ssh-agent -s)"
+```
+В зависимости от среды может потребоваться использовать другую команду. Например, вам может потребоваться доступ с правами root, для чего необходимо выполнить `sudo -s -H` перед запуском агента SSH. Может также потребоваться использовать `exec ssh-agent bash` или `exec ssh-agent zsh` для запуска агента SSH.
+
+2. Добавьте закрытый ключ SSH в ssh-agent.
+
+Если вы создали ключ с другим именем или добавляете существующий ключ с другим именем, замените id_ed25519 в команде именем файла закрытого ключа.
+
+```commandline
+ssh-add ~/.ssh/id_ed25519
+```
+
+3. Добавьте открытый ключ SSH в учетную запись на GitHub. Дополнительные сведения см. в разделе [Добавление нового SSH-ключа в ваш аккаунт GitHub](https://docs.github.com/ru/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+
+## Клонирование проекта
+Клонировать репозиторий лучше в общий, доступный для всех пользователей ОС, каталог, например `/opt`, чтобы не было проблем доступа для nginx. Для этого нужно просто перейти в него:
+```commandline
+cd /opt
+```
+_**Не размещать код в домашней директории `root`!!!**_
+
+Далее создаем каталог проекта 
+```commandline
+mkdir projectName
+```
+и клонируем в него репозиторий:
+
+```commandline
+git clone git@github.com:VovkaST/outline.git projectName
+cd projectName
 ```
 
 ## Настройка
@@ -18,7 +72,7 @@ echo   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/doc
   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
 tee /etc/apt/sources.list.d/docker.list > /dev/null
 apt update
-apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose
+apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose -y
 echo "Adding current user to docker group"
 usermod -aG docker $USER  
 ```
@@ -34,7 +88,7 @@ cp nginx/api-server /etc/nginx/sites-available/api-server
 ```
 **В целевом файле необходимо изменить**:
 * `HOST_NAME_OR_IP` &ndash; ip-адрес или имя домена (при наличии, _обязательно для HTTPS_).
-* `PATH_TO_APP` &ndash; путь до рабочего каталога приложения.
+* `PATH_TO_APP` &ndash; путь до рабочего каталога приложения (`/opt/projectName` - см.выше).
 
 И создать символическую ссылку на него в каталоге доступных сайтов:
 ```commandline
@@ -44,7 +98,7 @@ ln -s /etc/nginx/sites-available/api-server /etc/nginx/sites-enabled/
 ```commandline
 nginx -t
 ```
-Если все ок, перезапускаем:
+Если все ок, перезапускаем службу Nginx:
 ```commandline
 systemctl restart nginx.service
 ```
@@ -52,7 +106,7 @@ systemctl restart nginx.service
 ### Certbot (только при наличии доменного имени)
 Установить зависимости:
 ```commandline
-apt update && apt install python3 python3-dev python3-venv libaugeas-dev gcc
+apt update && apt install python3 python3-dev python3-venv libaugeas-dev gcc -y
 ```
 Создадим виртуальное окружение:
 ```commandline
@@ -113,19 +167,16 @@ services:
 
 ### Переменные окружения
 Для передачи настроек в приложение необходимо создать файл `.env` по образцу `.env.example`:
-* `SITE_URL` &ndash; url-сайта для генерации ссылок на внутренние ресурсы
-* `REQUEST_TOKEN` &ndash; токен для эндпоинтов, требующих авторизацию
-* `TBANK_TERMINAL_ID` &ndash; идентификатор терминала Т-банка
-* `TBANK_TERMINAL_PASSWORD` &ndash; пароль терминала
-* `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей
-* `TBANK_USE_FAIL_PAYMENT_REDIRECT_URL` &ndash; url для редиректов платежей, завершившихся ошибкой
+* `SITE_URL` &ndash; url-сайта для генерации ссылок на внутренние ресурсы (иными словами адрес разворачиваемого сайта, например `https://example.ru`)
+* `REQUEST_TOKEN` &ndash; токен для эндпоинтов, требующих авторизацию (это отправка сообщений пользователям через Telegram-бота и инициализация рекуррентного платежа через Т-Банк, если ничто их этого не используется, можно не указывать)
 * `YOOKASSA_ACCOUNT_ID` &ndash; идентификатор аккаунта Yookassa
 * `YOOKASSA_TOKEN` &ndash; токен API Yookassa
 * `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей 
 * `PLANFIX_ACCOUNT` &ndash; имя аккаунта PlanFix
 * `PLANFIX_TOKEN` &ndash; токен API PlanFix
-* `DEFAULT_PAYMENT_DEADLINE` &ndash; время жизни ссылки платежа (необязательный).
+* `DEFAULT_PAYMENT_DEADLINE` &ndash; время жизни ссылки платежа (необязательный)
 
+Сейчас по умолчанию используется интеграция с Ю-кассой, поэтому токен
 ### site-config.json
 
 В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `app_server/assets/site-config.json.example` в `site-config.json` в каталоге `app_server/assets/` и заполнить. При сборке фронта файл копируется в `dist/`, чтобы работал и в production. Поэтому **после изменения на продуктовом стенде необходимо пересобрать фронт** (см. ниже).
