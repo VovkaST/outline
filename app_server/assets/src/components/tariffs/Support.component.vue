@@ -1,7 +1,16 @@
 <script setup lang="ts">
+import { computed, inject } from 'vue';
 import { useConfig } from '@/composables/useConfig';
 
 const config = useConfig();
+const taskId = inject<string>('taskId', '');
+
+const supportItems = computed(() =>
+  config.value.supportItems.map((item) => ({
+    ...item,
+    url: item.url.replace('{task_id}', taskId),
+  })),
+);
 
 const isWhatsApp = (url: string) => url.includes('wa.me') || url.includes('whatsapp.com');
 </script>
@@ -10,7 +19,7 @@ const isWhatsApp = (url: string) => url.includes('wa.me') || url.includes('whats
     <h3>Остались вопросы?</h3>
     <p>Напишите нам — ответим в течение нескольких минут</p>
     <a
-      v-for="support in config.supportItems"
+      v-for="support in supportItems"
       :key="support.url"
       :href="support.url"
       class="sup-btn"
