@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   PaymentInfoComponent,
-  StatsList,
   Support,
   TariffCard,
   TariffFeature,
@@ -32,7 +31,6 @@ const onActionClick = (price: number) => {
   <div class="tariffs-container">
     <div class="tariffs">
       <TariffCard
-        guaranteeIcon="shield-alt"
         :price="19900"
         :old-price="24900"
         :per-month="19900"
@@ -45,17 +43,16 @@ const onActionClick = (price: number) => {
         <template #features>
           <TariffFeature bold>Полная анонимность</TariffFeature>
           <TariffFeature>Высокая скорость</TariffFeature>
-          <TariffFeature>Неограниченный трафик</TariffFeature>
+          <TariffFeature>Безлимитный трафик</TariffFeature>
           <TariffFeature>Поддержка 24/7</TariffFeature>
         </template>
         <template #buttonText> 🔥 Выбрать тариф </template>
-        <template #guarantee> Military Grade защита </template>
+        <template #guarantee> Попробуй без риска </template>
       </TariffCard>
 
       <TariffCard
-        guaranteeIcon="crown"
         :price="49900"
-        :old-price="147700"
+        :old-price="74700"
         :per-month="16800"
         :economy="248"
         :wait="isTariffSelected(49900)"
@@ -74,7 +71,6 @@ const onActionClick = (price: number) => {
       </TariffCard>
 
       <TariffCard
-        guaranteeIcon="star"
         :price="89900"
         :old-price="179400"
         :per-month="12800"
@@ -84,19 +80,18 @@ const onActionClick = (price: number) => {
         isPopular
         @actionClick="onActionClick"
       >
-        <template v-slot:term> 6 месяцев + 1 в подарок </template>
-        <template v-slot:features>
+        <template #term> 6 месяцев + 1 в подарок </template>
+        <template #features>
           <TariffFeature bold>Всё из тарифа 3 месяца</TariffFeature>
           <TariffFeature>+1 месяц БЕСПЛАТНО</TariffFeature>
           <TariffFeature>Выделенный канал</TariffFeature>
           <TariffFeature>Приоритет скорости</TariffFeature>
         </template>
-        <template #buttonText> 💎 ВЫБРАТЬ ВЫГОДУ </template>
-        <template #guarantee> Для профессионалов </template>
+        <template #buttonText> 💎 Выбрать выгоду </template>
+        <template #guarantee> Лучшее предложение </template>
       </TariffCard>
 
       <TariffCard
-        guaranteeIcon="shield-alt"
         :price="199900"
         :old-price="358800"
         :per-month="13300"
@@ -105,59 +100,41 @@ const onActionClick = (price: number) => {
         discount="-45%"
         @actionClick="onActionClick"
       >
-        <template v-slot:term> 12 месяцев + 3 в подарок </template>
-        <template v-slot:features>
+        <template #term> 12 месяцев + 3 в подарок </template>
+        <template #features>
           <TariffFeature bold>Всё из премиум-тарифа</TariffFeature>
           <TariffFeature>+3 месяца БЕСПЛАТНО</TariffFeature>
           <TariffFeature>Максимальная скорость</TariffFeature>
           <TariffFeature>Премиум поддержка</TariffFeature>
         </template>
-        <template #buttonText> 🚀 Максимальная защита </template>
-        <template #guarantee> SSL защита • Безопасные платежи </template>
+        <template #buttonText> 🛡 Максимальная защита </template>
+        <template #guarantee> Для профессионалов </template>
       </TariffCard>
     </div>
-    <StatsList />
     <PaymentInfoComponent />
     <Support />
   </div>
 </template>
+
 <style lang="scss" scoped>
 .tariffs-container {
-  padding: 25px 15px;
-  opacity: 1;
-  transform: translateY(0px);
-  transition:
-    opacity 0.5s,
-    transform 0.5s;
+  padding: 16px 12px;
 
   .tariffs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 16px;
   }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .tariffs-container {
-    padding: 20px 10px;
-  }
-
-  .tariffs {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .tariff {
-    padding: 18px 12px;
-  }
-}
-
-@media (max-width: 360px) {
-  .tariffs-container {
-    padding: 12px 8px;
+    .tariffs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
   }
 }
 </style>

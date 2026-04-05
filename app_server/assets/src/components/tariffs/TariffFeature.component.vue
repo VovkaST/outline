@@ -8,32 +8,38 @@ const props = withDefaults(
 </script>
 
 <template>
-  <li class="text-small">
-    <i class="fas fa-check"></i>
-    <strong v-if="props.bold"><slot /></strong>
-    <slot v-else />
+  <li :class="{ bold: props.bold }">
+    <span>
+      <strong v-if="props.bold"><slot /></strong>
+      <slot v-else />
+    </span>
   </li>
 </template>
 
 <style scoped lang="scss">
 li {
-  padding: 6px 0;
   display: flex;
-  align-items: center;
-  line-height: 1.3;
-  font-size: 0.95rem;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--md);
+  font-weight: 400;
+  color: var(--t2);
+  padding: 4px 0;
+  line-height: 1.5;
 
-  i {
-    color: var(--secondary);
-    margin-right: 8px;
-    font-size: 0.95rem;
-    min-width: 16px;
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--g);
+    flex-shrink: 0;
+    margin-top: 7px;
   }
-}
 
-@media (max-width: 768px) {
-  li {
-    font-size: 0.9rem;
+  &.bold span strong {
+    color: var(--t1);
+    font-weight: 600;
   }
 }
 </style>

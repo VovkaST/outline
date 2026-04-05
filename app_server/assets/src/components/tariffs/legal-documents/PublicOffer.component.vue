@@ -149,15 +149,15 @@ const config = useConfig();
     <div class="section">
       <h3 class="text-small">РЕКВИЗИТЫ ИСПОЛНИТЕЛЯ:</h3>
       <p><strong>Полное наименование организации:</strong> {{ config.site.name }}</p>
-      <p><strong>Юридический адрес:</strong> {{ config.organisation.legalAddress }}</p>
-      <p><strong>ИНН:</strong> {{ config.organisation.inn }}</p>
-      <p v-if="config.organisation.ogrn"><strong>ОГРН:</strong> {{ config.organisation.ogrn }}</p>
-      <p><strong>Банк:</strong> {{ config.organisation.bank }}</p>
-      <p><strong>Р/с:</strong> {{ config.organisation.bankAccount }}</p>
-      <p><strong>К/с:</strong> {{ config.organisation.correspondentAccount }}</p>
-      <p><strong>БИК:</strong> {{ config.organisation.bik }}</p>
-      <p><strong>Телефон:</strong> {{ config.organisation.phone }}</p>
-      <p><strong>E-mail:</strong> {{ config.organisation.email }}</p>
+      <p><strong>Юридический адрес:</strong> {{ config.organization.legalAddress }}</p>
+      <p><strong>ИНН:</strong> {{ config.organization.inn }}</p>
+      <p v-if="config.organization.ogrn"><strong>ОГРН:</strong> {{ config.organization.ogrn }}</p>
+      <p><strong>Банк:</strong> {{ config.organization.bank }}</p>
+      <p><strong>Р/с:</strong> {{ config.organization.bankAccount }}</p>
+      <p><strong>К/с:</strong> {{ config.organization.correspondentAccount }}</p>
+      <p><strong>БИК:</strong> {{ config.organization.bik }}</p>
+      <p><strong>Телефон:</strong> {{ config.organization.phone }}</p>
+      <p><strong>E-mail:</strong> {{ config.organization.email }}</p>
     </div>
   </div>
 </template>

@@ -36,180 +36,203 @@ defineExpose({ price: props.price });
 </script>
 
 <template>
-  <div class="tariff" :class="{ popular: props.isPopular }">
-    <div v-if="props.isPopular" class="popular-badge text-xsmall">🔥 ВЫГОДНЕЕ ВСЕХ</div>
-    <div v-if="props.discount" class="discount-badge text-xsmall">{{ props.discount }}</div>
-    <div class="tariff-header">
-      <div class="period">
-        <slot name="term" />
-      </div>
-      <div class="price-container">
-        <div class="price-old text-small">{{ _oldPrice }} ₽</div>
-        <div class="price-new">{{ _price }} ₽</div>
-        <div v-if="props.economy" class="economy text-xsmall">Экономия {{ props.economy }} ₽</div>
-        <div class="price-per-month text-small">({{ _perMonth }} ₽/мес)</div>
-      </div>
+  <div class="tariff" :class="{ pop: props.isPopular }">
+    <div v-if="props.isPopular" class="pop-badge">⭐ ВЫГОДНЕЕ ВСЕХ</div>
+    <div v-if="props.discount" class="disc-badge">{{ props.discount }}</div>
+
+    <div class="t-period" :class="{ 't-period--pop': props.isPopular }">
+      <slot name="term" />
     </div>
-    <ul class="features">
+
+    <div class="t-old" v-if="props.oldPrice">{{ _oldPrice }} ₽</div>
+    <div class="t-price">{{ _price }} ₽</div>
+
+    <div v-if="props.economy" class="t-save">Экономия {{ props.economy }} ₽</div>
+
+    <div class="t-per">{{ _perMonth }} ₽/месяц</div>
+
+    <div class="t-divider"></div>
+
+    <ul class="feats">
       <slot name="features" />
     </ul>
-    <MainButton @click="onActionClick" :wait="wait" :color="isPopular ? 'green' : 'default'">
-      <slot name="buttonText"> Оплатить сейчас </slot>
+
+    <MainButton
+      @click="onActionClick"
+      :wait="wait"
+      :color="isPopular ? 'green' : 'default'"
+      class="btn"
+    >
+      <slot name="buttonText"> Выбрать тариф </slot>
     </MainButton>
-    <div v-if="$slots.guarantee" class="guarantee text-xsmall">
-      <i class="fas" :class="`fa-${props.guaranteeIcon}`"></i>
-      <span><slot name="guarantee" /></span>
+
+    <div v-if="$slots.guarantee" class="t-label">
+      <slot name="guarantee" />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .tariff {
-  background: white;
+  background: #fff;
   border-radius: 14px;
+  border: 1.5px solid var(--border);
   padding: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  border: 2px solid #e5e7eb;
-  position: relative;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: visible;
+  transition: transform 0.15s;
+  text-align: center;
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(0.985);
   }
 
-  &.popular {
-    border: 2px solid var(--secondary);
-    background: var(--light);
-
-    .popular-badge {
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--secondary);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 15px;
-      font-weight: 700;
-      box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
-      white-space: nowrap;
-      max-width: 90%;
-    }
+  &.pop {
+    border-color: var(--g);
+    border-width: 2px;
+    margin-top: 8px;
   }
 
-  &-header {
-    text-align: center;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e5e7eb;
-    position: relative;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    .price-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 6px;
-
-      .price-old {
-        color: #6b7280;
-        text-decoration: line-through;
-        margin-bottom: 2px;
-      }
-
-      .price-new {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--primary);
-        line-height: 1;
-      }
-
-      .economy {
-        color: #dc2626;
-        font-weight: 700;
-        margin-top: 2px;
-        background: #fef2f2;
-        padding: 2px 6px;
-        border-radius: 6px;
-      }
-
-      .price-per-month {
-        color: #6b7280;
-        margin-top: 2px;
-      }
-    }
-  }
-
-  .discount-badge {
+  .pop-badge {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    background: #dc2626;
-    color: white;
-    padding: 3px 8px;
-    border-radius: 10px;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--g);
+    color: #fff;
+    font-size: var(--xs);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    padding: 3px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+    z-index: 10;
+    max-width: calc(100% - 20px);
+  }
+
+  .disc-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--r);
+    color: #fff;
+    font-size: var(--xs);
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 7px;
+  }
+
+  .t-period {
+    font-size: var(--sm);
+    font-weight: 600;
+    color: var(--t2);
+    margin-bottom: 6px;
+    padding-top: 4px;
+
+    &--pop {
+      padding-top: 12px;
+    }
+  }
+
+  .t-old {
+    font-size: var(--sm);
+    font-weight: 400;
+    color: var(--t3);
+    text-decoration: line-through;
+    margin-bottom: 2px;
+  }
+
+  .t-price {
+    font-size: var(--xl);
     font-weight: 700;
+    color: var(--p);
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 4px;
   }
 
-  .features {
+  .t-save {
+    font-size: var(--xs);
+    font-weight: 600;
+    color: var(--r);
+    background: #fef2f2;
+    padding: 2px 7px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 0 auto 4px;
+  }
+
+  .t-per {
+    font-size: var(--sm);
+    font-weight: 400;
+    color: var(--t3);
+    margin-bottom: 14px;
+  }
+
+  .feats {
     list-style: none;
-    margin: 15px 0;
-    flex-grow: 1;
+    flex: 1;
+    margin-bottom: 14px;
+    padding: 0;
+    text-align: left;
   }
 
-  .guarantee {
+  .t-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 12px;
+  }
+
+  .t-label {
     text-align: center;
-    padding: 8px;
-    background: #f0fdf4;
-    border-radius: 6px;
-    margin-top: 10px;
-    border: 1px solid #bbf7d0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-
-    i {
-      color: var(--secondary);
-    }
+    font-size: var(--xs);
+    font-weight: 400;
+    color: var(--t3);
+    margin-top: 8px;
   }
 }
 
-@media (max-width: 768px) {
-  .tariff {
-    padding: 20px 15px;
-
-    .period {
-      font-size: 1.1rem;
-    }
-
-    .price-new {
-      font-size: 1.6rem;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .tariff {
-    padding: 18px 12px;
-
-    .period {
-      font-size: 1rem;
-    }
-
-    .price-new {
-      font-size: 1.5rem;
-    }
-  }
-}
 @media (max-width: 360px) {
+  .t-price {
+    font-size: 30px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
   .tariff {
-    padding: 14px 12px;
+    background: #1c1c1e;
+    border-color: #2c2c2e;
+
+    &.pop {
+      border-color: var(--g);
+    }
+
+    .t-period {
+      color: #8e8e93;
+    }
+
+    .t-old,
+    .t-per {
+      color: #48484a;
+    }
+
+    .t-price {
+      color: #a78bfa;
+    }
+
+    .t-save {
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    .t-divider {
+      background: #2c2c2e;
+    }
+
+    .t-label {
+      color: #48484a;
+    }
   }
 }
 </style>

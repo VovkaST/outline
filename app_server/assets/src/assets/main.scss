@@ -16,39 +16,39 @@ body {
   margin: 0;
   padding: 15px;
   min-height: 100vh;
+  min-height: -webkit-fill-available;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  color: var(--dark);
+  color: var(--t1);
+  -webkit-font-smoothing: antialiased;
   word-break: break-word;
   text-rendering: optimizeLegibility;
   line-height: 1.4;
 
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
+  background: #3B0764;
+  overflow-x: hidden;
 
   user-select: none;
 }
 
 .text-large {
-  font-size: 1.4rem;
+  font-size: var(--lg);
 }
 
 .text-medium {
-  font-size: 1rem;
+  font-size: var(--md);
 }
 
 .text-small {
-  font-size: 0.8rem;
+  font-size: var(--sm);
 }
 
 .text-xsmall {
-  font-size: 0.7rem;
+  font-size: var(--xs);
 }
 
 @media (max-width: 768px) {
