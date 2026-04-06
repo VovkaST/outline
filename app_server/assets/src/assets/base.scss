@@ -39,6 +39,8 @@
   --lg: 18px;
   --xl: 34px;
 
+  --card-bg: #ffffff;
+
   font-weight: 400;
   color-scheme: light dark;
   text-rendering: optimizeLegibility;
@@ -59,8 +61,23 @@ a:hover {
   width: 100%;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-slate: #1e1b4b;
+    --br-slate: #312e81;
+    --card-bg: #111827;
+
+    --t1: #f8fafc;
+    --t2: #cbd5e1;
+    --t3: #94a3b8;
+
+    --border: #312e81;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
+    --card-bg: #ffffff;
     color: #213547;
     background-color: #ffffff;
   }

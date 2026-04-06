@@ -202,36 +202,36 @@ defineExpose({ price: props.price });
 
 @media (prefers-color-scheme: dark) {
   .tariff {
-    background: #1c1c1e;
-    border-color: #2c2c2e;
+    background: var(--bg-slate);
+    border-color: var(--border);
 
     &.pop {
       border-color: var(--g);
     }
 
     .t-period {
-      color: #8e8e93;
+      color: var(--t2);
     }
 
     .t-old,
     .t-per {
-      color: #48484a;
+      color: var(--t3);
     }
 
     .t-price {
-      color: #a78bfa;
+      color: var(--p);
     }
 
     .t-save {
-      background: rgba(239, 68, 68, 0.12);
+      background: rgba(239, 68, 68, 0.2);
     }
 
     .t-divider {
-      background: #2c2c2e;
+      background: var(--border);
     }
 
     .t-label {
-      color: #48484a;
+      color: var(--t3);
     }
   }
 }

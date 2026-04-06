@@ -55,7 +55,7 @@ const isDisabled = computed<boolean>(() => props.disabled || props.wait);
     }
 
     &.green {
-      background: #10B981;
+      background: #10b981;
     }
   }
 

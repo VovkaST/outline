@@ -135,14 +135,14 @@ const onConfidentialPolicyClose = () => {
 
 @media (prefers-color-scheme: dark) {
   .footer {
-    border-top-color: #2c2c2e;
+    border-top-color: var(--border);
 
     p {
-      color: #48484a;
+      color: var(--t3);
     }
 
     .req {
-      border-top-color: #2c2c2e;
+      border-top-color: var(--border);
     }
   }
 }

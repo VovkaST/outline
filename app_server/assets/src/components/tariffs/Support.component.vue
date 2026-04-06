@@ -98,16 +98,16 @@ const isWhatsApp = (url: string) => url.includes('wa.me') || url.includes('whats
 
 @media (prefers-color-scheme: dark) {
   .sup-box {
-    background: #2c2c2e;
-    border-color: #3a3a3c;
+    background: var(--bg-slate);
+    border-color: var(--border);
 
     h3 {
-      color: #f5f5f7;
+      color: var(--t1);
     }
 
     p,
     .sup-note {
-      color: #8e8e93;
+      color: var(--t2);
     }
   }
 }

@@ -51,7 +51,7 @@ const onActionClick = (price: number) => {
   margin: 0 auto;
 
   .card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 16px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
     overflow: visible;
