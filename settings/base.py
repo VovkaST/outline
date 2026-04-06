@@ -27,6 +27,7 @@ SERVER_PORT = env.as_int("SERVER_PORT", default=8000)
 SERVER_VERSION = env.get("SERVER_VERSION", default="1.0")
 SERVER_DESCRIPTION = env.get("SERVER_DESCRIPTION")
 REQUEST_TOKEN = env.get("REQUEST_TOKEN", default="")
+DEFAULT_RATE_LIMIT = env.get("DEFAULT_RATE_LIMIT", default="50/minute")
 
 
 # Настройки Т-кассы
