@@ -45,11 +45,11 @@
 
 @media (prefers-color-scheme: dark) {
   .pay-box {
-    background: #2c2c2e;
-    border-color: #3a3a3c;
+    background: var(--bg-slate);
+    border-color: var(--border);
 
     p {
-      color: #8e8e93;
+      color: var(--t2);
     }
   }
 }
