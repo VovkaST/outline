@@ -11,7 +11,8 @@ const route = useRoute();
 const paymentStore = usePaymentStore();
 
 const taskGuid = computed<string>(() => {
-  return route.query['guid'];
+  const value = route.query['guid'];
+  return typeof value === 'string' ? value : '';
 });
 const isRecurrent = computed<boolean>(() => {
   const isRecurrentValue = route.query['isRecurrent'];

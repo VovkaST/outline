@@ -27,5 +27,32 @@
       "url": "https://vk.com/page",
       "text": "ВКонтакте"
     }
+  ],
+  "subscriptionAddUrl": "https://t.me/your_bot?start={task_id}",
+  "announcement": {
+    "title": "Уважаемые клиенты",
+    "paragraphs": [
+      "Текст информационного сообщения. Можно указать несколько абзацев."
+    ],
+    "cta": "Опциональный выделенный призыв к действию."
+  },
+  "tariffs": [
+    {
+      "period": "1 месяц",
+      "price": 199
+    },
+    {
+      "period": "3 месяца",
+      "price": 499
+    },
+    {
+      "period": "6 месяцев",
+      "price": 899,
+      "featured": true
+    },
+    {
+      "period": "12 месяцев",
+      "price": 1999
+    }
   ]
 }

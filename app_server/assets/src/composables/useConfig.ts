@@ -23,6 +23,9 @@ function getDefaultConfig(): SiteConfig {
       representativeBasis: 'Устава',
     },
     supportItems: [],
+    subscriptionAddUrl: '',
+    announcement: undefined,
+    tariffs: [],
   };
 }
 

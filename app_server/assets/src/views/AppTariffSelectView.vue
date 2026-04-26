@@ -1,18 +1,25 @@
 <script setup lang="ts">
-import { Footer, Header, TariffsList } from '@/components/tariffs';
+import {
+  AddSubscriptionButton,
+  Announcement,
+  Footer,
+  Header,
+  SubscriptionRef,
+  TariffsList,
+} from '@/components/tariffs';
+import { useConfig } from '@/composables/useConfig';
 import { usePaymentStore } from '@/stores/payment';
 import { useToggle } from '@vueuse/core';
-import { computed, provide } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const config = useConfig();
 const paymentStore = usePaymentStore();
 
 const props = defineProps<{
   taskId: string;
 }>();
-
-provide('taskId', props.taskId);
 
 const returnUrl = computed<string>(() => (route.query['returnUrl'] as string) || '');
 
@@ -23,7 +30,7 @@ const onActionClick = (price: number) => {
   paymentStore
     .initYooKassaPayment({
       taskId: props.taskId,
-      amount: price,
+      amount: price * 100,
       returnUrl: returnUrl.value,
     })
     .then(
@@ -35,41 +42,53 @@ const onActionClick = (price: number) => {
     .finally(formSubmittingToggle);
 };
 </script>
+
 <template>
-  <div class="tariff-form-container">
-    <div class="card">
-      <Header />
-      <TariffsList ref="tariffsListRef" @actionClick="onActionClick" :wait="formSubmitting" />
-      <Footer />
-    </div>
+  <div class="page">
+    <Announcement v-if="config.announcement">
+      <template #title>{{ config.announcement.title }}</template>
+      <p v-for="paragraph in config.announcement.paragraphs" :key="paragraph">
+        {{ paragraph }}
+      </p>
+      <p v-if="config.announcement.cta" class="announcement-cta">
+        {{ config.announcement.cta }}
+      </p>
+    </Announcement>
+
+    <Header />
+
+    <SubscriptionRef :subscription-number="taskId" />
+
+    <TariffsList :tariffs="config.tariffs" :wait="formSubmitting" @actionClick="onActionClick" />
+
+    <div class="note">Перед оплатой у вас должна быть <strong>добавлена подписка</strong>.</div>
+
+    <AddSubscriptionButton :url="config.subscriptionAddUrl ?? ''" :task-id="taskId" />
+
+    <Footer />
   </div>
 </template>
+
 <style lang="scss" scoped>
-.tariff-form-container {
-  max-width: 1200px;
+.page {
+  max-width: 420px;
   width: 100%;
+  text-align: center;
   margin: 0 auto;
-
-  .card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
-    overflow: visible;
-    margin-bottom: 14px;
-  }
-
-  footer {
-    text-align: center;
-    padding: 20px;
-    color: var(--gray);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--border);
-  }
 }
 
-@media (max-width: 768px) {
-  .footer {
-    padding: 15px;
-  }
+.note {
+  font-size: 13px;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  padding: 12px 16px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.note :deep(strong) {
+  color: var(--ink);
+  font-weight: 600;
 }
 </style>

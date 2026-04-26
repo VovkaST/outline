@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LayerTypes } from './types.ts';
 
-const props = defineProps<{
+defineProps<{
   type: LayerTypes;
 }>();
 </script>

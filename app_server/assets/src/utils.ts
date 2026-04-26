@@ -32,16 +32,13 @@ export function decimalNumberFormat({
   currency?: string;
 }): string {
   const val = value ? value : 0;
-  let options = {
+  const options: Intl.NumberFormatOptions = {
     minimumFractionDigits: cutFractionDigits ? 0 : fractionDigits,
     maximumFractionDigits: fractionDigits,
   };
   if (currency) {
-    options = {
-      style: 'currency',
-      currency: currency,
-      ...options,
-    };
+    options.style = 'currency';
+    options.currency = currency;
   }
   return parseFloat(safeParseFloat(val).toFixed(fractionDigits)).toLocaleString('ru-RU', options);
 }

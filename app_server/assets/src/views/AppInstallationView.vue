@@ -87,7 +87,9 @@ const handleStepChange = (step: number) => {
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isIOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+    !(window as Window & { MSStream?: unknown }).MSStream;
   if (isIOS) {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;

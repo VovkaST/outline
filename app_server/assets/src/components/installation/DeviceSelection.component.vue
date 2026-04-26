@@ -21,12 +21,14 @@ const emit = defineEmits<{
   (e: 'deviceSelect', device: DeviceType): void;
 }>();
 
-const devices: Array<{
-  type: DeviceType;
-  icon: string;
-  label: string;
-  desc: string;
-}> = computed(() => [
+const devices = computed<
+  Array<{
+    type: DeviceType;
+    icon: string;
+    label: string;
+    desc: string;
+  }>
+>(() => [
   {
     type: 'android',
     icon: 'fab fa-android',

@@ -3,7 +3,7 @@ import Contacts from './Contacts.component.vue';
 import { inject } from 'vue';
 import { usePaymentStore } from '@/stores/payment.ts';
 
-const { taskGuid }: { taskGuid: string } = inject('paymentItem');
+const { taskGuid } = inject<{ taskGuid: string }>('paymentItem', { taskGuid: '' });
 
 const payment = usePaymentStore();
 
