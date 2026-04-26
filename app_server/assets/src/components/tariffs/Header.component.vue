@@ -16,8 +16,7 @@ const logoLetter = computed<string>(() => (nameParts.value.primary[0] ?? '').toU
 <template>
   <div class="logo">
     <div class="logo-mark">{{ logoLetter }}</div>
-    {{ nameParts.primary }}
-    <span v-if="nameParts.accent">&nbsp;{{ nameParts.accent }}</span>
+    {{ nameParts.primary }}<span v-if="nameParts.accent">{{ nameParts.accent }}</span>
   </div>
 </template>
 
