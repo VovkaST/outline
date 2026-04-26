@@ -1,65 +1,79 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const fullPath = computed(() => `${window.location.origin}${route.fullPath}`);
 </script>
 
 <template>
-  <div class="not-found">
-    <div class="container">
-      <div class="card">
-        <p class="main-title">404 - Страница не найдена</p>
-        <p class="text-medium">К сожалению, эта страница не существует.</p>
-        <p class="text-small">
-          Вы пытались получить доступ к: <strong>{{ fullPath }}</strong>
-        </p>
-      </div>
-    </div>
+  <div class="page">
+    <div class="code">404</div>
+    <p class="title">Страница не найдена</p>
+    <p class="text">К сожалению, эта страница не существует.</p>
+    <p class="path">
+      Вы пытались получить доступ к: <strong>{{ fullPath }}</strong>
+    </p>
   </div>
 </template>
 
-<style scoped>
-.not-found {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: #3B0764;
-  color: var(--t1);
-  text-align: center;
-}
-
-.container {
+<style scoped lang="scss">
+.page {
+  max-width: 420px;
   width: 100%;
-  max-width: 400px;
+  text-align: center;
   margin: 0 auto;
+  color: var(--ink);
 }
 
-.card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
-  padding: 24px 20px;
-}
-
-.main-title {
-  font-size: 1.4rem;
+.code {
+  font-size: 72px;
   font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
   margin-bottom: 8px;
-  color: var(--p);
+  letter-spacing: -0.2px;
+  color: var(--ink);
 }
 
-.text-medium {
-  font-size: var(--md);
-  margin-top: 5px;
-  color: var(--t1);
+.text {
+  font-size: 14px;
+  color: var(--ink-dim);
+  line-height: 1.55;
+  margin-bottom: 20px;
 }
 
-.text-small {
-  font-size: var(--sm);
-  margin-top: 12px;
-  color: var(--t2);
+.path {
+  font-size: 12px;
+  color: var(--ink-dim);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  word-break: break-all;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.path strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@media (max-width: 380px) {
+  .code {
+    font-size: 60px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
 }
 </style>
