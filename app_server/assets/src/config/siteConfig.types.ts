@@ -29,9 +29,24 @@ export interface SiteConfigSupportItem {
   text: string;
 }
 
+export interface SiteConfigTariff {
+  period: string;
+  price: number;
+  featured?: boolean;
+}
+
+export interface SiteConfigAnnouncement {
+  title: string;
+  paragraphs: readonly string[];
+  cta?: string;
+}
+
 export interface SiteConfig {
   readonly site: SiteConfigSite;
   readonly organization: SiteConfigOrganization;
   readonly publicOffer: SiteConfigPublicOffer;
   readonly supportItems: readonly SiteConfigSupportItem[];
+  readonly subscriptionAddUrl?: string;
+  readonly announcement?: SiteConfigAnnouncement;
+  readonly tariffs: readonly SiteConfigTariff[];
 }

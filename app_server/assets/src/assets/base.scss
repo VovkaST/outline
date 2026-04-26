@@ -2,36 +2,22 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
 :root {
-  --font-family-default: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-family-secondary: 'Nunito', sans-serif;
+  --bg: #ffffff;
+  --bg-soft: #f6f7f9;
+  --border: #e6e8ec;
+  --ink: #0f1115;
+  --ink-dim: #5a6270;
+  --ink-faint: #8b95a3;
+  --primary: #c9a961;
+  --primary-hover: #b8954a;
+  --primary-soft: #faf3e3;
+  --success: #13c296;
 
-  --block-border-radius: 16px;
-  --font-color-default: #0F172A;
-
-  --p: #7C3AED;
-  --pd: #4C1D95;
-  --g: #10B981;
-  --r: #EF4444;
-  --gold: #F59E0B;
-
-  --t1: #0F172A;
-  --t2: #64748B;
-  --t3: #94A3B8;
-
-  --bg-slate: #F8FAFC;
-  --br-slate: #E2E8F0;
-
-  --primary: var(--p);
-  --primary-dark: var(--pd);
-  --secondary: var(--g);
-  --dark: var(--t1);
-  --light: var(--bg-slate);
-  --gray: var(--t2);
-  --border: var(--br-slate);
+  --font-family-default: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --xs: 11px;
   --sm: 13px;
@@ -39,54 +25,24 @@
   --lg: 18px;
   --xl: 34px;
 
-  --card-bg: #ffffff;
-
   font-weight: 400;
-  color-scheme: light dark;
+  color-scheme: light;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 #app {
   width: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-slate: #1e1b4b;
-    --br-slate: #312e81;
-    --card-bg: #111827;
-
-    --t1: #f8fafc;
-    --t2: #cbd5e1;
-    --t3: #94a3b8;
-
-    --border: #312e81;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --card-bg: #ffffff;
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }

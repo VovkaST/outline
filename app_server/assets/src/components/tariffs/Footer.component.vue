@@ -1,62 +1,37 @@
 <script setup lang="ts">
 import { Modal } from '@/components';
 import {
+  ConfidentialPolicy,
   PublicOffer,
   UserAgreement,
-  ConfidentialPolicy,
 } from '@/components/tariffs/legal-documents';
-import { useConfig } from '@/composables/useConfig';
 import { useToggle } from '@vueuse/core';
-
-const config = useConfig();
 
 const [isPublicOfferShow, isPublicOfferShowToggle] = useToggle(false);
 const [isUserAgreementShow, isUserAgreementShowToggle] = useToggle(false);
 const [isConfidentialPolicyShow, isConfidentialPolicyShowToggle] = useToggle(false);
 
-const onPublicOfferClick = () => {
-  isPublicOfferShowToggle(true);
-};
-const onPublicOfferClose = () => {
-  isPublicOfferShowToggle(false);
-};
+const onPublicOfferClick = () => isPublicOfferShowToggle(true);
+const onPublicOfferClose = () => isPublicOfferShowToggle(false);
 
-const onUserAgreementClick = () => {
-  isUserAgreementShowToggle(true);
-};
-const onUserAgreementClose = () => {
-  isUserAgreementShowToggle(false);
-};
+const onUserAgreementClick = () => isUserAgreementShowToggle(true);
+const onUserAgreementClose = () => isUserAgreementShowToggle(false);
 
-const onConfidentialPolicyClick = () => {
-  isConfidentialPolicyShowToggle(true);
-};
-const onConfidentialPolicyClose = () => {
-  isConfidentialPolicyShowToggle(false);
-};
+const onConfidentialPolicyClick = () => isConfidentialPolicyShowToggle(true);
+const onConfidentialPolicyClose = () => isConfidentialPolicyShowToggle(false);
 </script>
+
 <template>
-  <div class="footer">
-    <p>© {{ new Date().getFullYear() }} {{ config.site.name }} — Ваша приватность под защитой</p>
-    <div class="footer-links">
-      <a href="#" id="offer-link" class="text-xsmall" @click.prevent="onPublicOfferClick">
-        Публичная оферта
-      </a>
-      <a href="#" id="agreement-link" class="text-xsmall" @click.prevent="onUserAgreementClick">
-        Пользовательское соглашение
-      </a>
-      <a
-        href="#"
-        id="confidential-policy-link"
-        class="text-xsmall"
-        @click.prevent="onConfidentialPolicyClick"
-      >
-        Политика конфиденциальности
-      </a>
-    </div>
-    <div class="req">
-      <p>{{ config.organization.fullName }} · ИНН {{ config.organization.inn }}</p>
-    </div>
+  <div class="legal-links">
+    <button class="offer-link" type="button" @click="onPublicOfferClick">Публичная оферта</button>
+    <span class="legal-sep">·</span>
+    <button class="offer-link" type="button" @click="onUserAgreementClick">
+      Пользовательское соглашение
+    </button>
+    <span class="legal-sep">·</span>
+    <button class="offer-link" type="button" @click="onConfidentialPolicyClick">
+      Политика конфиденциальности
+    </button>
 
     <Modal
       key="publicOffer"
@@ -67,7 +42,7 @@ const onConfidentialPolicyClose = () => {
       @close="onPublicOfferClose"
     >
       <template #title>Публичная оферта</template>
-      <template #body> <PublicOffer /> </template>
+      <template #body><PublicOffer /></template>
     </Modal>
 
     <Modal
@@ -79,7 +54,7 @@ const onConfidentialPolicyClose = () => {
       @close="onUserAgreementClose"
     >
       <template #title>Пользовательское соглашение</template>
-      <template #body> <UserAgreement /> </template>
+      <template #body><UserAgreement /></template>
     </Modal>
 
     <Modal
@@ -91,59 +66,52 @@ const onConfidentialPolicyClose = () => {
       @close="onConfidentialPolicyClose"
     >
       <template #title>Политика конфиденциальности</template>
-      <template #body> <ConfidentialPolicy /> </template>
+      <template #body><ConfidentialPolicy /></template>
     </Modal>
   </div>
 </template>
 
 <style scoped lang="scss">
-.footer {
-  text-align: center;
-  padding: 16px 12px;
-  border-top: 1px solid var(--border);
-
-  p {
-    font-size: var(--xs);
-    font-weight: 400;
-    color: var(--t3);
-    line-height: 1.7;
-    margin-bottom: 2px;
-  }
-
-  .footer-links {
-    margin-bottom: 8px;
-
-    a {
-      color: var(--p);
-      text-decoration: none;
-      font-size: var(--xs);
-      font-weight: 400;
-      margin: 0 4px;
-    }
-  }
-
-  .req {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border);
-
-    p {
-      color: var(--t3);
-    }
-  }
+.legal-links {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.6;
 }
 
-@media (prefers-color-scheme: dark) {
-  .footer {
-    border-top-color: var(--border);
+.legal-sep {
+  color: var(--ink-faint);
+  font-size: 11px;
+}
 
-    p {
-      color: var(--t3);
-    }
+.offer-link {
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s;
+  padding: 4px 2px;
+}
 
-    .req {
-      border-top-color: var(--border);
-    }
+.offer-link:hover {
+  color: var(--primary);
+}
+
+@media (max-width: 380px) {
+  .legal-links {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .legal-sep {
+    display: none;
   }
 }
 </style>

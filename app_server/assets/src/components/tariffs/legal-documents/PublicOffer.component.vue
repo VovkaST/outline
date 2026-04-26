@@ -28,7 +28,10 @@ const config = useConfig();
       <h3 class="text-small">1. ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ</h3>
       <p>
         <strong>Сайт</strong> — интернет-сайт Исполнителя, расположенный по адресу:
-        {{ config.site.url }}.
+        <a :href="config.site.url" target="_blank" rel="noopener noreferrer">
+          {{ config.site.url }}
+        </a>
+        .
       </p>
       <p>
         <strong>Услуга</strong> — комплекс услуг и функциональных возможностей, предоставляемых
@@ -146,7 +149,7 @@ const config = useConfig();
       </p>
     </div>
 
-    <div class="section">
+    <div class="section req">
       <h3 class="text-small">РЕКВИЗИТЫ ИСПОЛНИТЕЛЯ:</h3>
       <p><strong>Полное наименование организации:</strong> {{ config.site.name }}</p>
       <p><strong>Юридический адрес:</strong> {{ config.organization.legalAddress }}</p>
@@ -168,6 +171,12 @@ const config = useConfig();
   h3 {
     color: var(--primary);
     margin-bottom: 8px;
+  }
+
+  &.req {
+    p {
+      margin-bottom: 2px;
+    }
   }
 }
 </style>
