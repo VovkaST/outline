@@ -36,7 +36,10 @@ const videoSources = [
 let currentSourceIndex = 0;
 
 const isIOS = computed(() => {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+    !(window as Window & { MSStream?: unknown }).MSStream
+  );
 });
 
 const loadVideo = () => {
@@ -75,6 +78,11 @@ const tryNextSource = () => {
   }
 
   const videoSrc = videoSources[currentSourceIndex];
+  if (!videoSrc) {
+    showLoading.value = false;
+    showError.value = true;
+    return;
+  }
   videoElement.value.src = videoSrc;
 
   videoElement.value.oncanplay = () => {

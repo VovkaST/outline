@@ -20,14 +20,16 @@ export const usePaymentStore = defineStore('payment', {
 
     initPayment({
       guid,
+      amount,
       isRecurrent = false,
       useQr = false,
     }: {
       guid: string;
+      amount: number;
       isRecurrent?: boolean;
       useQr?: boolean;
     }) {
-      return PaymentsV1Service.initPayment({ taskGuid: guid, isRecurrent, useQr });
+      return PaymentsV1Service.initPayment({ taskGuid: guid, amount, isRecurrent, useQr });
     },
 
     initYooKassaPayment({

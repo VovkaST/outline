@@ -11,7 +11,7 @@ const props = withDefaults(
     <Transition name="fade" mode="out-in" appear>
       <div
         v-if="props.showModal"
-        :key="props.showModal"
+        :key="String(props.showModal)"
         :class="{ 'is-visible': props.showModal }"
         class="modal-wrapper"
         role="dialog"

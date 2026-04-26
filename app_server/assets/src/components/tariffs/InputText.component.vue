@@ -1,11 +1,11 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    type: 'text' | 'email';
+    type?: 'text' | 'email';
     placeholder?: string;
     name?: string;
-    disabled: boolean;
-    errors: string[];
+    disabled?: boolean;
+    errors?: string[];
   }>(),
   {
     type: 'text',

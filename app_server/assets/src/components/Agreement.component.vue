@@ -10,13 +10,15 @@ import { usePaymentStore } from '@/stores/payment.ts';
 import { LayerTypes } from '@/components/ui/types.ts';
 import { useToggle } from '@vueuse/core';
 
-const {
-  taskGuid,
-  isSuccess,
-  isRecurrent,
-}: { taskGuid: string; isSuccess: boolean; isRecurrent: boolean } = inject('paymentItem');
+const { taskGuid, isSuccess, isRecurrent } = inject<{
+  taskGuid: string;
+  isSuccess: boolean;
+  isRecurrent: boolean;
+}>('paymentItem', { taskGuid: '', isSuccess: false, isRecurrent: false });
 
-const { paymentError }: { paymentError: Ref<Errors> } = inject('paymentError');
+const { paymentError } = inject<{ paymentError: Ref<Errors> }>('paymentError', {
+  paymentError: ref<Errors>(Errors.UNHANDLED_ERROR),
+});
 
 const isSuccessfullyPayed = computed<boolean>(() => isSuccess);
 
@@ -38,13 +40,13 @@ const [isBusy, isBusyToggle] = useToggle();
 const onPayClick = async ({ useQr = false }: { useQr: boolean }) => {
   isBusy.value = true;
   payment
-    .initPayment({ guid: taskGuid, isRecurrent: isRecurrent, useQr })
+    .initPayment({ guid: taskGuid, amount: 0, isRecurrent: isRecurrent, useQr })
     .then(
       (response) => {
         if (response.qr) {
           qr.value = response.qr;
-          url.value = response.url;
-          pollingStart(response.payment_id);
+          url.value = response.url ?? '';
+          if (response.payment_id != null) pollingStart(response.payment_id);
         } else if (response.url) {
           window.location.href = response.url;
         }
@@ -64,7 +66,7 @@ const pollingStop = () => {
   clearInterval(pollingInterval.value);
   const searchParams = new URLSearchParams();
   searchParams.append('guid', taskGuid);
-  searchParams.append('success', true);
+  searchParams.append('success', 'true');
   window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
 };
 const polling = async (paymentId: number) => {

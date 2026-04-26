@@ -61,18 +61,18 @@ const onFormSubmit = () => {
         disabled
         placeholder="Сумма (₽)"
         v-model="amount"
-        :errors="errors['amount']"
+        :errors="errors['amount'] ?? []"
       />
       <InputText
         type="email"
         class="mb-2"
         placeholder="Email для чека"
         v-model="email"
-        :errors="errors['email']"
+        :errors="errors['email'] ?? []"
       />
       <MainButton
         @click="() => (allowSubmit ? onFormSubmit() : null)"
-        :disabled="canSubmit"
+        :disabled="!allowSubmit"
         :wait="wait"
       >
         Оплатить сейчас
