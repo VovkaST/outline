@@ -5,14 +5,16 @@ __all__ = [
     "yookassa",
 ]
 
-from app_server.config import planfix_config, t_bank_config, yookassa_config
+from app_server.config import planfix_config, t_bank_config, wata_config, yookassa_config
 
 from .payment import Payment
 from .planfix.client import PlanfixRestAPI, PlanfixWebchatAPI
+from .wata import WataService
 from .yookassa import YooKassaService
 
 payment_api = None
 yookassa = None
+wata = None
 
 planfix_api = PlanfixRestAPI(token=planfix_config.TOKEN)
 planfix_webchat = PlanfixWebchatAPI(token=planfix_config.WEBCHAT_TOKEN, provider_id=planfix_config.PROVIDER_ID)
@@ -26,3 +28,6 @@ if t_bank_config.TERMINAL_ID and t_bank_config.TERMINAL_PASSWORD:
 
 if yookassa_config.ACCOUNT_ID and yookassa_config.TOKEN:
     yookassa = YooKassaService(yookassa_config.ACCOUNT_ID, yookassa_config.TOKEN)
+
+if wata_config.TOKEN:
+    wata = WataService(token=wata_config.TOKEN)

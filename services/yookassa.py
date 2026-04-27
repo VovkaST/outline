@@ -16,7 +16,7 @@ class YooKassaService:
 
         Configuration.configure(self.account_id, self.token, logger=logger)
 
-    def init_payment(
+    async def init_payment(
         self,
         task_id: str,
         amount: int,

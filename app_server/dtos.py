@@ -1,6 +1,6 @@
 from contextlib import suppress
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from root.config import settings
 from root.dtos import ErrorResponse
@@ -115,6 +115,13 @@ class PutKeyRequest(BaseModel):
 class InitYooKassaPaymentDTO(BaseModel):
     payment_id: str = Field(description="Уникальный идентификатор транзакции в системе YooKassa")
     confirmation_url: str = Field(description="Ссылка на страницу подтверждения платежа")
+
+
+class InitWataPaymentDTO(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    payment_id: str = Field(description="Уникальный идентификатор транзакции в системе Wata", alias="id")
+    confirmation_url: str = Field(description="Ссылка на страницу подтверждения платежа", alias="url")
 
 
 class StoreTaskKeyRequest(BaseModel):

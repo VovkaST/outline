@@ -24,3 +24,8 @@ class PaymentStatus(str, Enum):
     AUTH_FAIL = "AUTH_FAIL"
     ACTIVE = "ACTIVE"
     INACTIVE = "INACTIVE"
+
+
+class PaymentSystems(str, Enum):
+    YOOKASSA = "yookassa"
+    WATA = "wata"
