@@ -29,7 +29,7 @@ SERVER_DESCRIPTION = env.get("SERVER_DESCRIPTION")
 REQUEST_TOKEN = env.get("REQUEST_TOKEN", default="")
 DEFAULT_RATE_LIMIT = env.get("DEFAULT_RATE_LIMIT", default="50/minute")
 
-
+DEFAULT_PAYMENT_AGENT = env.get("DEFAULT_PAYMENT_AGENT", "yookassa")
 # Настройки Т-кассы
 TBANK_REST_API_URL = env.get("TBANK_REST_API_URL", default="https://securepay.tinkoff.ru/v2")
 TBANK_TERMINAL_ID = env.get("TBANK_TERMINAL_ID")
@@ -46,6 +46,8 @@ YOOKASSA_TOKEN = env.get("YOOKASSA_TOKEN")
 YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL = env.get("YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL")
 YOOKASSA_DEFAULT_CURRENCY = env.get("YOOKASSA_DEFAULT_CURRENCY", default="RUB")
 
+# Настройки Wata
+WATA_TOKEN = env.get("WATA_TOKEN", default="")
 
 # Настройки Planfix
 PLANFIX_XML_API_URL = env.get("PLANFIX_XML_API_URL", default="https://apiru.planfix.ru/xml")

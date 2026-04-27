@@ -31,6 +31,12 @@ class YookassaConfig(BaseAppConfig):
     DEFAULT_CURRENCY: str
 
 
+class WataConfig(BaseAppConfig):
+    PREFIX = "WATA"
+
+    TOKEN: str
+
+
 class PlanfixConfig(BaseAppConfig):
     PREFIX = "PLANFIX"
 
@@ -46,5 +52,6 @@ class PlanfixConfig(BaseAppConfig):
 
 server_config = ServerAppConfig()
 t_bank_config = TBankConfig()
+wata_config = WataConfig()
 planfix_config = PlanfixConfig()
 yookassa_config = YookassaConfig()

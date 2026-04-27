@@ -11,7 +11,7 @@ class InitPaymentResponse(BaseModel):
     qr: str | None = Field(description="QR-код на оплату", default=None)
 
 
-class InitYooKassaPaymentResponse(BaseModel):
+class InitPaymentResponseV2(BaseModel):
     payment_id: str = Field(description="Уникальный идентификатор транзакции в системе YooKassa")
     confirmation_url: str = Field(description="Ссылка на страницу подтверждения платежа")
 
