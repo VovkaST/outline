@@ -1,4 +1,5 @@
 from app_server.dtos import InitWataPaymentDTO
+from services import wata_config
 from services.http_service import BaseHTTPService
 
 
@@ -28,11 +29,11 @@ class WataService(BaseHTTPService):
         payload = {
             "type": "ManyTime",
             "amount": amount / 100,
-            "currency": "RUB",
+            "currency": wata_config.DEFAULT_CURRENCY,
             "description": description or task_id,
             "orderId": task_id,
-            "successRedirectUrl": return_url,
-            "failRedirectUrl": return_url,
+            "successRedirectUrl": return_url or wata_config.USE_SUCCESS_PAYMENT_REDIRECT_URL,
+            "failRedirectUrl": return_url or wata_config.USE_FAIL_PAYMENT_REDIRECT_URL,
         }
         response = await self.make_request(url_name="links", method="post", json=payload)
         return InitWataPaymentDTO(**response)

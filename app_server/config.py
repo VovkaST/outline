@@ -35,6 +35,9 @@ class WataConfig(BaseAppConfig):
     PREFIX = "WATA"
 
     TOKEN: str
+    DEFAULT_CURRENCY: str
+    USE_SUCCESS_PAYMENT_REDIRECT_URL: str
+    USE_FAIL_PAYMENT_REDIRECT_URL: str
 
 
 class PlanfixConfig(BaseAppConfig):
