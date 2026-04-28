@@ -13,4 +13,14 @@ class BotAppConfig(BaseAppConfig):
     HOOK_REQUEST_DATA_PREFIX: str = "HOOK_"
 
 
+class S3Config(BaseAppConfig):
+    PREFIX = "S3"
+
+    ACCESS_KEY: str
+    SECRET_KEY: str
+    BUCKET_NAME: str
+    ENDPOINT_URL: str
+
+
 bot_config = BotAppConfig()
+s3_config = S3Config()

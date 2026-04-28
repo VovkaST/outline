@@ -71,6 +71,13 @@ BOT_APP_URL_ANDROID = env.get("BOT_APP_URL_ANDROID", default="https://play.googl
 BOT_APP_NAME = env.get("BOT_APP_NAME", default="Some app name")
 
 
+# Настройка S3-хранилища
+S3_ACCESS_KEY = env.get("S3_ACCESS_KEY", default="")
+S3_SECRET_KEY = env.get("S3_SECRET_KEY", default="")
+S3_BUCKET_NAME = env.get("S3_BUCKET_NAME", default="")
+S3_ENDPOINT_URL = env.get("S3_ENDPOINT_URL", default="")
+
+
 # Логирование
 LOG_DIR = env.get("LOG_DIR", default="logs")
 log_dir = Path(LOG_DIR)
