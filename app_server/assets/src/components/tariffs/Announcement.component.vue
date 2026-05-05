@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useConfig } from '@/composables/useConfig';
+import type { SiteConfigAnnouncement } from '@/config/siteConfig.types';
 import { computed, onUnmounted, ref, watch } from 'vue';
 
 const config = useConfig();
-const announcement = computed(() => config.value.announcement);
+const announcement = computed<SiteConfigAnnouncement | undefined>(() => config.value.announcement);
 
 const deadlineMs = computed<number | null>(() => {
   const rawDeadline = announcement.value?.deadline;
