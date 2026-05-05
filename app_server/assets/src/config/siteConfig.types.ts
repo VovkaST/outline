@@ -39,6 +39,7 @@ export interface SiteConfigAnnouncement {
   title: string;
   paragraphs: readonly string[];
   cta?: string;
+  deadline?: string;
 }
 
 export interface SiteConfig {
