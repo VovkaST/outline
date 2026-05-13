@@ -27,6 +27,9 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Same ref as selected for workflow_dispatch (any branch/tag).
+          ref: ${{ github.ref }}
 
       - name: Deploy over SSH
         env:

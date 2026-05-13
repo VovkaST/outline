@@ -1,5 +1,8 @@
 name: Deploy back
 
+# Manual deploy from any branch: Actions → this workflow → Run workflow → Branch dropdown.
+# This workflow file must exist on the default branch to appear in the Actions UI.
+
 on:
   workflow_dispatch:
     inputs:

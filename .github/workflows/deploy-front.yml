@@ -1,5 +1,9 @@
 name: Deploy front
 
+# Manual deploy from any branch: Actions → this workflow → Run workflow → Branch dropdown
+# («Use workflow from»). Server receives github.ref_name (see deploy-reusable).
+# GitHub shows workflow_dispatch only if this file exists on the repository default branch.
+
 on:
   workflow_dispatch:
     inputs:
