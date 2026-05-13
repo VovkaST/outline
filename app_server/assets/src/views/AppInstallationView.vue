@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CreateTaskResponse, GetTaskKeyResponse } from '@/api/generated/public';
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { InstallationSteps, ProgressBar, LanguageSwitcher } from '@/components/installation';
 import type { DeviceType } from '@/components/installation/DeviceSelection.component.vue';
@@ -57,7 +58,7 @@ const handleDeviceSelect = (device: DeviceType) => {
   }, 300);
   if (!isKeyFetching.value) {
     isKeyFetchingToggle(true);
-    tasksStore.createTask().then((response) => {
+    tasksStore.createTask().then((response: CreateTaskResponse) => {
       pollingStart(response.id);
     });
   }
@@ -72,7 +73,7 @@ const pollingStop = () => {
   isKeyFetchingToggle(false);
 };
 const polling = async (taskId: number) => {
-  await tasksStore.getTaskKey({ taskId }).then((response) => {
+  await tasksStore.getTaskKey({ taskId }).then((response: GetTaskKeyResponse) => {
     if (response.key) {
       subscriptionUrl.value = response.key;
       pollingStop();

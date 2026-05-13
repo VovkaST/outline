@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { InitYooKassaPaymentResponse } from '@/api/generated/public';
 import {
   AddSubscriptionButton,
   Announcement,
@@ -34,10 +35,10 @@ const onActionClick = (price: number) => {
       returnUrl: returnUrl.value,
     })
     .then(
-      (response) => {
+      (response: InitYooKassaPaymentResponse) => {
         window.location.href = response.confirmation_url;
       },
-      (reason) => console.error('Init payment error: ', reason),
+      (reason: unknown) => console.error('Init payment error: ', reason),
     )
     .finally(formSubmittingToggle);
 };

@@ -47,6 +47,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Generate OpenAPI client
+        run: yarn schema:generate
+
       - name: ESLint (TypeScript sources)
         run: yarn exec eslint "src/**/*.ts" --max-warnings 0
 
