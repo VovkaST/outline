@@ -37,7 +37,7 @@ onUnmounted(() => {
     <SuccessHero>
       <template #title>Подписка активирована</template>
       <template #description>
-        Оплата прошла успешно. Осталось пара действий, чтобы VPN снова заработал.
+        Оплата прошла успешно. Осталась пара действий, чтобы VPN снова заработал.
       </template>
     </SuccessHero>
 
