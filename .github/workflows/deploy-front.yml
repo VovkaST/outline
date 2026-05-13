@@ -1,0 +1,20 @@
+name: Deploy front
+
+on:
+  workflow_dispatch:
+    inputs:
+      stands_csv:
+        description: "Aliases from repo Variable DEPLOY_STANDS_JSON (comma-separated)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      component: front
+      stands_csv: ${{ inputs.stands_csv }}
+    secrets: inherit

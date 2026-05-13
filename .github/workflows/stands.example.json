@@ -1,0 +1,14 @@
+{
+  "production": {
+    "host": "deploy.example.com",
+    "user": "deploy",
+    "path": "/opt/vpn_outline/app"
+  },
+  "staging": {
+    "host": "staging.example.com",
+    "user": "ubuntu"
+  },
+  "another-site": {
+    "host": "vpn.other.example.com"
+  }
+}

@@ -1,0 +1,41 @@
+name: Deploy (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      component:
+        description: "front | back | bot"
+        required: true
+        type: string
+      stands_csv:
+        description: "Comma-separated aliases from DEPLOY_STANDS_JSON (Variable or Secret)"
+        required: true
+        type: string
+
+# Secrets: DEPLOY_SSH_KEY only (private SSH key).
+# Variables: SERVER_SSH_USER, DEPLOY_PROJECT_PATH (optional if every stand has path in JSON).
+# Stands map JSON: optional per-stand "user" / "path"; Secret or Variable DEPLOY_STANDS_JSON — same shape as stands.example.json.
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-${{ inputs.component }}-${{ github.ref }}-${{ inputs.stands_csv }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy over SSH
+        env:
+          COMPONENT: ${{ inputs.component }}
+          STANDS_CSV: ${{ inputs.stands_csv }}
+          DEPLOY_BRANCH: ${{ github.ref_name }}
+          SERVER_SSH_USER: ${{ vars.SERVER_SSH_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_PROJECT_PATH: ${{ vars.DEPLOY_PROJECT_PATH }}
+          DEPLOY_STANDS_JSON_SECRET: ${{ secrets.DEPLOY_STANDS_JSON }}
+          DEPLOY_STANDS_JSON_VAR: ${{ vars.DEPLOY_STANDS_JSON }}
+        run: bash scripts/gh-deploy-stands.sh
