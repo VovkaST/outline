@@ -19,6 +19,7 @@ export const detectLanguage = (): Language => {
   if (savedLang === 'ru' || savedLang === 'en') {
     return savedLang;
   }
-  const userLang = navigator.language || (navigator as any).userLanguage;
+  const userLang = navigator.language || (navigator as Navigator & { userLanguage?: string }).userLanguage || '';
+
   return userLang.startsWith('ru') ? 'ru' : 'en';
 };

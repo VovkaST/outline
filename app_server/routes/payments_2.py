@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Query
 from starlette.requests import Request
 
@@ -15,6 +17,8 @@ services_map = {
     PaymentSystems.WATA: wata,
 }
 
+_DEFAULT_PAYMENT_AGENT = settings.DEFAULT_PAYMENT_AGENT
+
 
 @routes.get("/init/", response_model=responses.InitPaymentResponseV2)
 async def init_payment_v2(
@@ -24,7 +28,10 @@ async def init_payment_v2(
     customer_email: str = Query(description="Почтовый ящик клиента", default=""),
     description: str = Query(description="Описание платежа", default=""),
     return_url: str = Query(description="URL редиректа успешной оплаты", default=""),
-    payment_agent: PaymentSystems = Query(description="Платежная система", default=settings.DEFAULT_PAYMENT_AGENT),
+    payment_agent: Annotated[
+        PaymentSystems,
+        Query(description="Платежная система"),
+    ] = _DEFAULT_PAYMENT_AGENT,
 ):
     """Инициализировать платеж."""
 
