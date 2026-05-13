@@ -18,6 +18,10 @@ body {
   line-height: 1.4;
 }
 
+body.payment-success-scroll {
+  align-items: flex-start;
+}
+
 body.modal-open {
   overflow: hidden;
   position: fixed;

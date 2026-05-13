@@ -1,29 +1,17 @@
-import AddSubscriptionButton from './AddSubscriptionButton.component.vue';
-import Announcement from './Announcement.component.vue';
-import Delimiter from './Delimiter.component.vue';
-import Footer from './Footer.component.vue';
-import Header from './Header.component.vue';
-import InputText from './InputText.component.vue';
-import MainButton from './MainButton.component.vue';
-import PayForm from './PayForm.component.vue';
-import Stat from './Stat.component.vue';
-import StatsList from './StatsList.component.vue';
-import SubscriptionRef from './SubscriptionRef.component.vue';
-import TariffCard from './TariffCard.component.vue';
-import TariffsList from './TariffsList.component.vue';
+export { default as AddSubscriptionButton } from './AddSubscriptionButton.component.vue';
+export { default as Announcement } from './Announcement.component.vue';
+export { default as Delimiter } from './Delimiter.component.vue';
+export { default as Footer } from './Footer.component.vue';
+export { default as Header } from './Header.component.vue';
+export { default as InputText } from './InputText.component.vue';
+export { default as MainButton } from './MainButton.component.vue';
+export { default as PayForm } from './PayForm.component.vue';
+export { default as PaymentSuccessConnectionMode } from './PaymentSuccessConnectionMode.component.vue';
+export { default as PaymentSuccessStep } from './PaymentSuccessStep.component.vue';
+export { default as Stat } from './Stat.component.vue';
+export { default as StatsList } from './StatsList.component.vue';
+export { default as SubscriptionRef } from './SubscriptionRef.component.vue';
+export { default as SuccessHero } from './SuccessHero.component.vue';
+export { default as TariffCard } from './TariffCard.component.vue';
+export { default as TariffsList } from './TariffsList.component.vue';
 
-export {
-  AddSubscriptionButton,
-  Announcement,
-  Delimiter,
-  Footer,
-  Header,
-  InputText,
-  MainButton,
-  PayForm,
-  Stat,
-  StatsList,
-  SubscriptionRef,
-  TariffCard,
-  TariffsList
-};
