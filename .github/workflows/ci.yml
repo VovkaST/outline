@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Ruff
+        run: pip install ruff
+
+      - name: Ruff check
+        working-directory: ${{ github.workspace }}
+        run: ruff check .
+
+      - name: Ruff format check
+        working-directory: ${{ github.workspace }}
+        run: ruff format --check .
+
+  lint-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app_server/assets
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: yarn
+          cache-dependency-path: app_server/assets/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Generate OpenAPI client
+        run: yarn schema:generate
+
+      - name: ESLint (TypeScript sources)
+        run: yarn exec eslint "src/**/*.ts" --max-warnings 0
+
+      - name: vue-tsc
+        run: yarn run type-check

@@ -27,10 +27,7 @@ class RootConfig:
                 setattr(self, setting, [])
 
     def __repr__(self):
-        return '<%(cls)s "%(settings_module)s">' % {
-            "cls": self.__class__.__name__,
-            "settings_module": self.SETTINGS_MODULE,
-        }
+        return f'<{self.__class__.__name__} "{self.SETTINGS_MODULE}">'
 
 
 settings = RootConfig()

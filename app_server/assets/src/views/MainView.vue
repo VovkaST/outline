@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CheckOrderResponse } from '@/api/generated/public';
 import Subscribe from '@/components/Subscribe.component.vue';
 import { Spinner } from '@/components/ui';
 import { computed, onBeforeMount, provide, readonly, ref } from 'vue';
@@ -44,7 +45,7 @@ onBeforeMount(() => {
     paymentStore
       .checkOrder({ guid: taskGuid.value })
       .then(
-        (response) => {
+        (response: CheckOrderResponse) => {
           isPaymentValid.value = response.is_valid;
           if (!isPaymentValid.value) paymentError.value = Errors.PAYMENT_NOT_FOUND;
         },

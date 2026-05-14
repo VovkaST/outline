@@ -171,7 +171,7 @@ services:
 * `REQUEST_TOKEN` &ndash; токен для эндпоинтов, требующих авторизацию (это отправка сообщений пользователям через Telegram-бота и инициализация рекуррентного платежа через Т-Банк, если ничто их этого не используется, можно не указывать)
 * `YOOKASSA_ACCOUNT_ID` &ndash; идентификатор аккаунта Yookassa
 * `YOOKASSA_TOKEN` &ndash; токен API Yookassa
-* `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей 
+* `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей (опционально включите подстроку `{task_id}` — при fallback без `return_url` с клиента она будет заменена на идентификатор задачи; если плейсхолдера нет, URL используется как есть). То же для `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL` и `WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL`.
 * `PLANFIX_ACCOUNT` &ndash; имя аккаунта PlanFix
 * `PLANFIX_TOKEN` &ndash; токен API PlanFix
 * `DEFAULT_PAYMENT_DEADLINE` &ndash; время жизни ссылки платежа (необязательный)

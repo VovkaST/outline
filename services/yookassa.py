@@ -4,6 +4,7 @@ import uuid
 from yookassa import Configuration, Payment
 
 from app_server.dtos import InitYooKassaPaymentDTO
+from app_server.utils import apply_task_id_to_redirect_url
 from services import yookassa_config
 
 logger = logging.getLogger("app_server")
@@ -25,6 +26,11 @@ class YooKassaService:
         return_url: str = "",
     ) -> InitYooKassaPaymentDTO:
         _amount = amount / 100
+        confirmation_return_url = (
+            return_url
+            if return_url
+            else apply_task_id_to_redirect_url(yookassa_config.USE_SUCCESS_PAYMENT_REDIRECT_URL, task_id)
+        )
         request_payload = {
             "amount": {
                 "value": _amount,
@@ -32,7 +38,7 @@ class YooKassaService:
             },
             "confirmation": {
                 "type": "redirect",
-                "return_url": return_url or yookassa_config.USE_SUCCESS_PAYMENT_REDIRECT_URL,
+                "return_url": confirmation_return_url,
             },
             "capture": True,
             "description": task_id,

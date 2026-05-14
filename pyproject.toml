@@ -29,3 +29,7 @@ indent-style = "space"
 
 [tool.ruff.lint.isort]
 known-first-party = ["root", "app_server"]
+
+[tool.ruff.lint.per-file-ignores]
+"settings/local.py" = ["F403", "F405"]
+"settings/prod.py" = ["F403", "F405"]

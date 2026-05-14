@@ -12,6 +12,12 @@ const router = createRouter({
       },
     },
     {
+      path: '/task/:taskId(\\d+)/success/',
+      name: 'payment-success',
+      component: () => import('@/views/PaymentSuccessView.vue'),
+      props: true,
+    },
+    {
       path: '/task/:taskId(\\d+)/',
       name: 'app-tariffs',
       component: () => import('@/views/AppTariffSelectView.vue'),

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import CheckBox from './CheckBox.component.vue';
-import ButtonComponent from './Button.component.vue';
-import QrComponent from './Qr.component.vue';
+import type { InitPaymentResponse, PaymentStatusResponse } from '@/api/generated/public';
 import { OverflowLayer } from '@/components/ui';
-import { computed, inject, onMounted, ref } from 'vue';
-import { type Ref } from 'vue';
+import { LayerTypes } from '@/components/ui/types.ts';
 import { Errors, Messages } from '@/stores/enums.ts';
 import { usePaymentStore } from '@/stores/payment.ts';
-import { LayerTypes } from '@/components/ui/types.ts';
 import { useToggle } from '@vueuse/core';
+import { computed, inject, onMounted, ref, type Ref } from 'vue';
+import ButtonComponent from './Button.component.vue';
+import CheckBox from './CheckBox.component.vue';
+import QrComponent from './Qr.component.vue';
 
 const { taskGuid, isSuccess, isRecurrent } = inject<{
   taskGuid: string;
@@ -42,7 +42,7 @@ const onPayClick = async ({ useQr = false }: { useQr: boolean }) => {
   payment
     .initPayment({ guid: taskGuid, amount: 0, isRecurrent: isRecurrent, useQr })
     .then(
-      (response) => {
+      (response: InitPaymentResponse) => {
         if (response.qr) {
           qr.value = response.qr;
           url.value = response.url ?? '';
@@ -70,7 +70,7 @@ const pollingStop = () => {
   window.location.href = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
 };
 const polling = async (paymentId: number) => {
-  await payment.getPaymentStatus({ paymentId }).then((response) => {
+  await payment.getPaymentStatus({ paymentId }).then((response: PaymentStatusResponse) => {
     if (response.Status !== 'FORM_SHOWED') pollingStop();
   });
 };
