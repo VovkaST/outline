@@ -16,6 +16,7 @@ import {
 import { useConfig } from '@/composables/useConfig';
 import { usePaymentStore } from '@/stores/payment';
 import { useTasksStore } from '@/stores/tasks';
+import NotFoundView from '@/views/NotFoundView.vue';
 import { useToggle } from '@vueuse/core';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -37,6 +38,7 @@ const paymentAgent = computed<PaymentSystems>(
 const addSubscriptionUrlFromTask = ref<string>('');
 const clientPhone = ref<string>('');
 const taskInfoLoading = ref<boolean>(true);
+const taskNotFound = ref<boolean>(false);
 const addSubscriptionUrl = computed<string>(
   () => addSubscriptionUrlFromTask.value || config.value.subscriptionAddUrl || '',
 );
@@ -67,15 +69,18 @@ onMounted(() => {
     .then((response: SubscriptionTaskResponse) => {
       addSubscriptionUrlFromTask.value = response.subscription_add_url;
       clientPhone.value = response.client_phone;
-    })
-    .finally(() => {
       taskInfoLoading.value = false;
+    })
+    .catch(() => {
+      taskNotFound.value = true;
     });
 });
 </script>
 
 <template>
-  <div class="page">
+  <NotFoundView v-if="taskNotFound" />
+
+  <div v-else class="page">
     <Announcement v-if="config.announcement">
       <template #title>{{ config.announcement.title }}</template>
       <p v-for="paragraph in config.announcement.paragraphs" :key="paragraph">
