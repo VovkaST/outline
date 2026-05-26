@@ -193,6 +193,11 @@ class TaskFilterResponse(BaseModel):
     tasks: list[TaskResponse]
 
 
+class GetTaskResponse(BaseModel):
+    result: str
+    task: TaskResponse
+
+
 class CreateTaskResponse(BaseModel):
     result: str
     id: int
