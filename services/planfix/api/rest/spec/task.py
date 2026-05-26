@@ -64,6 +64,7 @@ class Task(BaseAPIEntity, ITask):
         CustomFields.TELEGRAM_ID.value,
         CustomFields.PAYMENT_SUM.value,
         CustomFields.PAYMENT_SUM2.value,
+        CustomFields.SUBSCRIPTION_ADD_URL.value,
     ] + ALL_FIELDS
 
     def build_fields_list(self, fields: list[str]) -> str:

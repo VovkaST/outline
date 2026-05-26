@@ -8,6 +8,7 @@ from pydantic import BaseModel, PositiveInt, field_serializer
 
 class OperatorTypes(str, Enum):
     EQUAL = "equal"
+    HAVE = "have"
 
 
 class FilterTypes(Enum):

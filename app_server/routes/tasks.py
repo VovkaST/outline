@@ -9,6 +9,7 @@ from services import planfix_api
 from services.planfix.api.rest import responses as planfix_reponses
 from services.planfix.api.rest.spec.models import CustomFieldValueRequest
 from services.planfix.filters import UserKeyUpdate
+from services.planfix.utils import get_task
 
 routes = APIRouter(tags=["Tasks"], prefix="/tasks", generate_unique_id_function=get_route_name)
 
@@ -27,6 +28,14 @@ async def create(request: Request):
     response = planfix_reponses.CreateTaskResponse.model_validate(result)
     _task_key_pairs[response.id] = None
     return responses.CreateTaskResponse(id=response.id)
+
+
+@routes.get("/{task_guid}/", response_model=responses.SubscriptionTaskResponse)
+async def get_task_info(request: Request, task_guid: str):
+    task: planfix_reponses.TaskResponse = await get_task(task_guid=task_guid)
+    return responses.SubscriptionTaskResponse(
+        subscription_add_url=task.subscription_add_url.value, client_phone=task.client_phone
+    )
 
 
 @routes.post("/{task_id}/key/", status_code=status.HTTP_201_CREATED)

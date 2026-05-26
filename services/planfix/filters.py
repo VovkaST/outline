@@ -4,7 +4,7 @@ from typing import Any, TypeAlias
 from pydantic import Field, PositiveInt
 
 from services.planfix.api.rest.enums import SubscriptionStatus
-from services.planfix.api.rest.filters import CustF, FilterTypes
+from services.planfix.api.rest.filters import CustF, FilterTypes, OperatorTypes
 
 BASE_TELEGRAM_OBJECT_ID = "21991848"
 
@@ -22,6 +22,8 @@ class CustomFields(IntEnum):
     PAYMENT_SUM = 149932
     PAYMENT_SUM2 = 140326
     USER_KEY = 139978
+    COMPOSED_GUID_UUID = 140532
+    SUBSCRIPTION_ADD_URL = 140528
 
 
 class VPNKeyF(CustF):
@@ -82,6 +84,12 @@ class UserKeyF(CustF):
 class BaseTelegramObjectF(CustF):
     type: FilterTypes = FilterTypes.OBJECT
     field: PositiveInt | None = Field(exclude=True, default=None)
+
+
+class ComposedGuidUuidF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_LINE
+    field: PositiveInt = CustomFields.COMPOSED_GUID_UUID
+    operator: OperatorTypes = OperatorTypes.HAVE
 
 
 CustomFieldUpdateBody: TypeAlias = dict[str, str | int | dict[str, CustomFields]]

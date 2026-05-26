@@ -174,9 +174,18 @@ class TaskResponse(BaseModel):
 
     @computed_field
     @cached_property
+    def subscription_add_url(self) -> CustomFieldValueResponse:
+        return self.get_custom_field(field=CustomFields.SUBSCRIPTION_ADD_URL)
+
+    @computed_field
+    @cached_property
     def client_phone(self) -> str:
-        *_, phone = self.name.split(" | ")
-        return f"+{phone}" if phone else ""
+        if not self.name:
+            return ""
+        *_, phone = self.name.split("|")
+        if not phone:
+            return ""
+        return phone.strip()
 
 
 class TaskFilterResponse(BaseModel):
