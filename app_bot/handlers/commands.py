@@ -42,15 +42,23 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     is_first_visit = not task
 
     clear_or_init_history(context)
+    utm = context.args[0] if context.args else ""
+
+    if is_command and not is_first_visit:
+        try:
+            await planfix_webchat.chat.new_message(
+                chat_id=str(telegram_id),
+                contact_id=str(telegram_id),
+                contact_name=username,
+                message=f"/start {utm}".strip(),
+            )
+        except ClientResponseError as error:
+            logger.error("📨 Ошибка отправки данных в Planfix (%s): %s", error.code, error.message)
+
     if is_first_visit or not is_key_generated:
         try:
             if is_command and is_first_visit:
-                ref_link: str = ""
-                if context.args:
-                    ref_link = context.args[0]
-                message = (
-                    f"✅ Пользователь запустил бота через /start{ref_link}\nID: {telegram_id}\nUsername: {username}"
-                )
+                message = f"✅ Пользователь запустил бота через /start{utm}\nID: {telegram_id}\nUsername: {username}"
                 await planfix_webchat.chat.new_message(
                     chat_id=str(telegram_id), contact_id=str(telegram_id), contact_name=username, message=message
                 )
