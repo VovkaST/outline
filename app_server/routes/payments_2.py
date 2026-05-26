@@ -1,5 +1,3 @@
-from typing import Annotated
-
 from fastapi import APIRouter, Query
 from starlette.requests import Request
 
@@ -28,10 +26,7 @@ async def init_payment_v2(
     customer_email: str = Query(description="Почтовый ящик клиента", default=""),
     description: str = Query(description="Описание платежа", default=""),
     return_url: str = Query(description="URL редиректа успешной оплаты", default=""),
-    payment_agent: Annotated[
-        PaymentSystems,
-        Query(description="Платежная система"),
-    ] = _DEFAULT_PAYMENT_AGENT,
+    payment_agent: PaymentSystems = Query(description="Платежная система", default=_DEFAULT_PAYMENT_AGENT),
 ):
     """Инициализировать платеж."""
 

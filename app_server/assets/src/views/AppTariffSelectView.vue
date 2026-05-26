@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import type { InitYooKassaPaymentResponse } from '@/api/generated/public';
+import type {
+  InitPaymentResponseV2,
+  PaymentSystems,
+  SubscriptionTaskResponse,
+} from '@/api/generated/public';
 import {
   AddSubscriptionButton,
   Announcement,
@@ -10,38 +14,55 @@ import {
 } from '@/components/tariffs';
 import { useConfig } from '@/composables/useConfig';
 import { usePaymentStore } from '@/stores/payment';
+import { useTasksStore } from '@/stores/tasks';
 import { useToggle } from '@vueuse/core';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const config = useConfig();
 const paymentStore = usePaymentStore();
+const tasksStore = useTasksStore();
 
 const props = defineProps<{
   taskId: string;
 }>();
 
 const returnUrl = computed<string>(() => (route.query['returnUrl'] as string) || '');
+const paymentAgent = computed<PaymentSystems>(
+  () => (route.query['paymentAgent'] as PaymentSystems) || null,
+);
+
+const addSubscriptionUrlFromTask = ref<string>('');
+const addSubscriptionUrl = computed<string>(
+  () => addSubscriptionUrlFromTask.value || config.value.subscriptionAddUrl || '',
+);
 
 const [formSubmitting, formSubmittingToggle] = useToggle(false);
 
 const onActionClick = (price: number) => {
   formSubmitting.value = true;
   paymentStore
-    .initYooKassaPayment({
+    .initPaymentV2({
       taskId: props.taskId,
       amount: price * 100,
       returnUrl: returnUrl.value,
+      paymentAgent: paymentAgent.value,
     })
     .then(
-      (response: InitYooKassaPaymentResponse) => {
+      (response: InitPaymentResponseV2) => {
         window.location.href = response.confirmation_url;
       },
       (reason: unknown) => console.error('Init payment error: ', reason),
     )
     .finally(formSubmittingToggle);
 };
+
+onMounted(() => {
+  tasksStore.getTaskInfo({ taskGuid: props.taskId }).then((response: SubscriptionTaskResponse) => {
+    addSubscriptionUrlFromTask.value = response.subscription_add_url;
+  });
+});
 </script>
 
 <template>
@@ -64,7 +85,7 @@ const onActionClick = (price: number) => {
 
     <div class="note">Перед оплатой у вас должна быть <strong>добавлена подписка</strong>.</div>
 
-    <AddSubscriptionButton :url="config.subscriptionAddUrl ?? ''" :task-id="taskId" />
+    <AddSubscriptionButton :url="addSubscriptionUrl" :task-id="taskId" />
 
     <Footer />
   </div>

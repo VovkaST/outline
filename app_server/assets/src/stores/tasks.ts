@@ -15,8 +15,12 @@ export const useTasksStore = defineStore('TasksStore', {
       return TasksService.create();
     },
 
-    getTaskKey({taskId}: {taskId: number}) {
-      return TasksService.getTaskKey({taskId: String(taskId)});
+    getTaskKey({ taskId }: { taskId: number }) {
+      return TasksService.getTaskKey({ taskId: String(taskId) });
+    },
+
+    getTaskInfo({ taskGuid }: { taskGuid: string }) {
+      return TasksService.getTaskInfo({ taskGuid });
     },
   },
 });
