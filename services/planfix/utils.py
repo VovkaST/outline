@@ -47,7 +47,7 @@ async def get_task(
     assert task_guid or request_key or telegram_id, (
         "Не указан идентификатор задачи, запроса на привязку счета или TelegramId"
     )
-    if not task_guid.isdigit():
+    if (task_guid and not task_guid.isdigit()) or not task_guid:
         args = []
         if task_guid:
             args.append(ComposedGuidUuidF(value=task_guid))

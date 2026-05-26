@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
+from starlette import status
 from starlette.requests import Request
 
 from app_server import responses
@@ -32,6 +33,9 @@ async def init_payment_v2(
     """Инициализировать платеж."""
 
     service = services_map.get(payment_agent)
+
+    if not service:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неизвестная платежная система")
 
     if not task_id.isdigit():
         from services.planfix.utils import get_task
