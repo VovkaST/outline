@@ -1,11 +1,11 @@
 import importlib
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.staticfiles import StaticFiles
 
 from app_bot.routes import routes as bot_routes
 from app_server import routes
@@ -56,5 +56,9 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
     app.include_router(routes.subscription_routes, prefix="/api")
     app.include_router(routes.tasks_routes, prefix="/api")
     app.include_router(bot_routes, prefix="/api")
-    app.mount("/", StaticFiles(directory="app_server/assets", html=True, check_dir=True), name="static")
+
+    @app.get("/openapi.json/", include_in_schema=False)
+    async def openapi_trailing_slash():
+        return JSONResponse(app.openapi())
+
     return app
