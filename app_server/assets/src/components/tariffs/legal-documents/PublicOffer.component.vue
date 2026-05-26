@@ -14,13 +14,12 @@ const config = useConfig();
         <strong>{{ config.publicOffer.city }}</strong>
       </p>
       <p>
-        <strong>{{ config.site.name }}</strong
-        >, именуемое в дальнейшем «Исполнитель», в лице {{ config.publicOffer.representativeName }},
-        действующего на основании {{ config.publicOffer.representativeBasis }}, с одной стороны,
-        предлагает заключить Договор на оказание услуг любому дееспособному физическому лицу,
-        достигшему 18-летнего возраста, а также юридическому лицу или индивидуальному
-        предпринимателю, именуемому в дальнейшем «Заказчик», на условиях настоящей Публичной оферты
-        (далее – «Договор» или «Оферта»).
+        <strong> {{ config.organization.fullName }} </strong>, именуемый в дальнейшем «Исполнитель»,
+        в лице {{ config.publicOffer.representativeName }}, действующего на основании
+        {{ config.publicOffer.representativeBasis }}, с одной стороны, предлагает заключить Договор
+        на оказание услуг любому дееспособному физическому лицу, достигшему 18-летнего возраста, а
+        также юридическому лицу или индивидуальному предпринимателю, именуемому в дальнейшем
+        «Заказчик», на условиях настоящей Публичной оферты (далее – «Договор» или «Оферта»).
       </p>
     </div>
 
@@ -151,7 +150,7 @@ const config = useConfig();
 
     <div class="section req">
       <h3 class="text-small">РЕКВИЗИТЫ ИСПОЛНИТЕЛЯ:</h3>
-      <p><strong>Полное наименование организации:</strong> {{ config.site.name }}</p>
+      <p><strong>Полное наименование организации:</strong> {{ config.organization.fullName }}</p>
       <p><strong>Юридический адрес:</strong> {{ config.organization.legalAddress }}</p>
       <p><strong>ИНН:</strong> {{ config.organization.inn }}</p>
       <p v-if="config.organization.ogrn"><strong>ОГРН:</strong> {{ config.organization.ogrn }}</p>
