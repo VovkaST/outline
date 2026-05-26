@@ -31,6 +31,13 @@ async def init_payment_v2(
     """Инициализировать платеж."""
 
     service = services_map.get(payment_agent)
+
+    if not task_id.isdigit():
+        from services.planfix.utils import get_task
+
+        task = await get_task(task_guid=task_id)
+        task_id = str(task.id)
+
     payment = await service.init_payment(
         task_id=task_id,
         amount=amount,
