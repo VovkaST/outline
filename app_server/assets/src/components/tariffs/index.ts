@@ -3,6 +3,8 @@ export { default as Announcement } from './Announcement.component.vue';
 export { default as Delimiter } from './Delimiter.component.vue';
 export { default as Footer } from './Footer.component.vue';
 export { default as Header } from './Header.component.vue';
+export { default as InfoCard } from './InfoCard.component.vue';
+export { default as InfoCardList } from './InfoCardList.component.vue';
 export { default as InputText } from './InputText.component.vue';
 export { default as MainButton } from './MainButton.component.vue';
 export { default as PayForm } from './PayForm.component.vue';
