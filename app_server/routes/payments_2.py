@@ -15,7 +15,8 @@ services_map = {
     PaymentSystems.WATA: wata,
 }
 
-_DEFAULT_PAYMENT_AGENT = settings.DEFAULT_PAYMENT_AGENT
+_DEFAULT_PAYMENT_AGENT = PaymentSystems(settings.DEFAULT_PAYMENT_AGENT)
+_PAYMENT_AGENT_QUERY = Query(default=_DEFAULT_PAYMENT_AGENT, description="Платежная система")
 
 
 @routes.get("/init/", response_model=responses.InitPaymentResponseV2)
@@ -26,7 +27,7 @@ async def init_payment_v2(
     customer_email: str = Query(description="Почтовый ящик клиента", default=""),
     description: str = Query(description="Описание платежа", default=""),
     return_url: str = Query(description="URL редиректа успешной оплаты", default=""),
-    payment_agent: PaymentSystems = Query(description="Платежная система", default=_DEFAULT_PAYMENT_AGENT),
+    payment_agent: PaymentSystems = _PAYMENT_AGENT_QUERY,
 ):
     """Инициализировать платеж."""
 
