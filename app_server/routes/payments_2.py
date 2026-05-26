@@ -1,6 +1,5 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
+from starlette import status
 from starlette.requests import Request
 
 from app_server import responses
@@ -17,7 +16,8 @@ services_map = {
     PaymentSystems.WATA: wata,
 }
 
-_DEFAULT_PAYMENT_AGENT = settings.DEFAULT_PAYMENT_AGENT
+_DEFAULT_PAYMENT_AGENT = PaymentSystems(settings.DEFAULT_PAYMENT_AGENT)
+_PAYMENT_AGENT_QUERY = Query(default=_DEFAULT_PAYMENT_AGENT, description="Платежная система")
 
 
 @routes.get("/init/", response_model=responses.InitPaymentResponseV2)
@@ -28,14 +28,21 @@ async def init_payment_v2(
     customer_email: str = Query(description="Почтовый ящик клиента", default=""),
     description: str = Query(description="Описание платежа", default=""),
     return_url: str = Query(description="URL редиректа успешной оплаты", default=""),
-    payment_agent: Annotated[
-        PaymentSystems,
-        Query(description="Платежная система"),
-    ] = _DEFAULT_PAYMENT_AGENT,
+    payment_agent: PaymentSystems = _PAYMENT_AGENT_QUERY,
 ):
     """Инициализировать платеж."""
 
     service = services_map.get(payment_agent)
+
+    if not service:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неизвестная платежная система")
+
+    if not task_id.isdigit():
+        from services.planfix.utils import get_task
+
+        task = await get_task(task_guid=task_id)
+        task_id = str(task.id)
+
     payment = await service.init_payment(
         task_id=task_id,
         amount=amount,

@@ -123,65 +123,79 @@ class TaskResponse(BaseModel):
     # files: list
     customFieldData: list[CustomFieldValueResponse] | None = Field(default_factory=list)
 
-    def get_custom_field(self, field: CustomFields) -> CustomFieldValueResponse:
+    def get_custom_field(self, field: CustomFields) -> CustomFieldValueResponse | None:
         with suppress(StopIteration):
             return next(filter(lambda d: d.field.id == field, self.customFieldData))
 
     @computed_field
     @cached_property
-    def vpn_key(self) -> CustomFieldValueResponse:
+    def vpn_key(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.VPN_KEY)
 
     @computed_field
     @cached_property
-    def vpn_key_link(self) -> CustomFieldValueResponse:
+    def vpn_key_link(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.VPN_KEY_LINK)
 
     @computed_field
     @cached_property
-    def rebill_field(self) -> CustomFieldValueResponse:
+    def rebill_field(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.REBILL_ID)
 
     @computed_field
     @cached_property
-    def client_field(self) -> CustomFieldValueResponse:
+    def client_field(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.CLIENT_ID)
 
     @computed_field
     @cached_property
-    def subscription_status_field(self) -> CustomFieldValueResponse:
+    def subscription_status_field(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.SUBSCRIPTION_STATUS_ID)
 
     @computed_field
     @cached_property
-    def account_token_field(self) -> CustomFieldValueResponse:
+    def account_token_field(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.ACCOUNT_TOKEN)
 
     @computed_field
     @cached_property
-    def payment_sum(self) -> CustomFieldValueResponse:
+    def payment_sum(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.PAYMENT_SUM)
 
     @computed_field
     @cached_property
-    def payment_sum2(self) -> CustomFieldValueResponse:
+    def payment_sum2(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.PAYMENT_SUM2)
 
     @computed_field
     @cached_property
-    def telegram_id(self) -> CustomFieldValueResponse:
+    def telegram_id(self) -> CustomFieldValueResponse | None:
         return self.get_custom_field(field=CustomFields.TELEGRAM_ID)
 
     @computed_field
     @cached_property
+    def subscription_add_url(self) -> CustomFieldValueResponse | None:
+        return self.get_custom_field(field=CustomFields.SUBSCRIPTION_ADD_URL)
+
+    @computed_field
+    @cached_property
     def client_phone(self) -> str:
-        *_, phone = self.name.split(" | ")
-        return f"+{phone}" if phone else ""
+        if not self.name:
+            return ""
+        *_, phone = self.name.split("|")
+        if not phone:
+            return ""
+        return phone.strip()
 
 
 class TaskFilterResponse(BaseModel):
     result: str
     tasks: list[TaskResponse]
+
+
+class GetTaskResponse(BaseModel):
+    result: str
+    task: TaskResponse
 
 
 class CreateTaskResponse(BaseModel):

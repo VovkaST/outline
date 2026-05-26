@@ -28,3 +28,8 @@ class CreateTaskResponse(BaseModel):
 
 class GetTaskKeyResponse(BaseModel):
     key: str | None
+
+
+class SubscriptionTaskResponse(BaseModel):
+    subscription_add_url: str
+    client_phone: str

@@ -3,6 +3,7 @@ import {
   OrdersService,
   PaymentsV1Service,
   PaymentsV2Service,
+  PaymentSystems,
   SubscriptionService,
 } from '@/api/generated/public';
 import { getEnvVar } from '@/config/utils';
@@ -32,25 +33,28 @@ export const usePaymentStore = defineStore('payment', {
       return PaymentsV1Service.initPayment({ taskGuid: guid, amount, isRecurrent, useQr });
     },
 
-    initYooKassaPayment({
+    initPaymentV2({
       taskId,
       amount,
       customerEmail = '',
       description = '',
       returnUrl = '',
+      paymentAgent,
     }: {
       taskId: string;
       amount: number;
       customerEmail?: string;
       description?: string;
       returnUrl?: string;
+      paymentAgent?: PaymentSystems;
     }) {
-      return PaymentsV2Service.initYookassaPayment({
+      return PaymentsV2Service.initPaymentV2({
         taskId,
         amount,
         customerEmail,
         description,
         returnUrl,
+        paymentAgent
       });
     },
 

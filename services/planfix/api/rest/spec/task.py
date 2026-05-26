@@ -64,10 +64,11 @@ class Task(BaseAPIEntity, ITask):
         CustomFields.TELEGRAM_ID.value,
         CustomFields.PAYMENT_SUM.value,
         CustomFields.PAYMENT_SUM2.value,
+        CustomFields.SUBSCRIPTION_ADD_URL.value,
     ] + ALL_FIELDS
 
     def build_fields_list(self, fields: list[str]) -> str:
-        return ",".join(self.default_fields + (fields or []))
+        return ",".join(map(str, self.default_fields + (fields or [])))
 
     def extract_default_filters(self, **kwargs: dict[str, Any]) -> dict[str, int | str]:
         _kwargs = {}

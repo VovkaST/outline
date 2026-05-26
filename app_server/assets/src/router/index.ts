@@ -12,13 +12,13 @@ const router = createRouter({
       },
     },
     {
-      path: '/task/:taskId(\\d+)/success/',
+      path: '/task/:taskId([\\d\\w-]+)/success/',
       name: 'payment-success',
       component: () => import('@/views/PaymentSuccessView.vue'),
       props: true,
     },
     {
-      path: '/task/:taskId(\\d+)/',
+      path: '/task/:taskId([\\d\\w-]+)/',
       name: 'app-tariffs',
       component: () => import('@/views/AppTariffSelectView.vue'),
       props: true,

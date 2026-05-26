@@ -1,51 +1,86 @@
 <script setup lang="ts">
-import type { InitYooKassaPaymentResponse } from '@/api/generated/public';
+import type {
+  InitPaymentResponseV2,
+  PaymentSystems,
+  SubscriptionTaskResponse,
+} from '@/api/generated/public';
 import {
   AddSubscriptionButton,
   Announcement,
   Footer,
   Header,
-  SubscriptionRef,
+  InfoCard,
+  InfoCardList,
   TariffsList,
 } from '@/components/tariffs';
 import { useConfig } from '@/composables/useConfig';
 import { usePaymentStore } from '@/stores/payment';
+import { useTasksStore } from '@/stores/tasks';
+import NotFoundView from '@/views/NotFoundView.vue';
 import { useToggle } from '@vueuse/core';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const config = useConfig();
 const paymentStore = usePaymentStore();
+const tasksStore = useTasksStore();
 
 const props = defineProps<{
   taskId: string;
 }>();
 
 const returnUrl = computed<string>(() => (route.query['returnUrl'] as string) || '');
+const paymentAgent = computed<PaymentSystems>(
+  () => (route.query['paymentAgent'] as PaymentSystems) || null,
+);
+
+const addSubscriptionUrlFromTask = ref<string>('');
+const clientPhone = ref<string>('');
+const taskInfoLoading = ref<boolean>(true);
+const taskNotFound = ref<boolean>(false);
+const addSubscriptionUrl = computed<string>(
+  () => addSubscriptionUrlFromTask.value || config.value.subscriptionAddUrl || '',
+);
 
 const [formSubmitting, formSubmittingToggle] = useToggle(false);
 
 const onActionClick = (price: number) => {
   formSubmitting.value = true;
   paymentStore
-    .initYooKassaPayment({
+    .initPaymentV2({
       taskId: props.taskId,
       amount: price * 100,
       returnUrl: returnUrl.value,
+      paymentAgent: paymentAgent.value,
     })
     .then(
-      (response: InitYooKassaPaymentResponse) => {
+      (response: InitPaymentResponseV2) => {
         window.location.href = response.confirmation_url;
       },
       (reason: unknown) => console.error('Init payment error: ', reason),
     )
     .finally(formSubmittingToggle);
 };
+
+onMounted(() => {
+  tasksStore
+    .getTaskInfo({ taskGuid: props.taskId })
+    .then((response: SubscriptionTaskResponse) => {
+      addSubscriptionUrlFromTask.value = response.subscription_add_url;
+      clientPhone.value = response.client_phone;
+      taskInfoLoading.value = false;
+    })
+    .catch(() => {
+      taskNotFound.value = true;
+    });
+});
 </script>
 
 <template>
-  <div class="page">
+  <NotFoundView v-if="taskNotFound" />
+
+  <div v-else class="page">
     <Announcement v-if="config.announcement">
       <template #title>{{ config.announcement.title }}</template>
       <p v-for="paragraph in config.announcement.paragraphs" :key="paragraph">
@@ -58,13 +93,54 @@ const onActionClick = (price: number) => {
 
     <Header />
 
-    <SubscriptionRef :subscription-number="taskId" />
+    <TariffsList
+      :tariffs="config.tariffs"
+      :wait="formSubmitting || taskInfoLoading"
+      @actionClick="onActionClick"
+    />
 
-    <TariffsList :tariffs="config.tariffs" :wait="formSubmitting" @actionClick="onActionClick" />
+    <Transition name="content-fade">
+      <InfoCardList v-if="!taskInfoLoading">
+        <InfoCard>
+          <template #icon>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+          </template>
+          <strong>Внимание:</strong> оплата поступит для подписки клиента
+          <span class="phone">{{ clientPhone }}</span>
+        </InfoCard>
+        <InfoCard>
+          <template #icon>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg>
+          </template>
+          1 ключ можно использовать только на одном устройстве.
+        </InfoCard>
+      </InfoCardList>
+    </Transition>
 
-    <div class="note">Перед оплатой у вас должна быть <strong>добавлена подписка</strong>.</div>
-
-    <AddSubscriptionButton :url="config.subscriptionAddUrl ?? ''" :task-id="taskId" />
+    <Transition name="content-fade">
+      <AddSubscriptionButton v-if="!taskInfoLoading" :url="addSubscriptionUrl" :task-id="taskId" />
+    </Transition>
 
     <Footer />
   </div>
@@ -78,18 +154,14 @@ const onActionClick = (price: number) => {
   margin: 0 auto;
 }
 
-.note {
-  font-size: 13px;
-  color: var(--ink-dim);
-  line-height: 1.5;
-  padding: 12px 16px;
-  background: var(--bg-soft);
-  border-radius: 8px;
-  text-align: center;
+.content-fade-enter-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
-.note :deep(strong) {
-  color: var(--ink);
-  font-weight: 600;
+.content-fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
 }
 </style>
