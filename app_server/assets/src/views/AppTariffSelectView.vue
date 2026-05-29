@@ -42,6 +42,10 @@ const taskNotFound = ref<boolean>(false);
 const addSubscriptionUrl = computed<string>(
   () => addSubscriptionUrlFromTask.value || config.value.subscriptionAddUrl || '',
 );
+const isWhatsappSubscriptionUrl = computed(() => {
+  const url = addSubscriptionUrlFromTask.value.toLowerCase();
+  return url.includes('whatsapp') || url.includes('wa.me');
+});
 
 const [formSubmitting, formSubmittingToggle] = useToggle(false);
 
@@ -93,6 +97,10 @@ onMounted(() => {
 
     <Header />
 
+    <div class="tariff-heading">
+      <h2 class="tariff-heading__title">Выберите тариф</h2>
+    </div>
+
     <TariffsList
       :tariffs="config.tariffs"
       :wait="formSubmitting || taskInfoLoading"
@@ -101,7 +109,7 @@ onMounted(() => {
 
     <Transition name="content-fade">
       <InfoCardList v-if="!taskInfoLoading">
-        <InfoCard>
+        <InfoCard v-if="isWhatsappSubscriptionUrl">
           <template #icon>
             <svg
               viewBox="0 0 24 24"
@@ -152,6 +160,31 @@ onMounted(() => {
   width: 100%;
   text-align: center;
   margin: 0 auto;
+}
+
+.tariff-heading {
+  background: var(--primary-soft);
+  border: 1px solid rgba(201, 169, 97, 0.35);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+
+.tariff-heading__title {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -0.4px;
+  color: var(--primary);
+}
+
+@media (max-width: 380px) {
+  .tariff-heading {
+    padding: 14px 16px;
+  }
+
+  .tariff-heading__title {
+    font-size: 18px;
+  }
 }
 
 .content-fade-enter-active {
