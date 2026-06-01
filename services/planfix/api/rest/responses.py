@@ -187,6 +187,17 @@ class TaskResponse(BaseModel):
             return ""
         return phone.strip()
 
+    @computed_field
+    @cached_property
+    def client_phone_masked(self) -> str:
+        phone = self.client_phone
+        if not phone:
+            return ""
+        digits = "".join(c for c in phone if c.isdigit())
+        if len(digits) < 8:
+            return ""
+        return f"{digits[:4]}***{digits[-4:]}"
+
 
 class TaskFilterResponse(BaseModel):
     result: str
