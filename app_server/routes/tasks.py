@@ -35,7 +35,7 @@ async def get_task_info(request: Request, task_guid: str):
     task: planfix_reponses.TaskResponse = await get_task(task_guid=task_guid)
     return responses.SubscriptionTaskResponse(
         subscription_add_url=task.subscription_add_url.value if task.subscription_add_url else "",
-        client_phone=task.client_phone,
+        client_phone=task.client_phone_masked,
     )
 
 
