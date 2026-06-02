@@ -11,6 +11,7 @@ import {
   Header,
   InfoCard,
   InfoCardList,
+  SubscriptionRef,
   TariffsList,
 } from '@/components/tariffs';
 import { useConfig } from '@/composables/useConfig';
@@ -101,6 +102,8 @@ onMounted(() => {
       <h2 class="tariff-heading__title">Выберите тариф</h2>
     </div>
 
+    <SubscriptionRef v-if="!isWhatsappSubscriptionUrl" :subscription-number="props.taskId" />
+
     <TariffsList
       :tariffs="config.tariffs"
       :wait="formSubmitting || taskInfoLoading"
@@ -147,7 +150,11 @@ onMounted(() => {
     </Transition>
 
     <Transition name="content-fade">
-      <AddSubscriptionButton v-if="!taskInfoLoading" :url="addSubscriptionUrl" :task-id="taskId" />
+      <AddSubscriptionButton
+        v-if="!taskInfoLoading && isWhatsappSubscriptionUrl"
+        :url="addSubscriptionUrl"
+        :task-id="taskId"
+      />
     </Transition>
 
     <Footer />
