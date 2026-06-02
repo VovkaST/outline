@@ -1,45 +1,9 @@
+import { siteConfig } from '@/config/siteConfig';
 import type { SiteConfig } from '@/config/siteConfig.types';
 import { readonly, ref, type Ref } from 'vue';
 
-const CONFIG_URL = '/site-config.json';
-
-function getDefaultConfig(): SiteConfig {
-  return {
-    site: { name: 'Сайт', copyrightSuffix: '', url: '', title: 'Сайт', tariffsHeader: 'Выберите тариф' },
-    organization: {
-      fullName: '',
-      inn: '',
-      legalAddress: '',
-      bank: '',
-      bankAccount: '',
-      correspondentAccount: '',
-      bik: '',
-      phone: '',
-      email: '',
-    },
-    publicOffer: {
-      city: '',
-      representativeName: '',
-      representativeBasis: 'Устава',
-    },
-    supportItems: [],
-    subscriptionAddUrl: '',
-    announcement: undefined,
-    tariffs: [],
-  };
-}
-
-let configRef: Ref<SiteConfig> | null = null;
+const configRef: Ref<SiteConfig> = ref(siteConfig);
 
 export function useConfig(): Readonly<Ref<SiteConfig>> {
-  if (!configRef) {
-    configRef = ref<SiteConfig>(getDefaultConfig());
-    fetch(CONFIG_URL, { cache: 'no-store' })
-      .then((res) => (res.ok ? res.json() : getDefaultConfig()))
-      .catch(() => getDefaultConfig())
-      .then((data) => {
-        configRef!.value = (data as SiteConfig) ?? getDefaultConfig();
-      });
-  }
   return readonly(configRef);
 }
