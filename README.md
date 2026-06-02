@@ -179,21 +179,30 @@ services:
 Сейчас по умолчанию используется интеграция с Ю-кассой, поэтому токен
 ### site-config.json
 
-В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `app_server/assets/site-config.json.example` в `site-config.json` в каталоге `app_server/assets/` и заполнить. При сборке фронта файл копируется в `dist/`, чтобы работал и в production. Поэтому **после изменения на продуктовом стенде необходимо пересобрать фронт** (см. ниже).
+В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `app_server/assets/site-config.json.example` в `site-config.json` в каталоге `app_server/assets/` и заполнить. При сборке фронта настройки **вшиваются в JavaScript-бандл**. Поэтому **после изменения на продуктовом стенде необходимо пересобрать фронт** (см. ниже).
 
-**Структура:**
+Значения по умолчанию для необязательных полей задаются в коде — [`app_server/assets/src/config/siteConfig.defaults.ts`](app_server/assets/src/config/siteConfig.defaults.ts), а не дублируются в JSON.
+
+**Обязательные поля** (должны быть в JSON):
 
 | Блок | Поля | Примечание |
 |------|------|------------|
-| `site` | `name`, `copyrightSuffix?`, `url`, `title` | Название сайта, суффикс копирайта в футере, URL и заголовок страницы |
-| `organisation` | `fullName`, `inn`, `ogrn?`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты |
-| `publicOffer` | `city`, `representativeName`, `representativeBasis` | Город, ФИО представителя в род. падеже, основание (напр. «Устава») |
-| `supportItems` | массив `{ "url", "text" }` | Ссылки поддержки (кнопки в блоке «Напишите нам») |
+| `site` | `name`, `url`, `title` | Название сайта, URL и заголовок страницы |
+| `organization` | `fullName`, `inn`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты |
+| `publicOffer` | `city`, `representativeName` | Город и ФИО представителя в род. падеже |
+| `tariffs` | минимум 1 элемент | Список тарифов `{ "period": string, "price": number, "featured?": boolean }` |
 
-Дополнительные поля:
-- `subscriptionAddUrl` — URL для кнопки «Добавить подписку».
-- `tariffs` — список тарифов в формате `{ "period": string, "price": number, "featured?": boolean }`.
-- `announcement` — настройки баннера на странице тарифов.
+**Необязательные поля** (есть значения по умолчанию в коде):
+
+| Поле | Значение по умолчанию | Примечание |
+|------|----------------------|------------|
+| `site.copyrightSuffix` | `''` | Суффикс копирайта в футере |
+| `site.tariffsHeader` | `'Выберите тариф'` | Заголовок блока выбора тарифа |
+| `publicOffer.representativeBasis` | `'Устава'` | Основание полномочий представителя |
+| `organization.ogrn` | — | ОГРН (не задаётся по умолчанию) |
+| `supportItems` | `[]` | Ссылки поддержки (кнопки в блоке «Напишите нам»), массив `{ "url", "text" }` |
+| `subscriptionAddUrl` | `''` | URL для кнопки «Добавить подписку» |
+| `announcement` | не задан | Настройки баннера на странице тарифов |
 
 Настройки `announcement`:
 - `title` — заголовок баннера.
