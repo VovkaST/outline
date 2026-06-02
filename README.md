@@ -185,7 +185,7 @@ services:
 
 | Блок | Поля | Примечание |
 |------|------|------------|
-| `site` | `name`, `copyrightSuffix?`, `url`, `title` | Название сайта, суффикс копирайта в футере, URL и заголовок страницы |
+| `site` | `name`, `copyrightSuffix?`, `url`, `title`, `tariffsHeader` | Название сайта, суффикс копирайта в футере, URL, заголовок страницы и текст заголовка выбора тарифа |
 | `organisation` | `fullName`, `inn`, `ogrn?`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты |
 | `publicOffer` | `city`, `representativeName`, `representativeBasis` | Город, ФИО представителя в род. падеже, основание (напр. «Устава») |
 | `supportItems` | массив `{ "url", "text" }` | Ссылки поддержки (кнопки в блоке «Напишите нам») |

@@ -3,6 +3,7 @@ export interface SiteConfigSite {
   copyrightSuffix?: string;
   url: string;
   title: string;
+  tariffsHeader: string;
 }
 
 export interface SiteConfigOrganization {

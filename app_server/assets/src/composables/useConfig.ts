@@ -5,7 +5,7 @@ const CONFIG_URL = '/site-config.json';
 
 function getDefaultConfig(): SiteConfig {
   return {
-    site: { name: 'Сайт', copyrightSuffix: '', url: '', title: 'Сайт' },
+    site: { name: 'Сайт', copyrightSuffix: '', url: '', title: 'Сайт', tariffsHeader: 'Выберите тариф' },
     organization: {
       fullName: '',
       inn: '',

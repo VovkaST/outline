@@ -98,8 +98,8 @@ onMounted(() => {
 
     <Header />
 
-    <div class="tariff-heading">
-      <h2 class="tariff-heading__title">Выберите тариф</h2>
+    <div v-if="config.site.tariffsHeader" class="tariff-heading">
+      <h2 class="tariff-heading__title">{{ config.site.tariffsHeader }}</h2>
     </div>
 
     <SubscriptionRef v-if="!isWhatsappSubscriptionUrl" :subscription-number="props.taskId" />

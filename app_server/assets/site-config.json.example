@@ -3,7 +3,8 @@
     "name": "Наименование сайта",
     "copyrightSuffix": "Мы супер-пупер",
     "url": "https://my-site.ru",
-    "title": "Заголовок сайта"
+    "title": "Заголовок сайта",
+    "tariffsHeader": "Выберите тариф"
   },
   "organization": {
     "fullName": "ИП ИВАНОВ ИВАН ИВАНОВИЧ",
