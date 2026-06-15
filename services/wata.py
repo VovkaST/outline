@@ -33,7 +33,7 @@ class WataService(BaseHTTPService):
             else apply_task_id_to_redirect_url(wata_config.USE_SUCCESS_PAYMENT_REDIRECT_URL, task_id)
         )
         payload = {
-            "type": "ManyTime",
+            "type": "OneTime",
             "amount": amount / 100,
             "currency": wata_config.DEFAULT_CURRENCY,
             "description": description or task_id,
