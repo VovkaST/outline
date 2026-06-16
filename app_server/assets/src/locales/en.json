@@ -1,84 +1,74 @@
 {
-  "header": {
-    "title": "Installation Halal_VPN",
-    "subtitle": "Step-by-step guide for your device",
-    "logoAlt": "Halal_VPN logo"
+  "brand": {
+    "nameFirst": "Halal",
+    "nameSecond": "VPN"
   },
   "common": {
-    "loading": "Loading...",
-    "back": "Back"
+    "loading": "Loading..."
   },
-  "steps": {
+  "welcome": {
+    "subtitle": "We’ll connect VPN in a couple of minutes.",
+    "steps": {
+      "step1": {
+        "label": "Step 1",
+        "title": "Install the app",
+        "desc": "Download the Happ app to your device"
+      },
+      "step2": {
+        "label": "Step 2",
+        "title": "Get a temporary subscription",
+        "descNeedInstall": "First complete step 1: install Happ",
+        "descWaitingKey": "Preparing the link — it may take a moment",
+        "descReady": "Happ will open — the key will be added automatically"
+      },
+      "step3": {
+        "label": "Step 3",
+        "title": "Activate the temporary subscription",
+        "desc": "Open Happ and follow the instructions"
+      }
+    }
+  },
+  "device": {
+    "title": "What device do you have?",
+    "subtitle": "Choose a platform — we’ll show where to download the app.",
+    "options": {
+      "iphone": "iPhone or iPad",
+      "android": "Android phone",
+      "windows": "Windows computer",
+      "mac": "Mac (macOS)"
+    }
+  },
+  "install": {
+    "title": "Install the app",
+    "subtitle": "Tap the button below to open the app store. Install Happ and come back here.",
+    "appName": "Happ",
+    "platform": {
+      "iphone": "for iPhone and iPad",
+      "android": "for Android",
+      "windows": "for Windows",
+      "mac": "for Mac"
+    },
+    "cta": {
+      "ios": "Download on the App Store",
+      "android": "Get it on Google Play",
+      "windows": "Download from Microsoft Store"
+    },
+    "continue": "Already installed, continue"
+  },
+  "activate": {
+    "modalTitle": "Subscription activation",
+    "introHtml": "To activate VPN, do <strong>2 steps</strong> in the Happ app:",
     "step1": {
-      "title": "Select your device",
-      "instruction": "Tap on your device model to continue:"
+      "title": "Activate the subscription",
+      "descHtml": "Tap the chain icon in Happ.",
+      "imageAlt": "Subscription activation icon in Happ"
     },
     "step2": {
-      "title": "Install the app",
-      "instruction": "Click the button below to download and install the application on your device."
+      "title": "Pay for the subscription",
+      "descHtml": "After activation, an <strong>(i)</strong> icon will appear in Happ — tap it to pay for the full subscription.",
+      "imageAlt": "Subscription payment icon in Happ"
     },
-    "step3": {
-      "title": "Subscription activation"
-    },
-    "step4": {
-      "title": "Installation complete",
-      "instruction": "You have successfully completed the installation of the Happ test subscription. Before starting work, watch the video tutorial."
-    }
-  },
-  "devices": {
-    "android": {
-      "label": "Android",
-      "desc": "Tap to proceed with installation"
-    },
-    "iphone": {
-      "label": "iPhone or iPad",
-      "desc": "Tap to proceed with installation"
-    },
-    "windows": {
-      "label": "Windows",
-      "desc": "Tap to proceed with installation"
-    },
-    "mac": {
-      "label": "macOS",
-      "desc": "Tap to proceed with installation"
-    }
-  },
-  "buttons": {
-    "installed": "I have installed the Happ app",
-    "next": "I have already added a subscription",
-    "restart": "Start over"
-  },
-  "subscription": {
-    "title": "Add subscription",
-    "desc": "For full access to application features",
-    "button": "Add subscription",
-    "note": "To activate, pay for the subscription in the HALAL_VPN app",
-    "paymentNote": "You can pay for the subscription in the Happ app",
-    "wait": "Your key is being processed, please wait for it to be issued...",
-    "imagePaymentNote": "Instructions on how to pay for the subscription in the HALAL_VPN app",
-    "imagePaymentDescription": "Subscription payment in the HALAL_VPN app"
-  },
-  "video": {
-    "title": "Watch the video tutorial",
-    "description": "Tap to view the final setup instructions",
-    "loadButton": "Load and play",
-    "loading": "Loading video...",
-    "errorTitle": "Failed to load video",
-    "errorDescription": "Please check access to the file \"video/video.MP4\"",
-    "retry": "Try again",
-    "fullscreen": "Full screen",
-    "exitFullscreen": "Exit"
-  },
-  "stores": {
-    "android": "Google Play",
-    "windows": "Download Happ for Windows",
-    "appStoreUs": "App Store (US)",
-    "appStoreRu": "App Store (RU)"
-  },
-  "notifications": {
-    "appStore": "Opening App Store",
-    "playStore": "Opening Google Play",
-    "windows": "Starting file download",
-    "general": "Opening download page"
+    "noAppPrefix": "Don’t have the Happ app?",
+    "noAppLink": "Install"
   }
 }

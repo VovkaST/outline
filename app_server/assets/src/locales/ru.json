@@ -1,84 +1,74 @@
 {
-  "header": {
-    "title": "Установка Halal_VPN",
-    "subtitle": "Пошаговая инструкция для вашего устройства",
-    "logoAlt": "Логотип Halal_VPN"
+  "brand": {
+    "nameFirst": "Halal",
+    "nameSecond": "VPN"
   },
   "common": {
-    "loading": "Загрузка...",
-    "back": "Назад"
+    "loading": "Загрузка..."
   },
-  "steps": {
+  "welcome": {
+    "subtitle": "Подключим VPN за пару минут.",
+    "steps": {
+      "step1": {
+        "label": "Шаг 1",
+        "title": "Установить приложение",
+        "desc": "Скачайте приложение Happ на ваше устройство"
+      },
+      "step2": {
+        "label": "Шаг 2",
+        "title": "Получить временную подписку",
+        "descNeedInstall": "Сначала завершите шаг 1: установите Happ",
+        "descWaitingKey": "Готовим ссылку — это займёт немного времени",
+        "descReady": "Откроется Happ — ключ добавится автоматически"
+      },
+      "step3": {
+        "label": "Шаг 3",
+        "title": "Активировать временную подписку",
+        "desc": "Откройте Happ и выполните действия по инструкции"
+      }
+    }
+  },
+  "device": {
+    "title": "Какое у вас устройство?",
+    "subtitle": "Выберите платформу — мы подскажем, где скачать приложение.",
+    "options": {
+      "iphone": "iPhone или iPad",
+      "android": "Android-смартфон",
+      "windows": "Windows-компьютер",
+      "mac": "Mac (macOS)"
+    }
+  },
+  "install": {
+    "title": "Установите приложение",
+    "subtitle": "Нажмите кнопку ниже — откроется магазин приложений. Установите Happ и вернитесь сюда.",
+    "appName": "Happ",
+    "platform": {
+      "iphone": "для iPhone и iPad",
+      "android": "для Android",
+      "windows": "для Windows",
+      "mac": "для Mac"
+    },
+    "cta": {
+      "ios": "Скачать в App Store",
+      "android": "Скачать в Google Play",
+      "windows": "Скачать из Microsoft Store"
+    },
+    "continue": "Уже установил, продолжить"
+  },
+  "activate": {
+    "modalTitle": "Активация подписки",
+    "introHtml": "Чтобы активировать VPN, выполните <strong>2 действия</strong> в приложении Happ:",
     "step1": {
-      "title": "Выберите ваше устройство",
-      "instruction": "Нажмите на модель вашего устройства для продолжения:"
+      "title": "Активировать подписку",
+      "descHtml": "Нажмите на иконку цепочки в Happ.",
+      "imageAlt": "Иконка активации подписки в Happ"
     },
     "step2": {
-      "title": "Установите приложение",
-      "instruction": "Нажмите на кнопку ниже, чтобы скачать и установить приложение на ваше устройство."
+      "title": "Оплатить подписку",
+      "descHtml": "После активации в Happ появится иконка <strong>(i)</strong> — нажмите на неё, чтобы оплатить полную подписку.",
+      "imageAlt": "Иконка оплаты подписки в Happ"
     },
-    "step3": {
-      "title": "Активация подписки"
-    },
-    "step4": {
-      "title": "Завершение установки",
-      "instruction": "Вы успешно завершили установку тестовой подписки Happ. Перед началом работы посмотрите видео-инструкцию."
-    }
-  },
-  "devices": {
-    "android": {
-      "label": "Android",
-      "desc": "Нажмите для перехода к установке"
-    },
-    "iphone": {
-      "label": "iPhone или iPad",
-      "desc": "Нажмите для перехода к установке"
-    },
-    "windows": {
-      "label": "Windows",
-      "desc": "Нажмите для перехода к установке"
-    },
-    "mac": {
-      "label": "macOS",
-      "desc": "Нажмите для перехода к установке"
-    }
-  },
-  "buttons": {
-    "installed": "Я установил приложение Happ",
-    "next": "Я уже добавил подписку",
-    "restart": "Начать сначала"
-  },
-  "subscription": {
-    "title": "Добавьте подписку",
-    "desc": "Для полного доступа к функции приложения",
-    "button": "Добавить подписку",
-    "note": "Для активации оплатите подписку в приложении HALAL_VPN",
-    "paymentNote": "Оплатить подписку можно в приложении Happ",
-    "wait": "Ваш ключ в работе, ожидайте его выдачи...",
-    "imagePaymentNote": "Инструкция по оплате подписки в приложении Halal_VPN",
-    "imagePaymentDescription": "Оплата подписки в приложении Halal_VPN"
-  },
-  "video": {
-    "title": "Посмотрите видео-инструкцию",
-    "description": "Нажмите для просмотра финальной инструкции по настройке",
-    "loadButton": "Загрузить и воспроизвести",
-    "loading": "Загрузка видео...",
-    "errorTitle": "Не удалось загрузить видео",
-    "errorDescription": "Пожалуйста, проверьте доступ к файлу \"video/video.MP4\"",
-    "retry": "Попробовать снова",
-    "fullscreen": "На весь экран",
-    "exitFullscreen": "Выйти"
-  },
-  "stores": {
-    "android": "Google Play",
-    "windows": "Скачать Happ для Windows",
-    "appStoreUs": "App Store (US)",
-    "appStoreRu": "App Store (RU)"
-  },
-  "notifications": {
-    "appStore": "Открывается App Store",
-    "playStore": "Открывается Google Play",
-    "windows": "Начинается загрузка файла",
-    "general": "Открывается страница загрузки"
+    "noAppPrefix": "Нет приложения Happ?",
+    "noAppLink": "Установить"
   }
 }

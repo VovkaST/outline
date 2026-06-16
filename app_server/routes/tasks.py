@@ -6,7 +6,7 @@ from app_server import responses
 from app_server.dtos import StoreTaskKeyRequest
 from root.utils.others import get_route_name
 from services import planfix_api
-from services.planfix.api.rest import responses as planfix_reponses
+from services.planfix.api.rest import responses as planfix_responses
 from services.planfix.api.rest.spec.models import CustomFieldValueRequest
 from services.planfix.filters import UserKeyUpdate
 from services.planfix.utils import get_task
@@ -25,14 +25,14 @@ async def create(request: Request):
         object_id=259510,
         description="Ключ с сайта",
     )
-    response = planfix_reponses.CreateTaskResponse.model_validate(result)
+    response = planfix_responses.CreateTaskResponse.model_validate(result)
     _task_key_pairs[response.id] = None
     return responses.CreateTaskResponse(id=response.id)
 
 
 @routes.get("/{task_guid}/", response_model=responses.SubscriptionTaskResponse)
 async def get_task_info(request: Request, task_guid: str):
-    task: planfix_reponses.TaskResponse = await get_task(task_guid=task_guid)
+    task: planfix_responses.TaskResponse = await get_task(task_guid=task_guid)
     return responses.SubscriptionTaskResponse(
         subscription_add_url=task.subscription_add_url.value if task.subscription_add_url else "",
         client_phone=task.client_phone_masked,
