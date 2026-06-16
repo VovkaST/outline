@@ -18,6 +18,7 @@ const switchLanguage = (lang: 'ru' | 'en') => {
       class="lang-btn"
       :class="{ active: currentLanguage === 'ru' }"
       @click="switchLanguage('ru')"
+      type="button"
     >
       RU
     </button>
@@ -25,6 +26,7 @@ const switchLanguage = (lang: 'ru' | 'en') => {
       class="lang-btn"
       :class="{ active: currentLanguage === 'en' }"
       @click="switchLanguage('en')"
+      type="button"
     >
       EN
     </button>
@@ -33,30 +35,29 @@ const switchLanguage = (lang: 'ru' | 'en') => {
 
 <style scoped lang="scss">
 .language-switcher {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 100;
-  display: flex;
-  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
 }
 
 .lang-btn {
-  background: rgba(255, 255, 255, 0.95);
+  appearance: none;
   border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
+  border-radius: 10px;
+  padding: 6px 10px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--primary);
+  color: var(--ink-dim);
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease;
+  background: transparent;
 
   &:hover {
-    background: white;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    color: var(--ink);
   }
 
   &.active {
