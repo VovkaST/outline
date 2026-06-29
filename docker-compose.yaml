@@ -11,7 +11,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: on-failure
+    restart: always
     volumes:
       - ./logs:/app/logs
       - ./media:/app/media
