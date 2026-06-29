@@ -6,8 +6,10 @@ from services.planfix.api.rest.responses import GetTaskResponse, TaskFilterRespo
 from services.planfix.exceptions import TaskNotFoundError
 from services.planfix.filters import (
     BASE_TELEGRAM_OBJECT_ID,
+    LEAD_SOURCE_ID_TELEGRAM,
     BaseTelegramObjectF,
     ComposedGuidUuidF,
+    LeadSourceF,
     RequestKeyF,
     TelegramIdF,
 )
@@ -56,6 +58,7 @@ async def get_task(
         if telegram_id:
             args.append(TelegramIdF(value=telegram_id))
             args.append(BaseTelegramObjectF(value=BASE_TELEGRAM_OBJECT_ID))
+            args.append(LeadSourceF(value=LEAD_SOURCE_ID_TELEGRAM))
 
         response = await planfix_api.task.get_list(*args)
         response = TaskFilterResponse(**response)
