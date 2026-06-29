@@ -7,6 +7,7 @@ from services.planfix.api.rest.enums import SubscriptionStatus
 from services.planfix.api.rest.filters import CustF, FilterTypes, OperatorTypes
 
 BASE_TELEGRAM_OBJECT_ID = "21991848"
+LEAD_SOURCE_ID_TELEGRAM = 35
 
 
 class CustomFields(IntEnum):
@@ -21,7 +22,7 @@ class CustomFields(IntEnum):
     VPN_KEY_LINK = 140352
     PAYMENT_SUM = 149932
     PAYMENT_SUM2 = 140326
-    USER_KEY = 139978
+    LEAD_SOURCE = 139978
     COMPOSED_GUID_UUID = 140532
     SUBSCRIPTION_ADD_URL = 140528
 
@@ -57,7 +58,7 @@ class RequestKeyF(CustF):
 
 
 class TelegramIdF(CustF):
-    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_LINE
     field: PositiveInt = CustomFields.TELEGRAM_ID
 
 
@@ -76,9 +77,9 @@ class PaymentSum2F(CustF):
     field: PositiveInt = CustomFields.PAYMENT_SUM2
 
 
-class UserKeyF(CustF):
-    type: FilterTypes = FilterTypes.CUSTOM_FIELD_NUMBER
-    field: PositiveInt = CustomFields.USER_KEY
+class LeadSourceF(CustF):
+    type: FilterTypes = FilterTypes.CUSTOM_FIELD_DIRECTORY_ENTRY
+    field: PositiveInt = CustomFields.LEAD_SOURCE
 
 
 class BaseTelegramObjectF(CustF):
@@ -124,5 +125,5 @@ def PaymentSum2Update(value: int) -> CustomFieldUpdateBody:
     return {"field": {"id": CustomFields.PAYMENT_SUM2}, "value": value}
 
 
-def UserKeyUpdate(value: int) -> CustomCompositeFieldUpdateBody:
-    return {"field": {"id": CustomFields.USER_KEY}, "value": {"id": value}}
+def LeadSourceUpdate(value: int) -> CustomCompositeFieldUpdateBody:
+    return {"field": {"id": CustomFields.LEAD_SOURCE}, "value": {"id": value}}

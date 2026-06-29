@@ -8,7 +8,7 @@ from root.utils.others import get_route_name
 from services import planfix_api
 from services.planfix.api.rest import responses as planfix_responses
 from services.planfix.api.rest.spec.models import CustomFieldValueRequest
-from services.planfix.filters import UserKeyUpdate
+from services.planfix.filters import LeadSourceUpdate
 from services.planfix.utils import get_task
 
 routes = APIRouter(tags=["Tasks"], prefix="/tasks", generate_unique_id_function=get_route_name)
@@ -21,7 +21,7 @@ _task_key_pairs: dict[int, str | None] = {}
 async def create(request: Request):
     """Создать задачу."""
     result = await planfix_api.task.create_with_set_custom_field(
-        CustomFieldValueRequest.model_validate(UserKeyUpdate(42)),
+        CustomFieldValueRequest.model_validate(LeadSourceUpdate(42)),
         object_id=259510,
         description="Ключ с сайта",
     )
