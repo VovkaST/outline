@@ -6,7 +6,16 @@ import aiohttp
 from aiohttp import hdrs
 from starlette.responses import JSONResponse
 
+from root.config import settings
+
 logger = logging.getLogger("HTTPClient")
+
+
+def get_client_timeout() -> aiohttp.ClientTimeout:
+    return aiohttp.ClientTimeout(
+        total=settings.HTTP_CLIENT_TIMEOUT_TOTAL,
+        connect=settings.HTTP_CLIENT_TIMEOUT_CONNECT,
+    )
 
 
 async def response_to_str(response) -> str | None:

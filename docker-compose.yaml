@@ -12,6 +12,13 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
     volumes:
       - ./logs:/app/logs
       - ./media:/app/media
@@ -32,6 +39,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    mem_limit: 512m
     command: python -m bot run
 
   assets:

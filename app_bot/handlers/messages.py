@@ -7,6 +7,7 @@ from telegram.ext import ContextTypes
 from app_bot.s3 import s3_client
 from app_bot.utils.dialogs import clear_username
 from root.utils.others import download_file
+from root.utils.requests import get_client_timeout
 from services import planfix_webchat
 
 
@@ -30,7 +31,7 @@ async def user_message_with_attachment_handler(update: Update, context: ContextT
         f = await file.get_file()
         if not s3_client.is_configured:
             return f.file_path
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(timeout=get_client_timeout()) as session:
             file_content = await download_file(session, f.file_path)
         if not file_content:
             return ""
