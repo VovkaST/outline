@@ -29,6 +29,12 @@ SERVER_DESCRIPTION = env.get("SERVER_DESCRIPTION")
 REQUEST_TOKEN = env.get("REQUEST_TOKEN", default="")
 DEFAULT_RATE_LIMIT = env.get("DEFAULT_RATE_LIMIT", default="50/minute")
 
+# Таймауты и лимиты исходящих HTTP-запросов (aiohttp)
+HTTP_CLIENT_TIMEOUT_TOTAL = env.as_int("HTTP_CLIENT_TIMEOUT_TOTAL", default=30)
+HTTP_CLIENT_TIMEOUT_CONNECT = env.as_int("HTTP_CLIENT_TIMEOUT_CONNECT", default=10)
+HTTP_CLIENT_CONNECTOR_LIMIT = env.as_int("HTTP_CLIENT_CONNECTOR_LIMIT", default=50)
+HTTP_CLIENT_DNS_CACHE_TTL = env.as_int("HTTP_CLIENT_DNS_CACHE_TTL", default=300)
+
 DEFAULT_PAYMENT_AGENT = env.get("DEFAULT_PAYMENT_AGENT", "yookassa")
 # Настройки Т-кассы
 TBANK_REST_API_URL = env.get("TBANK_REST_API_URL", default="https://securepay.tinkoff.ru/v2")

@@ -21,6 +21,7 @@ from app_bot.const import NO_USERNAME
 from app_bot.dtos import CustomMessageRequest, MessageAttachment, NewMessageRequest
 from app_bot.exceptions import ChatNotFoundError
 from root.utils.others import download_file
+from root.utils.requests import get_client_timeout
 from services.planfix.api.rest.responses import TaskResponse
 
 
@@ -58,7 +59,7 @@ def media_to_input_file(file: bytes) -> AttachmentFile:
 
 
 async def prepare_media(attachments: list[MessageAttachment]) -> list[AttachmentFile]:
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(timeout=get_client_timeout()) as session:
         coroutines = []
         for attachment in attachments:
             coroutines.append(download_file(session, attachment.url))

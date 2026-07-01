@@ -18,6 +18,7 @@ from app_bot.handlers.messages import (
     user_message_with_attachment_handler,
 )
 from app_bot.utils.callback_registry import registry
+from services.http_service import BaseHTTPService
 
 logger = logging.getLogger("bot")
 
@@ -29,6 +30,10 @@ async def add_commands(app: Application):
     await app.bot.set_my_commands(commands)
 
 
+async def on_shutdown(_app: Application) -> None:
+    await BaseHTTPService.close_all()
+
+
 def build_app(token: str):
     return (
         ApplicationBuilder()
@@ -37,6 +42,7 @@ def build_app(token: str):
         .read_timeout(30)
         .write_timeout(30)
         .get_updates_read_timeout(42)
+        .post_shutdown(on_shutdown)
         .build()
     )
 
@@ -58,4 +64,10 @@ async def run_bot(token: str):
 
     await add_commands(app)
 
-    app.run_polling()
+    try:
+        app.run_polling()
+    except Exception:
+        logger.exception("Bot polling failed")
+        raise
+    finally:
+        await BaseHTTPService.close_all()

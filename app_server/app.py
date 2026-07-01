@@ -1,4 +1,5 @@
 import importlib
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
@@ -13,6 +14,7 @@ from app_server.error_handlers import app_error_handler, payment_error_handler, 
 from app_server.exceptions import PaymentError
 from root.config import settings
 from root.exceptions import AppError
+from services.http_service import BaseHTTPService
 
 limiter = Limiter(key_func=get_remote_address, default_limits=[settings.DEFAULT_RATE_LIMIT])
 
@@ -37,8 +39,14 @@ def add_middlewares(app: FastAPI):
             app.add_middleware(middleware_class, **middleware_kwargs)
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await BaseHTTPService.close_all()
+
+
 def init_app(service_name: str, version: str, description: str) -> FastAPI:
-    app = FastAPI(title=service_name, version=version, description=description)
+    app = FastAPI(title=service_name, version=version, description=description, lifespan=lifespan)
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
