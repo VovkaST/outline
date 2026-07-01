@@ -10,8 +10,13 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from app_bot.routes import routes as bot_routes
 from app_server import routes
-from app_server.error_handlers import app_error_handler, payment_error_handler, unknown_error_handler
-from app_server.exceptions import PaymentError
+from app_server.error_handlers import (
+    app_error_handler,
+    payment_error_handler,
+    payment_gateway_error_handler,
+    unknown_error_handler,
+)
+from app_server.exceptions import PaymentError, PaymentGatewayError
 from root.config import settings
 from root.exceptions import AppError
 from services.http_service import BaseHTTPService
@@ -52,6 +57,7 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
 
     app.exception_handler(AppError)(app_error_handler)
     app.exception_handler(PaymentError)(payment_error_handler)
+    app.exception_handler(PaymentGatewayError)(payment_gateway_error_handler)
     app.exception_handler(Exception)(unknown_error_handler)
 
     add_middlewares(app)

@@ -6,7 +6,7 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from app_server.exceptions import PaymentError
+from app_server.exceptions import PaymentError, PaymentGatewayError
 from root.exceptions import AppError
 from root.utils.requests import response_to_str
 
@@ -34,6 +34,16 @@ def error_response(error_code: int, message: str, details: str = None, status_co
                 "Details": details,
             }
         ),
+    )
+
+
+@exception_handler_log
+async def payment_gateway_error_handler(request: Request, exc: PaymentGatewayError):
+    return error_response(
+        error_code=-1,
+        message=exc.message,
+        details=exc.details,
+        status_code=exc.status_code,
     )
 
 
