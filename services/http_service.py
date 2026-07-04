@@ -1,3 +1,4 @@
+import logging
 from copy import copy
 
 import aiohttp
@@ -6,6 +7,8 @@ from aiohttp.typedefs import Query
 
 from root.config import settings
 from root.utils.requests import LoggingClientSession
+
+logger = logging.getLogger("HTTPClient")
 
 
 class BaseHTTPService:
@@ -86,10 +89,33 @@ class BaseHTTPService:
         params: Query = None,
         session=None,
         data: dict | None = None,
+        *,
+        _retry: bool = False,
         **kwargs,
     ) -> dict:
+        """Выполнить HTTP-запрос к внешнему API.
+
+        При сетевых сбоях (ClientConnectorError, ServerDisconnectedError, TimeoutError)
+        один раз закрывает сессию, создаёт новую и повторяет запрос.
+        Повторный вызов возможен только при _retry=False (не более одной попытки).
+        """
         request_kwargs = await self.prepare_request(url_name, method, json=json, params=params, data=data, **kwargs)
-        session = session or self.session
-        request_method = getattr(session, method)
-        async with request_method(**request_kwargs) as response:
-            return await self.handle_response(response)
+        use_session = self.session if _retry else (session or self.session)
+        request_method = getattr(use_session, method)
+        try:
+            async with request_method(**request_kwargs) as response:
+                return await self.handle_response(response)
+        except (aiohttp.ClientConnectorError, aiohttp.ServerDisconnectedError, TimeoutError) as exc:
+            if not _retry:
+                logger.warning("HTTP session reset after %s, retrying once: %s", type(exc).__name__, exc)
+                await self.close()
+                return await self.make_request(
+                    url_name,
+                    method,
+                    json=json,
+                    params=params,
+                    data=data,
+                    _retry=True,
+                    **kwargs,
+                )
+            raise
