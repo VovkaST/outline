@@ -97,6 +97,26 @@ onMounted(() => {
     </Announcement>
 
     <Header />
+    <InfoCardList v-if="!taskInfoLoading">
+      <InfoCard v-if="isWhatsappSubscriptionUrl" gold>
+        <template #icon>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </template>
+        <strong>Внимание:</strong> оплата поступит для подписки клиента
+        <span class="phone">{{ clientPhone }}</span>
+      </InfoCard>
+    </InfoCardList>
 
     <div v-if="config.site.tariffsHeader" class="tariff-heading">
       <h2 class="tariff-heading__title">{{ config.site.tariffsHeader }}</h2>
@@ -112,24 +132,6 @@ onMounted(() => {
 
     <Transition name="content-fade">
       <InfoCardList v-if="!taskInfoLoading">
-        <InfoCard v-if="isWhatsappSubscriptionUrl">
-          <template #icon>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
-          </template>
-          <strong>Внимание:</strong> оплата поступит для подписки клиента
-          <span class="phone">{{ clientPhone }}</span>
-        </InfoCard>
         <InfoCard>
           <template #icon>
             <svg
