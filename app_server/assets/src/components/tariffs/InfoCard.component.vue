@@ -1,5 +1,9 @@
+<script setup lang="ts">
+withDefaults(defineProps<{ gold?: boolean }>(), { gold: false });
+</script>
+
 <template>
-  <div class="info-card">
+  <div class="info-card" :class="{ 'info-card--gold': gold }">
     <div class="info-card__icon" aria-hidden="true">
       <slot name="icon" />
     </div>
@@ -20,6 +24,12 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   text-align: left;
+}
+
+.info-card--gold {
+  background: linear-gradient(170deg, #fff9eb 0%, #ffffff 100%);
+  border: 1px solid #dcc090;
+  box-shadow: 0 2px 8px rgba(201, 169, 97, 0.12);
 }
 
 .info-card__icon {
