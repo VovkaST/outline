@@ -64,27 +64,34 @@ cd projectName
 
 ### Docker
 ```commandline
-apt update
-install -m 0755 -d /etc/apt/keyrings
+sudo apt update
+sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-chmod a+r /etc/apt/keyrings/docker.gpg
-echo   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-tee /etc/apt/sources.list.d/docker.list > /dev/null
-apt update
-apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose -y
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl enable --now docker
 echo "Adding current user to docker group"
-usermod -aG docker $USER  
+sudo usermod -aG docker "$USER"
+```
+
+После добавления пользователя в группу `docker` необходимо **перелогиниться** или выполнить `newgrp docker`. Проверка установки:
+
+```commandline
+docker compose version
 ```
 
 ### Nginx:
 Установка nginx:
 ```commandline
-apt update && apt install nginx -y
+sudo apt update && sudo apt install nginx -y
 ```
 Закинуть файл настроек nginx для сайта.
 ```commandline
-cp nginx/api-server /etc/nginx/sites-available/api-server
+sudo cp nginx/api-server /etc/nginx/sites-available/api-server
 ```
 **В целевом файле необходимо изменить**:
 * `HOST_NAME_OR_IP` &ndash; ip-адрес или имя домена (при наличии, _обязательно для HTTPS_).
@@ -92,16 +99,30 @@ cp nginx/api-server /etc/nginx/sites-available/api-server
 
 И создать символическую ссылку на него в каталоге доступных сайтов:
 ```commandline
-ln -s /etc/nginx/sites-available/api-server /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/api-server /etc/nginx/sites-enabled/
 ```
 Проверить корректность настроек:
 ```commandline
-nginx -t
+sudo nginx -t
 ```
 Если все ок, перезапускаем службу Nginx:
 ```commandline
-systemctl restart nginx.service
+sudo systemctl restart nginx.service
 ```
+
+**Приложение установки** (опционально) собирается в `dist-installation/` и раздаётся отдельно. Пример location в конфиге Nginx:
+
+```nginx
+location = /installation {
+    alias /PATH_TO_APP/app_server/assets/dist-installation/installation.html;
+}
+
+location /installation/ {
+    alias /PATH_TO_APP/app_server/assets/dist-installation/;
+}
+```
+
+Сборка: `docker compose up assets-installation` (см. раздел «Запуск приложения»).
 
 ### Certbot (только при наличии доменного имени)
 Установить зависимости:
@@ -151,32 +172,90 @@ echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; 
 ```commandline
 certbot --nginx
 ```
-5. Для каждого приложения будет запускаться свой Docker-контейнер для обработки API. Т.к. используются одинаковые по структуре docker-compose-файлы, **необходимо изменить имя контейнера сервера** в `docker-compose.yaml`:
+5. Для каждого приложения на одном хосте запускаются свои Docker-контейнеры. Т.к. используются одинаковые по структуре `docker-compose.yaml`, **необходимо задать уникальные имена контейнеров и порты**:
 ```yaml
 services:
   server:
-    image: outline-app-python-3.10:latest
-    container_name: outline-api-server  # Задать уникальное имя контейнера
-    env_file:
-      - .env
-    environment:
-...
+    container_name: outline-api-server-second  # уникальное имя
     ports:
-      - "127.0.0.1:8001:8000"  # Изменить порт на хосте на свободный, например 8001
+      - "127.0.0.1:8001:8000"  # свободный порт на хосте
+  bot:
+    container_name: outline-bot-second
+  assets:
+    container_name: outline-assets-second
+  assets-installation:
+    container_name: outline-assets-installation-second
 ```
 
-### Переменные окружения
-Для передачи настроек в приложение необходимо создать файл `.env` по образцу `.env.example`:
-* `SITE_URL` &ndash; url-сайта для генерации ссылок на внутренние ресурсы (иными словами адрес разворачиваемого сайта, например `https://example.ru`)
-* `REQUEST_TOKEN` &ndash; токен для эндпоинтов, требующих авторизацию (это отправка сообщений пользователям через Telegram-бота и инициализация рекуррентного платежа через Т-Банк, если ничто их этого не используется, можно не указывать)
-* `YOOKASSA_ACCOUNT_ID` &ndash; идентификатор аккаунта Yookassa
-* `YOOKASSA_TOKEN` &ndash; токен API Yookassa
-* `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` &ndash; url для редиректов успешных платежей (опционально включите подстроку `{task_id}` — при fallback без `return_url` с клиента она будет заменена на идентификатор задачи; если плейсхолдера нет, URL используется как есть). То же для `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL` и `WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL`.
-* `PLANFIX_ACCOUNT` &ndash; имя аккаунта PlanFix
-* `PLANFIX_TOKEN` &ndash; токен API PlanFix
-* `DEFAULT_PAYMENT_DEADLINE` &ndash; время жизни ссылки платежа (необязательный)
+В конфиге Nginx для второго сайта `proxy_pass` должен указывать на соответствующий порт API (например, `http://127.0.0.1:8001/api`).
 
-Сейчас по умолчанию используется интеграция с Ю-кассой, поэтому токен
+### Переменные окружения (backend)
+
+Для передачи настроек в API и бот создайте файл `.env` в корне проекта по образцу `.env.example`:
+
+| Переменная | Назначение |
+|------------|------------|
+| `SITE_URL` | URL сайта для генерации внутренних ссылок (например, `https://example.ru`) |
+| `REQUEST_TOKEN` | Токен для защищённых эндпоинтов (Telegram-бот, рекуррентные платежи Т-Банк); если не используется — можно не задавать |
+| `YOOKASSA_ACCOUNT_ID`, `YOOKASSA_TOKEN` | Учётные данные ЮKassa (основная платёжная интеграция по умолчанию) |
+| `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` | URL редиректа после успешной оплаты; поддерживается плейсхолдер `{task_id}` |
+| `TBANK_TERMINAL_ID`, `TBANK_TERMINAL_PASSWORD` | Учётные данные Т-Банк |
+| `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `TBANK_USE_FAIL_PAYMENT_REDIRECT_URL` | URL редиректов Т-Банк; в success-URL — плейсхолдер `{task_id}` |
+| `WATA_TOKEN` | Токен WATA |
+| `WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `WATA_USE_FAIL_PAYMENT_REDIRECT_URL` | URL редиректов WATA; в success-URL — плейсхолдер `{task_id}` |
+| `PLANFIX_ACCOUNT`, `PLANFIX_TOKEN` | Интеграция с PlanFix |
+| `DEFAULT_PAYMENT_DEADLINE` | Время жизни ссылки на оплату в минутах (по умолчанию `30`) |
+| `DEFAULT_RATE_LIMIT` | Лимит запросов к API (по умолчанию `50/minute`) |
+| `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_BUCKET_NAME`, `S3_ENDPOINT_URL` | Хранилище S3 (Yandex Object Storage и аналоги) |
+| `BOT_TOKEN` | Токен Telegram-бота (для контейнера `bot`) |
+
+Рекомендуемый URL успешной оплаты для всех платёжных систем: `https://example.ru/task/{task_id}/success/`.
+
+### Переменные окружения фронтенда (`app_server/assets/.env`)
+
+Создайте по образцу `app_server/assets/.env.example`. Значения **вшиваются при сборке** контейнера `assets` — после изменения нужна пересборка фронта.
+
+| Переменная | По умолчанию | Назначение |
+|------------|--------------|------------|
+| `VITE_USE_SUCCESS_DUMMY_PAGE` | `false` | Подменная страница успешной оплаты (см. ниже) |
+| `VITE_BASE_URL` | `http://127.0.0.1:8000` | Базовый URL API (для локальной разработки) |
+| `VITE_APP_POOLING_INTERVAL` | `1500` | Интервал опроса статуса платежа, мс |
+| `VITE_APP_LINK_ANDROID` | см. `.env.example` | Ссылка на Google Play |
+| `VITE_APP_LINK_IPHONE_US`, `VITE_APP_LINK_IPHONE_RU` | см. `.env.example` | Ссылки на App Store |
+| `VITE_APP_LINK_WINDOWS` | см. `.env.example` | Ссылка на установщик Windows |
+| `VITE_APP_LINK_MAC_US`, `VITE_APP_LINK_MAC_RU` | см. `.env.example` | Ссылки на App Store для macOS |
+| `VITE_SUBSCRIPTION_URL` | см. `.env.example` | URL страницы подписки |
+
+#### Подменная страница успешной оплаты
+
+Флаг `VITE_USE_SUCCESS_DUMMY_PAGE` переключает содержимое маршрута `/task/{task_id}/success/`:
+
+- `false` (по умолчанию) — инструкции по активации VPN
+- `true` — dummy-страница «облачное хранилище»
+
+Цена на dummy-странице подставляется из `site-config.json` → `tariffs[0].price` (в бейдже и в тексте шага 3).
+
+Включение:
+
+```commandline
+# app_server/assets/.env
+VITE_USE_SUCCESS_DUMMY_PAGE=true
+```
+
+После изменения:
+
+```commandline
+docker compose up assets
+```
+
+### Страницы фронтенда
+
+| Маршрут | Назначение |
+|---------|------------|
+| `/task/{task_id}/` | Выбор тарифа и оплата |
+| `/task/{task_id}/success/` | Страница успешной оплаты (VPN или dummy — по флагу `VITE_USE_SUCCESS_DUMMY_PAGE`) |
+| `/payment/app/tariffs/?task={id}` | Редирект на `/task/{id}/` (обратная совместимость) |
+
 ### site-config.json
 
 В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `app_server/assets/site-config.json.example` в `site-config.json` в каталоге `app_server/assets/` и заполнить. При сборке фронта настройки **вшиваются в JavaScript-бандл**. Поэтому **после изменения на продуктовом стенде необходимо пересобрать фронт** (см. ниже).
@@ -190,7 +269,7 @@ services:
 | `site` | `name`, `url`, `title` | Название сайта, URL и заголовок страницы |
 | `organization` | `fullName`, `inn`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты |
 | `publicOffer` | `city`, `representativeName` | Город и ФИО представителя в род. падеже |
-| `tariffs` | минимум 1 элемент | Список тарифов `{ "period": string, "price": number, "featured?": boolean }` |
+| `tariffs` | минимум 1 элемент | Список тарифов `{ "period": string, "price": number, "featured?": boolean }`. Первый тариф (`tariffs[0].price`) используется на подменной странице успешной оплаты при `VITE_USE_SUCCESS_DUMMY_PAGE=true` |
 
 **Необязательные поля** (есть значения по умолчанию в коде):
 
@@ -224,18 +303,28 @@ services:
 chmod +x run_server.sh
 ```
 
-Затем для запустить его:
+Затем запустить его:
 ```commandline
 ./run_server.sh
 ```
 
-### Перезапуск приложения после простого изменения переменных окружения
-После изменения переменных окружения в `.env`-файле необходимо перезапустить целевой контейнер:
+Скрипт собирает Docker-образ, пересобирает основной фронт (`assets`) и поднимает API (`server`).
+
+**Сборка приложения установки** (опционально, в `dist-installation/`):
+
 ```commandline
-docker compose up -d server    # Приложение API
-docker compose up -d bot       # Telegram-бот
-docker compose up -d assets    # Пересобрать фронт
+docker compose up assets-installation
 ```
+
+### Перезапуск и пересборка после изменений
+
+| Что изменилось | Команда |
+|----------------|---------|
+| Корневой `.env` (backend) | `docker compose up -d server` и/или `docker compose up -d bot` |
+| `app_server/assets/.env` или `site-config.json` | `docker compose up assets` |
+| Приложение установки | `docker compose up assets-installation` |
+
+Для one-shot сборки фронта (`assets`, `assets-installation`) предпочтительно `docker compose up` **без** `-d` — контейнер завершится после сборки.
 
 ## _Только для локальной разработки. Для доступа на продуктовом сервере необходима соответствующая настройка Nginx._
 По умолчанию приложение будет доступно в браузере по адресу: http://127.0.0.1:8000/.
@@ -245,6 +334,15 @@ API-документация:
 
 
 ## Проверка состояния сервисов
+
+### Healthcheck API
+
+Контейнер `server` проверяет доступность по эндпоинту:
+
+```commandline
+curl http://127.0.0.1:8000/api/health/
+```
+
 ### Состояние контейнеров
 ```commandline
 docker ps
@@ -252,7 +350,7 @@ CONTAINER ID   IMAGE                            COMMAND                  CREATED
 fdbda06e0bbb   outline-app-python-3.10:latest   "python -m server --…"   5 minutes ago   Up 5 minutes   127.0.0.1:8000->8000/tcp   outline-api-server
 0820cabc2512   outline-app-python-3.10:latest   "python -m bot run"      5 minutes ago   Up 5 minutes                              outline-bot
 ```
-В зависимости от целевого решения, должны быть запущены контейнеры `outline-bot` (Telegram-бот) и/или `outline-api-server` (API плетежного сервиса). Имя последнего может меняться в зависимости от настроек п.5 раздела **Несколько сайтов на одном сервере**.
+В зависимости от целевого решения, должны быть запущены контейнеры `outline-bot` (Telegram-бот) и/или `outline-api-server` (API платёжного сервиса). Контейнеры `outline-assets` и `outline-assets-installation` — одноразовые: запускаются для сборки фронта и завершаются. Имена контейнеров могут отличаться при настройке нескольких сайтов (см. раздел **Несколько сайтов на одном сервере**).
 Для вывода всех, даже остановленных контейнеров, добавить ключ `-a`.
 
 ### Просмотр логов контейнера

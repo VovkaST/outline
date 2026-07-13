@@ -1,3 +1,4 @@
+import { str2bool } from '@/utils';
 import { getEnvVar } from "./utils";
 
 export interface AppConfigType {
@@ -16,6 +17,7 @@ export interface AppConfigType {
     appStoreRu: string;
   };
   poolingInterval: number;
+  useSuccessDummyPage: boolean;
 }
 
 
@@ -54,4 +56,5 @@ export const AppConfig: AppConfigType = {
     ),
   },
   poolingInterval: Number(getEnvVar('VITE_APP_POOLING_INTERVAL', '1500')),
+  useSuccessDummyPage: str2bool(getEnvVar('VITE_USE_SUCCESS_DUMMY_PAGE', 'false')),
 };

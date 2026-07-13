@@ -33,6 +33,12 @@ yarn build:installation
 
 Собирает приложение установки в папку `dist-installation/`.
 
+На продуктовом сервере через Docker:
+
+```bash
+docker compose up assets-installation
+```
+
 ### Превью собранного приложения
 
 ```bash
@@ -49,11 +55,11 @@ yarn preview:installation
 Главный HTML файл - `dist-installation/installation.html`.
 
 Приложение установки полностью независимо и не требует основного приложения для работы.
+Для раздачи через Nginx см. раздел «Nginx» в корневом [README.md](../../README.md).
 
 ## Переменные окружения
 
-Ссылки на приложения и подписку настраиваются через переменные окружения. 
-Создайте файл `.env` в корне папки `app_server/assets/` на основе `.env.example`:
+Ссылки на приложения и подписку настраиваются через переменные окружения в общем файле `app_server/assets/.env` (тот же, что и для основного фронта). Создайте его по образцу `.env.example`:
 
 ```bash
 cp .env.example .env
@@ -67,6 +73,8 @@ cp .env.example .env
 - `VITE_APP_LINK_MAC_US` - ссылка на App Store (US) для macOS
 - `VITE_APP_LINK_MAC_RU` - ссылка на App Store (RU) для macOS
 - `VITE_SUBSCRIPTION_URL` - ссылка на страницу подписки
+
+Переменная `VITE_USE_SUCCESS_DUMMY_PAGE` относится только к **основному** приложению (страница `/task/{id}/success/`) и на приложение установки не влияет.
 
 Если переменные не заданы, используются значения по умолчанию из `.env.example`.
 
