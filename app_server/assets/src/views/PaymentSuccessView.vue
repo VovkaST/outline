@@ -18,6 +18,6 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <PaymentSuccessDummyContent v-if="AppConfig.useSuccessDummyPage" :task-id="taskId" />
+  <PaymentSuccessDummyContent v-if="AppConfig.useDummyConfig" :task-id="taskId" />
   <PaymentSuccessContent v-else :task-id="taskId" />
 </template>

@@ -7,6 +7,7 @@ import type {
 import {
   AddSubscriptionButton,
   Announcement,
+  DummyStorageInfo,
   Footer,
   Header,
   InfoCard,
@@ -15,6 +16,7 @@ import {
   TariffsList,
 } from '@/components/tariffs';
 import { useConfig } from '@/composables/useConfig';
+import { AppConfig } from '@/config/envConfig';
 import { usePaymentStore } from '@/stores/payment';
 import { useTasksStore } from '@/stores/tasks';
 import NotFoundView from '@/views/NotFoundView.vue';
@@ -97,7 +99,7 @@ onMounted(() => {
     </Announcement>
 
     <Header />
-    <InfoCardList v-if="!taskInfoLoading">
+    <InfoCardList v-if="!taskInfoLoading && !AppConfig.useDummyConfig">
       <InfoCard v-if="isWhatsappSubscriptionUrl" gold>
         <template #icon>
           <svg
@@ -122,7 +124,10 @@ onMounted(() => {
       <h2 class="tariff-heading__title">{{ config.site.tariffsHeader }}</h2>
     </div>
 
-    <SubscriptionRef v-if="!isWhatsappSubscriptionUrl" :subscription-number="props.taskId" />
+    <SubscriptionRef
+      v-if="!AppConfig.useDummyConfig && !isWhatsappSubscriptionUrl"
+      :subscription-number="props.taskId"
+    />
 
     <TariffsList
       :tariffs="config.tariffs"
@@ -130,7 +135,9 @@ onMounted(() => {
       @actionClick="onActionClick"
     />
 
-    <Transition name="content-fade">
+    <DummyStorageInfo v-if="AppConfig.useDummyConfig" />
+
+    <Transition v-if="!AppConfig.useDummyConfig" name="content-fade">
       <InfoCardList v-if="!taskInfoLoading">
         <InfoCard>
           <template #icon>
@@ -151,7 +158,7 @@ onMounted(() => {
       </InfoCardList>
     </Transition>
 
-    <Transition name="content-fade">
+    <Transition v-if="!AppConfig.useDummyConfig" name="content-fade">
       <AddSubscriptionButton
         v-if="!taskInfoLoading && isWhatsappSubscriptionUrl"
         :url="addSubscriptionUrl"

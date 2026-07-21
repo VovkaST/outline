@@ -4,6 +4,7 @@ export { default as Delimiter } from './Delimiter.component.vue';
 export { default as DummyPaymentSuccessStep } from './DummyPaymentSuccessStep.component.vue';
 export { default as DummyPriceBadge } from './DummyPriceBadge.component.vue';
 export { default as DummyStorageFlowDiagram } from './DummyStorageFlowDiagram.component.vue';
+export { default as DummyStorageInfo } from './DummyStorageInfo.component.vue';
 export { default as DummySuccessHero } from './DummySuccessHero.component.vue';
 export { default as Footer } from './Footer.component.vue';
 export { default as Header } from './Header.component.vue';
