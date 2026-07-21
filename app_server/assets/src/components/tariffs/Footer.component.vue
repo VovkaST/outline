@@ -3,8 +3,10 @@ import { Modal } from '@/components';
 import {
   ConfidentialPolicy,
   PublicOffer,
+  PublicOfferDummy,
   UserAgreement,
 } from '@/components/tariffs/legal-documents';
+import { AppConfig } from '@/config/envConfig';
 import { useToggle } from '@vueuse/core';
 
 const [isPublicOfferShow, isPublicOfferShowToggle] = useToggle(false);
@@ -42,7 +44,10 @@ const onConfidentialPolicyClose = () => isConfidentialPolicyShowToggle(false);
       @close="onPublicOfferClose"
     >
       <template #title>Публичная оферта</template>
-      <template #body><PublicOffer /></template>
+      <template #body>
+        <PublicOfferDummy v-if="AppConfig.useDummyConfig" />
+        <PublicOffer v-else />
+      </template>
     </Modal>
 
     <Modal

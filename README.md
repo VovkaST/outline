@@ -217,7 +217,7 @@ services:
 
 | Переменная | По умолчанию | Назначение |
 |------------|--------------|------------|
-| `VITE_USE_SUCCESS_DUMMY_PAGE` | `false` | Подменная страница успешной оплаты (см. ниже) |
+| `VITE_USE_DUMMY_CONFIG` | `false` | Dummy-режим: подменная страница успешной оплаты и текст публичной оферты (см. ниже) |
 | `VITE_BASE_URL` | `http://127.0.0.1:8000` | Базовый URL API (для локальной разработки) |
 | `VITE_APP_POOLING_INTERVAL` | `1500` | Интервал опроса статуса платежа, мс |
 | `VITE_APP_LINK_ANDROID` | см. `.env.example` | Ссылка на Google Play |
@@ -226,12 +226,17 @@ services:
 | `VITE_APP_LINK_MAC_US`, `VITE_APP_LINK_MAC_RU` | см. `.env.example` | Ссылки на App Store для macOS |
 | `VITE_SUBSCRIPTION_URL` | см. `.env.example` | URL страницы подписки |
 
-#### Подменная страница успешной оплаты
+#### Dummy-режим (white-label)
 
-Флаг `VITE_USE_SUCCESS_DUMMY_PAGE` переключает содержимое маршрута `/task/{task_id}/success/`:
+Флаг `VITE_USE_DUMMY_CONFIG` переключает:
 
-- `false` (по умолчанию) — инструкции по активации VPN
-- `true` — dummy-страница «облачное хранилище»
+- содержимое маршрута `/task/{task_id}/success/` — `false` (по умолчанию) инструкции по активации VPN, `true` dummy-страница «облачное хранилище»;
+- текст публичной оферты в футере — `false` оферта с автоплатежом, `true` оферта на хранение видеозаписей;
+- страницу выбора тарифа `/task/{task_id}/` — при `true`:
+  - показывается info-блок `DummyStorageInfo` (описание услуги хранения и строка «Услугу оказывает организация …» с `site.name`);
+  - скрыты: блок «Оплата подписки» (`SubscriptionRef`), карточка «1 ключ / одно устройство», WhatsApp-предупреждение об оплате за клиента и кнопка добавления подписки.
+
+В dummy-режиме поле `tariffs[].period` — произвольная подпись тарифа (например, объём: `"100 ГБ"`, `"1 ТБ"`), а не период подписки. Заголовок над тарифами задаётся через `site.tariffsHeader`.
 
 Цена на dummy-странице подставляется из `site-config.json` → `tariffs[0].price` (в бейдже и в тексте шага 3).
 
@@ -239,7 +244,7 @@ services:
 
 ```commandline
 # app_server/assets/.env
-VITE_USE_SUCCESS_DUMMY_PAGE=true
+VITE_USE_DUMMY_CONFIG=true
 ```
 
 После изменения:
@@ -253,7 +258,7 @@ docker compose up assets
 | Маршрут | Назначение |
 |---------|------------|
 | `/task/{task_id}/` | Выбор тарифа и оплата |
-| `/task/{task_id}/success/` | Страница успешной оплаты (VPN или dummy — по флагу `VITE_USE_SUCCESS_DUMMY_PAGE`) |
+| `/task/{task_id}/success/` | Страница успешной оплаты (VPN или dummy — по флагу `VITE_USE_DUMMY_CONFIG`) |
 | `/payment/app/tariffs/?task={id}` | Редирект на `/task/{id}/` (обратная совместимость) |
 
 ### site-config.json
@@ -269,7 +274,7 @@ docker compose up assets
 | `site` | `name`, `url`, `title` | Название сайта, URL и заголовок страницы |
 | `organization` | `fullName`, `inn`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты |
 | `publicOffer` | `city`, `representativeName` | Город и ФИО представителя в род. падеже |
-| `tariffs` | минимум 1 элемент | Список тарифов `{ "period": string, "price": number, "featured?": boolean }`. Первый тариф (`tariffs[0].price`) используется на подменной странице успешной оплаты при `VITE_USE_SUCCESS_DUMMY_PAGE=true` |
+| `tariffs` | минимум 1 элемент | Список тарифов `{ "period": string, "price": number, "featured?": boolean }`. `period` — подпись тарифа (период подписки или, в dummy-режиме, объём: `"100 ГБ"`, `"300 ГБ"`). Первый тариф (`tariffs[0].price`) используется на подменной странице успешной оплаты при `VITE_USE_DUMMY_CONFIG=true` |
 
 **Необязательные поля** (есть значения по умолчанию в коде):
 

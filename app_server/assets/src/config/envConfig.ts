@@ -17,7 +17,7 @@ export interface AppConfigType {
     appStoreRu: string;
   };
   poolingInterval: number;
-  useSuccessDummyPage: boolean;
+  useDummyConfig: boolean;
 }
 
 
@@ -56,5 +56,5 @@ export const AppConfig: AppConfigType = {
     ),
   },
   poolingInterval: Number(getEnvVar('VITE_APP_POOLING_INTERVAL', '1500')),
-  useSuccessDummyPage: str2bool(getEnvVar('VITE_USE_SUCCESS_DUMMY_PAGE', 'false')),
+  useDummyConfig: str2bool(getEnvVar('VITE_USE_DUMMY_CONFIG', 'false')),
 };
