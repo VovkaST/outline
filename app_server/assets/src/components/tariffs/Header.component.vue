@@ -35,14 +35,14 @@ const logoLetter = computed<string>(() => (nameParts.value.primary[0] ?? '').toU
 .logo-mark {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, #d4b876, #a8893f);
+  background: var(--logo-mark-background);
   border-radius: 10px;
   display: grid;
   place-items: center;
-  color: #fff;
+  color: var(--logo-mark-color);
   font-weight: 800;
   font-size: 17px;
-  box-shadow: 0 4px 14px rgba(201, 169, 97, 0.4);
+  box-shadow: var(--logo-mark-shadow);
 }
 
 .logo span {

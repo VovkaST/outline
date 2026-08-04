@@ -180,7 +180,7 @@ onMounted(() => {
 
 .tariff-heading {
   background: var(--primary-soft);
-  border: 1px solid rgba(201, 169, 97, 0.35);
+  border: 1px solid var(--tariff-heading-border);
   border-radius: 12px;
   padding: 16px 18px;
   margin-bottom: 14px;

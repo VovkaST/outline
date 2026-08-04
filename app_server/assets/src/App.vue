@@ -7,6 +7,7 @@ const config = useConfig();
 watchEffect(() => {
   if (config.value?.site?.name) {
     document.title = config.value.site.title;
+    document.documentElement.dataset.theme = config.value.site.theme;
   }
 });
 </script>

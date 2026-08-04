@@ -282,6 +282,7 @@ docker compose up assets
 |------|----------------------|------------|
 | `site.copyrightSuffix` | `''` | Суффикс копирайта в футере |
 | `site.tariffsHeader` | `'Выберите тариф'` | Заголовок блока выбора тарифа |
+| `site.theme` | `'classic'` | Тема оформления: `classic` или `babochki`. Неизвестное значение заменяется на `classic` |
 | `publicOffer.representativeBasis` | `'Устава'` | Основание полномочий представителя |
 | `organization.ogrn` | — | ОГРН (не задаётся по умолчанию) |
 | `supportItems` | `[]` | Ссылки поддержки (кнопки в блоке «Напишите нам»), массив `{ "url", "text" }` |

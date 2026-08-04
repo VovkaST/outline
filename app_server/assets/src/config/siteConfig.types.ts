@@ -1,5 +1,8 @@
+export type SiteTheme = 'classic' | 'babochki';
+
 export interface SiteConfigSite {
   name: string;
+  theme: SiteTheme;
   copyrightSuffix: string;
   url: string;
   title: string;
@@ -55,6 +58,7 @@ export interface SiteConfig {
 
 export interface SiteConfigSiteInput {
   name: string;
+  theme?: SiteTheme;
   url: string;
   title: string;
   copyrightSuffix?: string;

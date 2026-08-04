@@ -42,7 +42,7 @@ const href = computed(() => props.url.replace('{task_id}', props.taskId));
   min-height: 76px;
   margin-top: 12px;
   padding: 16px 22px;
-  background: #fff;
+  background: var(--trial-button-background);
   border: 1.5px solid var(--primary);
   border-radius: 12px;
   color: var(--primary);
@@ -84,17 +84,17 @@ const href = computed(() => props.url.replace('{task_id}', props.taskId));
 
 .trial-button:hover {
   background: var(--primary);
-  color: #fff;
+  color: var(--trial-button-hover-ink);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(201, 169, 97, 0.3);
+  box-shadow: var(--trial-button-hover-shadow);
 }
 
 .trial-button:hover .trial-button__title {
-  color: #fff;
+  color: var(--trial-button-hover-ink);
 }
 
 .trial-button:hover .trial-button__hint {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--trial-button-hover-hint);
 }
 
 @media (max-width: 380px) {
@@ -113,7 +113,7 @@ const href = computed(() => props.url.replace('{task_id}', props.taskId));
 
 @media (hover: none) {
   .trial-button:hover {
-    background: #fff;
+    background: var(--trial-button-background);
     color: var(--primary);
     transform: none;
     box-shadow: none;
