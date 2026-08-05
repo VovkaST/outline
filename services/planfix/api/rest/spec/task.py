@@ -55,6 +55,7 @@ class Task(BaseAPIEntity, ITask):
         "description",
         CustomFields.VPN_KEY.value,
         CustomFields.VPN_KEY_LINK.value,
+        CustomFields.VPN_KEY_LINK_2.value,
         CustomFields.GUID.value,
         CustomFields.REBILL_ID.value,
         CustomFields.CLIENT_ID.value,

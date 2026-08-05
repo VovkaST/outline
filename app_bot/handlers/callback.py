@@ -12,7 +12,7 @@ from app_bot.utils.callback_registry import registry
 from app_bot.utils.context_history import context_history
 from app_bot.utils.decorators import get_task_from_context, planfix_log_querydata, planfix_task_context
 from app_bot.utils.dialogs import make_ref_link
-from services.planfix.utils import get_task
+from services.planfix.utils import get_key_link, get_task
 
 
 @registry.handler(BotButtons.BACKWARD)
@@ -83,10 +83,9 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
     user: User = update.effective_user  # type: ignore [attr-not-none]
     telegram_id = user.id
     task = await get_task(telegram_id=telegram_id)
-    if task.vpn_key_link.stringValue:
-        await update.callback_query.edit_message_text(
-            **menus.KeyInfoMenu.to_message(link=task.vpn_key_link.stringValue)
-        )
+    key_link = get_key_link(task)
+    if key_link:
+        await update.callback_query.edit_message_text(**menus.KeyInfoMenu.to_message(link=key_link))
     else:
         try:
             await update.callback_query.edit_message_text(
