@@ -4,13 +4,25 @@ import { computed } from 'vue';
 
 const config = useConfig();
 
+// Имя из site-config.json может содержать невидимые символы (NBSP, zero-width, BOM),
+// поэтому нормализуем строку перед разбором: иначе первая «буква» логотипа окажется пустой.
+const ZERO_WIDTH_PATTERN = /[​-‍﻿]/g;
+const LETTER_OR_DIGIT_PATTERN = /[\p{L}\p{N}]/u;
+
+const siteName = computed<string>(() =>
+  (config.value.site.name ?? '').replace(ZERO_WIDTH_PATTERN, '').replace(/\s+/g, ' ').trim(),
+);
+
 const nameParts = computed<{ primary: string; accent: string }>(() => {
-  const name = config.value.site.name ?? '';
-  const [primary = '', ...rest] = name.split(' ');
+  const [primary = '', ...rest] = siteName.value.split(' ');
   return { primary, accent: rest.join(' ') };
 });
 
-const logoLetter = computed<string>(() => (nameParts.value.primary[0] ?? '').toUpperCase());
+const logoLetter = computed<string>(() => {
+  const letter = [...siteName.value].find((char) => LETTER_OR_DIGIT_PATTERN.test(char));
+  return (letter ?? '').toUpperCase();
+});
+
 const isBabochkiTheme = computed<boolean>(() => config.value.site.theme === 'babochki');
 </script>
 
@@ -78,6 +90,7 @@ const isBabochkiTheme = computed<boolean>(() => config.value.site.theme === 'bab
 
 .logo span {
   color: var(--primary);
+  margin-left: 0.28em;
 }
 
 @media (max-width: 380px) {
