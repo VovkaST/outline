@@ -43,6 +43,11 @@ def prefetch_form_data(form_data: list[tuple[str, str]]) -> dict:
     return result
 
 
+def get_key_link(task: TaskResponse) -> str | None:
+    """Ссылка на ключ доступа из задачи. `None`, если поле не заполнено или отсутствует в ответе."""
+    return task.vpn_key_link_2.stringValue if task.vpn_key_link_2 else None
+
+
 async def get_task(
     task_guid: str | None = None, request_key: str | None = None, telegram_id: int | None = None
 ) -> TaskResponse:

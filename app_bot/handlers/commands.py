@@ -12,7 +12,7 @@ from app_bot.utils.decorators import get_task_from_context, planfix_task_context
 from app_bot.utils.dialogs import clear_username
 from services import planfix_webchat
 from services.planfix.exceptions import TaskNotFoundError
-from services.planfix.utils import get_task
+from services.planfix.utils import get_key_link, get_task
 
 logger = logging.getLogger("bot")
 
@@ -32,10 +32,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     try:
         task = get_task_from_context(context) if not is_command else None
-        if not task or not task.vpn_key_link.stringValue:
+        if not task or not get_key_link(task):
             task = await get_task(telegram_id=telegram_id)
             store_task_to_context(context, task)
-        is_key_generated = bool(task.vpn_key_link.stringValue)
+        is_key_generated = bool(get_key_link(task))
     except TaskNotFoundError:
         task = None
 
