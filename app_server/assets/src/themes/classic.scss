@@ -1,0 +1,36 @@
+:root,
+:root[data-theme='classic'] {
+  --bg: #ffffff;
+  --bg-soft: #f6f7f9;
+  --border: #e6e8ec;
+
+  --ink: #0f1115;
+  --ink-dim: #5a6270;
+  --ink-faint: #8b95a3;
+
+  --primary: #c9a961;
+  --primary-hover: #b8954a;
+  --primary-soft: #faf3e3;
+
+  --logo-mark-background: linear-gradient(135deg, #d4b876, #a8893f);
+  --logo-mark-color: #ffffff;
+  --logo-mark-shadow: 0 4px 14px rgba(201, 169, 97, 0.4);
+
+  --tariff-heading-border: rgba(201, 169, 97, 0.35);
+  --tariff-card-background: #ffffff;
+  --tariff-card-featured-ink: #ffffff;
+  --tariff-card-hover-shadow: 0 6px 18px rgba(201, 169, 97, 0.18);
+  --tariff-card-featured-shadow: 0 4px 14px rgba(201, 169, 97, 0.35);
+
+  --info-card-accent-background: linear-gradient(170deg, #fff9eb 0%, #ffffff 100%);
+  --info-card-accent-border: #dcc090;
+  --info-card-accent-shadow: 0 2px 8px rgba(201, 169, 97, 0.12);
+
+  --trial-button-background: #ffffff;
+  --trial-button-hover-ink: #ffffff;
+  --trial-button-hover-hint: rgba(255, 255, 255, 0.75);
+  --trial-button-hover-shadow: 0 6px 18px rgba(201, 169, 97, 0.3);
+
+  --success: #13c296;
+  --success-soft: #e6f9f3;
+}

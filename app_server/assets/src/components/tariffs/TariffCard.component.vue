@@ -36,7 +36,7 @@ const onClick = () => {
 <style scoped lang="scss">
 .btn {
   width: 100%;
-  background: #fff;
+  background: var(--tariff-card-background);
   border: 1.5px solid var(--border);
   padding: 18px 22px;
   border-radius: 12px;
@@ -54,7 +54,7 @@ const onClick = () => {
 .btn:hover:not(:disabled) {
   border-color: var(--primary);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(201, 169, 97, 0.18);
+  box-shadow: var(--tariff-card-hover-shadow);
 }
 
 .btn:disabled {
@@ -74,12 +74,12 @@ const onClick = () => {
 .btn.featured {
   background: var(--primary);
   border-color: var(--primary);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(201, 169, 97, 0.35);
+  color: var(--tariff-card-featured-ink);
+  box-shadow: var(--tariff-card-featured-shadow);
 }
 
 .btn.featured .btn-price {
-  color: #fff;
+  color: var(--tariff-card-featured-ink);
 }
 
 .btn.featured:hover:not(:disabled) {

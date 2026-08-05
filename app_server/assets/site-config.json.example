@@ -2,7 +2,8 @@
   "site": {
     "name": "Наименование сайта",
     "url": "https://my-site.ru",
-    "title": "Заголовок сайта"
+    "title": "Заголовок сайта",
+    "theme": "classic"
   },
   "organization": {
     "fullName": "ИП ИВАНОВ ИВАН ИВАНОВИЧ",

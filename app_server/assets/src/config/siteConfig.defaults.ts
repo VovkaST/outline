@@ -5,10 +5,12 @@ import type {
   SiteConfigPublicOffer,
   SiteConfigSite,
   SiteConfigSupportItem,
+  SiteTheme,
 } from './siteConfig.types';
 
 export const DEFAULT_SITE_CONFIG = {
   site: {
+    theme: 'classic',
     copyrightSuffix: '',
     tariffsHeader: 'Выберите тариф',
   },
@@ -18,10 +20,18 @@ export const DEFAULT_SITE_CONFIG = {
   supportItems: [],
   subscriptionAddUrl: '',
 } as const satisfies Pick<Partial<SiteConfig>, 'supportItems' | 'subscriptionAddUrl'> & {
-  site: Pick<SiteConfigSite, 'copyrightSuffix' | 'tariffsHeader'>;
+  site: Pick<SiteConfigSite, 'theme' | 'copyrightSuffix' | 'tariffsHeader'>;
   publicOffer: Pick<SiteConfigPublicOffer, 'representativeBasis'>;
   supportItems: readonly SiteConfigSupportItem[];
 };
+
+const SITE_THEMES: readonly SiteTheme[] = ['classic', 'babochki'];
+
+function resolveSiteTheme(value: unknown): SiteTheme {
+  return SITE_THEMES.includes(value as SiteTheme)
+    ? (value as SiteTheme)
+    : DEFAULT_SITE_CONFIG.site.theme;
+}
 
 const REQUIRED_SITE_FIELDS: (keyof Pick<SiteConfigSite, 'name' | 'url' | 'title'>)[] = [
   'name',
@@ -79,6 +89,7 @@ export function mergeSiteConfig(raw: SiteConfigInput): SiteConfig {
   const site = {
     ...DEFAULT_SITE_CONFIG.site,
     ...raw.site,
+    theme: resolveSiteTheme(raw.site.theme),
     copyrightSuffix: raw.site.copyrightSuffix ?? DEFAULT_SITE_CONFIG.site.copyrightSuffix,
     tariffsHeader: raw.site.tariffsHeader ?? DEFAULT_SITE_CONFIG.site.tariffsHeader,
   };

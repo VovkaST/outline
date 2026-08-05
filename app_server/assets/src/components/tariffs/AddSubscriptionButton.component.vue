@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useConfig } from '@/composables/useConfig';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -6,12 +7,28 @@ const props = defineProps<{
   taskId: string;
 }>();
 
+const config = useConfig();
+
 const href = computed(() => props.url.replace('{task_id}', props.taskId));
+const isBabochkiTheme = computed<boolean>(() => config.value.site.theme === 'babochki');
 </script>
 
 <template>
   <a v-if="url" class="trial-button" :href="href" target="_blank" rel="noopener">
     <svg
+      v-if="isBabochkiTheme"
+      class="trial-button__icon"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        d="M21.7 3.3 18.5 19c-.24 1.11-.88 1.38-1.78.86l-4.87-3.59-2.35 2.26c-.26.26-.48.48-.98.48l.35-4.96 9.02-8.15c.39-.35-.09-.55-.61-.2L6.13 12.73l-4.8-1.5c-1.04-.33-1.06-1.04.22-1.54L20.3 2.47c.87-.32 1.63.2 1.4.83Z"
+      />
+    </svg>
+
+    <svg
+      v-else
       class="trial-button__icon"
       viewBox="0 0 24 24"
       fill="none"
@@ -26,8 +43,12 @@ const href = computed(() => props.url.replace('{task_id}', props.taskId));
       <path d="m15.5 7.5 3 3L22 7l-3-3" />
     </svg>
     <span class="trial-button__text">
-      <span class="trial-button__title">Получить пробную подписку</span>
-      <span class="trial-button__hint">если это не ваш номер</span>
+      <span class="trial-button__title">
+        {{ isBabochkiTheme ? 'Получить пробную подписку в Telegram' : 'Получить пробную подписку' }}
+      </span>
+      <span v-if="!isBabochkiTheme" class="trial-button__hint">
+        если это не ваш номер
+      </span>
     </span>
   </a>
 </template>
@@ -42,7 +63,7 @@ const href = computed(() => props.url.replace('{task_id}', props.taskId));
   min-height: 76px;
   margin-top: 12px;
   padding: 16px 22px;
-  background: #fff;
+  background: var(--trial-button-background);
   border: 1.5px solid var(--primary);
   border-radius: 12px;
   color: var(--primary);
@@ -84,17 +105,17 @@ const href = computed(() => props.url.replace('{task_id}', props.taskId));
 
 .trial-button:hover {
   background: var(--primary);
-  color: #fff;
+  color: var(--trial-button-hover-ink);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(201, 169, 97, 0.3);
+  box-shadow: var(--trial-button-hover-shadow);
 }
 
 .trial-button:hover .trial-button__title {
-  color: #fff;
+  color: var(--trial-button-hover-ink);
 }
 
 .trial-button:hover .trial-button__hint {
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--trial-button-hover-hint);
 }
 
 @media (max-width: 380px) {
@@ -113,7 +134,7 @@ const href = computed(() => props.url.replace('{task_id}', props.taskId));
 
 @media (hover: none) {
   .trial-button:hover {
-    background: #fff;
+    background: var(--trial-button-background);
     color: var(--primary);
     transform: none;
     box-shadow: none;

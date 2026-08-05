@@ -27,9 +27,9 @@ withDefaults(defineProps<{ gold?: boolean }>(), { gold: false });
 }
 
 .info-card--gold {
-  background: linear-gradient(170deg, #fff9eb 0%, #ffffff 100%);
-  border: 1px solid #dcc090;
-  box-shadow: 0 2px 8px rgba(201, 169, 97, 0.12);
+  background: var(--info-card-accent-background);
+  border: 1px solid var(--info-card-accent-border);
+  box-shadow: var(--info-card-accent-shadow);
 }
 
 .info-card__icon {
