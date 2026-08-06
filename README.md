@@ -375,3 +375,24 @@ docker logs outline-api-server --tail 100
 docker logs outline-api-server --tail 100 --follow
 ```
 Остановка отслеживания: `Ctrl+C`.
+
+### Локальные пресеты конфигурации
+
+Локальные файлы конфигурации:
+
+- `app_server/assets/site-config.classic.json`
+- `app_server/assets/site-config.babochki.json`
+
+Переключение на классическую тему:
+
+`./scripts/switch-site-config.sh classic`
+
+Переключение на тему «Бабочки»:
+
+`./scripts/switch-site-config.sh babochki`
+
+После переключения необходимо выполнить:
+
+`docker compose up assets`
+
+Файлы пресетов содержат локальные настройки сайта и не должны попадать в Git.

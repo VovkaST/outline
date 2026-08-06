@@ -181,4 +181,8 @@ logs/
 /media
 
 # Индивидуальные настройки сайта: app_server/assets/site-config.json (копировать из site-config.json.example)
-site-config.json
+site-config.json/app_server/assets/site-config.classic.json
+/app_server/assets/site-config.babochki.json
+/app_server/assets/site-config.last.json
+/app_server/assets/site-config.json
+/app_server/assets/site-config.classic.json
