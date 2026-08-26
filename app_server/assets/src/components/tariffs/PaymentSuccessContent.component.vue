@@ -18,7 +18,7 @@ const config = useConfig();
 
 watchEffect(() => {
   const baseTitle = config.value?.site?.title;
-  document.title = baseTitle ? `${baseTitle} — Подписка активирована` : 'Подписка активирована';
+  document.title = baseTitle ? `${baseTitle} — Активация` : 'Активация';
 });
 </script>
 
@@ -26,11 +26,8 @@ watchEffect(() => {
   <div class="page payment-success-view">
     <Header />
 
-    <SuccessHero>
-      <template #title>Подписка активирована</template>
-      <template #description>
-        Оплата прошла успешно. Осталась пара действий, чтобы VPN снова заработал.
-      </template>
+    <SuccessHero :show-icon="false">
+      <template #title> После оплаты обновите подписку </template>
     </SuccessHero>
 
     <div class="section-title">Что делать дальше</div>
