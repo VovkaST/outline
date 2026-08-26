@@ -6,7 +6,7 @@ const props = defineProps<{
 
 <template>
   <div class="success-card">
-    <div v-if="showIcon" class="success-icon" aria-hidden="true">
+    <div v-if="props.showIcon" class="success-icon" aria-hidden="true">
       <svg
         viewBox="0 0 24 24"
         fill="none"
