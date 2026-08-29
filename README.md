@@ -286,7 +286,7 @@ docker compose up assets
 | `publicOffer.representativeBasis` | `'Устава'` | Основание полномочий представителя |
 | `organization.ogrn` | — | ОГРН (не задаётся по умолчанию) |
 | `supportItems` | `[]` | Ссылки поддержки (кнопки в блоке «Напишите нам»), массив `{ "url", "text" }` |
-| `subscriptionAddUrl` | `''` | URL для кнопки «Добавить подписку» |
+| `subscriptionAddUrl` | `''` | URL для кнопки «Добавить подписку»: если задан — кнопка на любой теме с этим URL; иначе берётся `subscription_add_url` из API и кнопка показывается только для WhatsApp |
 | `announcement` | не задан | Настройки баннера на странице тарифов |
 
 Настройки `announcement`:

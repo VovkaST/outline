@@ -43,21 +43,14 @@ const clientPhone = ref<string>('');
 const taskInfoLoading = ref<boolean>(true);
 const taskNotFound = ref<boolean>(false);
 
-const isBabochkiTheme = computed<boolean>(
-  () => config.value.site.theme === 'babochki',
+const isBabochkiTheme = computed<boolean>(() => config.value.site.theme === 'babochki');
+
+const addSubscriptionUrl = computed<string>(
+  () => config.value.subscriptionAddUrl || addSubscriptionUrlFromTask.value || '',
 );
 
-const addSubscriptionUrl = computed<string>(() => {
-  if (isBabochkiTheme.value && config.value.subscriptionAddUrl) {
-    return config.value.subscriptionAddUrl;
-  }
-
-  return addSubscriptionUrlFromTask.value || config.value.subscriptionAddUrl || '';
-});
-
-const hasAddSubscriptionUrl = computed<boolean>(
-  () => Boolean(addSubscriptionUrl.value),
-);
+const hasAddSubscriptionUrl = computed<boolean>(() => Boolean(addSubscriptionUrl.value));
+const hasConfigSubscriptionUrl = computed(() => Boolean(config.value.subscriptionAddUrl));
 const isWhatsappSubscriptionUrl = computed(() => {
   const url = addSubscriptionUrlFromTask.value.toLowerCase();
   return url.includes('whatsapp') || url.includes('wa.me');
@@ -112,9 +105,7 @@ onMounted(() => {
     </Announcement>
 
     <Header />
-    <InfoCardList
-        v-if="!taskInfoLoading && !AppConfig.useDummyConfig && !isBabochkiTheme"
-      >
+    <InfoCardList v-if="!taskInfoLoading && !AppConfig.useDummyConfig && !isBabochkiTheme">
       <InfoCard v-if="isWhatsappSubscriptionUrl" gold>
         <template #icon>
           <svg
@@ -140,11 +131,7 @@ onMounted(() => {
     </div>
 
     <SubscriptionRef
-      v-if="
-        !AppConfig.useDummyConfig &&
-        !isBabochkiTheme &&
-        !isWhatsappSubscriptionUrl
-      "
+      v-if="!AppConfig.useDummyConfig && !isBabochkiTheme && !isWhatsappSubscriptionUrl"
       :subscription-number="props.taskId"
     />
 
@@ -182,7 +169,7 @@ onMounted(() => {
         v-if="
           !taskInfoLoading &&
           hasAddSubscriptionUrl &&
-          (isBabochkiTheme || isWhatsappSubscriptionUrl)
+          (hasConfigSubscriptionUrl || isWhatsappSubscriptionUrl)
         "
         :url="addSubscriptionUrl"
         :task-id="taskId"
