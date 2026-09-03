@@ -33,6 +33,20 @@ export interface SiteConfigSupportItem {
   text: string;
 }
 
+export interface SiteConfigSubscriptionButtonInput {
+  url?: string;
+  /** Может содержать HTML-теги, выводится без экранирования. */
+  title?: string;
+  /** Может содержать HTML-теги, выводится без экранирования. */
+  hint?: string;
+}
+
+export interface SiteConfigSubscriptionButton {
+  url: string;
+  title: string;
+  hint: string;
+}
+
 export interface SiteConfigTariff {
   period: string;
   price: number;
@@ -51,7 +65,11 @@ export interface SiteConfig {
   readonly organization: SiteConfigOrganization;
   readonly publicOffer: SiteConfigPublicOffer;
   readonly supportItems: readonly SiteConfigSupportItem[];
+  /** URL кнопки пробной подписки. Сохранён для обратной совместимости; дублирует subscriptionButton.url. */
   readonly subscriptionAddUrl?: string;
+  readonly subscriptionButton: SiteConfigSubscriptionButton;
+  /** HTML-строка инфо-карточки на экране выбора тарифа, выводится без экранирования. */
+  readonly tariffNote: string;
   readonly announcement?: SiteConfigAnnouncement;
   readonly tariffs: readonly SiteConfigTariff[];
 }
@@ -96,7 +114,10 @@ export interface SiteConfigInput {
   organization: SiteConfigOrganizationInput;
   publicOffer: SiteConfigPublicOfferInput;
   supportItems?: readonly SiteConfigSupportItem[];
+  /** Legacy-вход: URL кнопки пробной подписки. Предпочтителен subscriptionButton.url. */
   subscriptionAddUrl?: string;
+  subscriptionButton?: SiteConfigSubscriptionButtonInput;
+  tariffNote?: string;
   announcement?: SiteConfigAnnouncementInput;
   tariffs: readonly SiteConfigTariff[];
 }

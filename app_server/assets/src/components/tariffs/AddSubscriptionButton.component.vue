@@ -43,12 +43,12 @@ const isBabochkiTheme = computed<boolean>(() => config.value.site.theme === 'bab
       <path d="m15.5 7.5 3 3L22 7l-3-3" />
     </svg>
     <span class="trial-button__text">
-      <span class="trial-button__title">
-        {{ isBabochkiTheme ? 'Получить пробную подписку в Telegram' : 'Получить пробную подписку' }}
-      </span>
-      <span v-if="!isBabochkiTheme" class="trial-button__hint">
-        если это не ваш номер
-      </span>
+      <span class="trial-button__title" v-html="config.subscriptionButton.title" />
+      <span
+        v-if="config.subscriptionButton.hint"
+        class="trial-button__hint"
+        v-html="config.subscriptionButton.hint"
+      />
     </span>
   </a>
 </template>
