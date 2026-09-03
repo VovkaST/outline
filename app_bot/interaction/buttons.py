@@ -13,7 +13,7 @@ class BotButtons(TextChoices):
     PAY_6MON = "PAY_6MON", "🗓 6 мес — 1499 ₽"
     PAY_12MON = "PAY_12MON", "📅 12 мес — 2999 ₽"
     INSTALL = "INSTALL", "📄 Установить VPN"
-    REFERAL = "REFERAL", "👥 Создать партнерскую ссылку"
+    REFERAL = "REFERAL", "👥 Поделиться и получить дни"
     HELP = "HELP", "🛠 Помощь"
 
     IOS_EU = "IOS_EU", "🍏 iOS/Айфон (🇪🇺 EU)"
