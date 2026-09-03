@@ -1,8 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps<{
+  showIcon?: boolean;
+}>();
+</script>
 
 <template>
   <div class="success-card">
-    <div class="success-icon" aria-hidden="true">
+    <div v-if="props.showIcon" class="success-icon" aria-hidden="true">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -13,19 +17,20 @@
         <polyline points="20 6 9 17 4 12" />
       </svg>
     </div>
-    <h1 class="success-heading"><slot name="title" /></h1>
+    <h1 v-if="$slots['title']" class="success-heading"><slot name="title" /></h1>
     <p class="success-lead"><slot name="description" /></p>
   </div>
 </template>
 
 <style scoped lang="scss">
 .success-card {
-  background: linear-gradient(180deg, var(--success-soft) 0%, #ffffff 100%);
-  border: 1px solid #c3edde;
+  background: linear-gradient(180deg, var(--success-soft) 0%, var(--bg) 100%);
+  border: 1px solid color-mix(in srgb, var(--success) 30%, var(--border));
   border-radius: 18px;
   padding: 28px 22px 24px;
   margin-bottom: 28px;
   text-align: center;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--success) 12%, transparent);
 }
 
 .success-icon {
@@ -59,16 +64,24 @@
 
 .success-heading {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 600;
+  line-height: 1.3;
   letter-spacing: -0.5px;
-  margin-bottom: 6px;
-  color: var(--ink);
+  color: color-mix(in srgb, var(--success) 55%, var(--ink));
+}
+
+.success-heading + .success-lead {
+  margin-top: 6px;
 }
 
 .success-lead {
   font-size: 14px;
   line-height: 1.5;
   color: var(--ink-dim);
+}
+
+.success-lead:empty {
+  display: none;
 }
 
 @media (max-width: 380px) {
@@ -83,8 +96,13 @@
 
 @media (prefers-color-scheme: dark) {
   .success-card {
-    background: linear-gradient(180deg, rgba(19, 194, 150, 0.12) 0%, rgba(30, 41, 59, 0.98) 100%);
-    border-color: rgba(19, 194, 150, 0.35);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--success) 14%, transparent) 0%,
+      rgba(30, 41, 59, 0.98) 100%
+    );
+    border-color: color-mix(in srgb, var(--success) 35%, transparent);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--success) 18%, transparent);
   }
 
   .success-lead {
@@ -92,7 +110,7 @@
   }
 
   .success-heading {
-    color: #fff;
+    color: color-mix(in srgb, var(--success) 70%, #fff);
   }
 }
 </style>
