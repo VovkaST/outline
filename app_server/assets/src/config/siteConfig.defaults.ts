@@ -4,6 +4,7 @@ import type {
   SiteConfigOrganizationInput,
   SiteConfigPublicOffer,
   SiteConfigSite,
+  SiteConfigSubscriptionButton,
   SiteConfigSupportItem,
   SiteTheme,
 } from './siteConfig.types';
@@ -19,10 +20,21 @@ export const DEFAULT_SITE_CONFIG = {
   },
   supportItems: [],
   subscriptionAddUrl: '',
-} as const satisfies Pick<Partial<SiteConfig>, 'supportItems' | 'subscriptionAddUrl'> & {
+  subscriptionButton: {
+    url: '',
+    title: 'Получить пробную подписку',
+    hint: 'если это не ваш номер',
+  },
+  tariffNote:
+    '<strong>1 ключ</strong> можно использовать <strong>только на одном устройстве</strong>.',
+} as const satisfies Pick<
+  Partial<SiteConfig>,
+  'supportItems' | 'subscriptionAddUrl' | 'tariffNote'
+> & {
   site: Pick<SiteConfigSite, 'theme' | 'copyrightSuffix' | 'tariffsHeader'>;
   publicOffer: Pick<SiteConfigPublicOffer, 'representativeBasis'>;
   supportItems: readonly SiteConfigSupportItem[];
+  subscriptionButton: SiteConfigSubscriptionButton;
 };
 
 const SITE_THEMES: readonly SiteTheme[] = ['classic', 'babochki'];
@@ -102,14 +114,26 @@ export function mergeSiteConfig(raw: SiteConfigInput): SiteConfig {
   };
 
   const supportItems = raw.supportItems ?? DEFAULT_SITE_CONFIG.supportItems;
-  const subscriptionAddUrl = raw.subscriptionAddUrl ?? DEFAULT_SITE_CONFIG.subscriptionAddUrl;
+
+  const subscriptionUrl =
+    raw.subscriptionButton?.url ??
+    raw.subscriptionAddUrl ??
+    DEFAULT_SITE_CONFIG.subscriptionButton.url;
+  const subscriptionButton: SiteConfigSubscriptionButton = {
+    url: subscriptionUrl,
+    title: raw.subscriptionButton?.title ?? DEFAULT_SITE_CONFIG.subscriptionButton.title,
+    hint: raw.subscriptionButton?.hint ?? DEFAULT_SITE_CONFIG.subscriptionButton.hint,
+  };
+  const tariffNote = raw.tariffNote ?? DEFAULT_SITE_CONFIG.tariffNote;
 
   return {
     site,
     organization: raw.organization,
     publicOffer,
     supportItems,
-    subscriptionAddUrl,
+    subscriptionAddUrl: subscriptionUrl,
+    subscriptionButton,
+    tariffNote,
     announcement: raw.announcement,
     tariffs: raw.tariffs,
   };

@@ -159,7 +159,7 @@ onMounted(() => {
               <line x1="12" y1="18" x2="12.01" y2="18" />
             </svg>
           </template>
-          <strong>1 ключ</strong> можно использовать <strong>только на одном устройстве</strong>.
+          <span v-html="config.tariffNote" />
         </InfoCard>
       </InfoCardList>
     </Transition>
