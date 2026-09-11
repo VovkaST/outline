@@ -31,7 +31,7 @@ def run(ctx: click.core.Context):
     print(f"PythonTelegramBot version {telegram.__version__}, using settings '{os.environ.get('SETTINGS_MODULE')}'")
     print("Starting bot...")
 
-    asyncio.run(run_bot(token=bot_settings.TOKEN))
+    asyncio.run(run_bot(token=bot_settings.TOKEN, proxy=bot_settings.PROXY_URL or None))
 
 
 if __name__ == "__main__":
