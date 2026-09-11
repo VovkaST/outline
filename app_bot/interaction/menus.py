@@ -1,9 +1,15 @@
+import logging
+
 from pydantic import BaseModel, ConfigDict, Field
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.constants import ParseMode
 
 from app_bot.interaction import messages
 from app_bot.interaction.buttons import BotButtons
+from app_bot.links import build
+from app_bot.tariffs import get_tariffs
+
+logger = logging.getLogger("bot")
 
 
 def enum2btn(button_enum: BotButtons) -> InlineKeyboardButton:
@@ -118,3 +124,24 @@ HelpMenu = Menu(
         ]
     ),
 )
+
+
+def build_pay_menu(telegram_id: int) -> Menu:
+    """Экран выбора тарифа. Каждая кнопка — URL на подписанный редирект `/tg/go?a=pay`.
+
+    Платёж создаётся в момент нажатия кнопки (на стороне сервера), а не при показе экрана.
+    Список тарифов и тексты кнопок берутся из JSON-конфига (`app_bot/tariffs.json`).
+
+    Без `BOT_LINK_SECRET` `build()` возвращает пустую строку — Telegram отклоняет
+    inline-кнопку с пустым `url` как "текстовую" (`BadRequest`). Такой тариф пропускаем,
+    а не отдаём в клавиатуру, залогировав проблему конфигурации.
+    """
+    rows: list[list[InlineKeyboardButton]] = []
+    for tariff in get_tariffs():
+        url = build("pay", t=tariff.id, u=telegram_id)
+        if not url:
+            logger.error("Не удалось построить ссылку оплаты для тарифа %s: не задан BOT_LINK_SECRET", tariff.id)
+            continue
+        rows.append([InlineKeyboardButton(tariff.title, url=url)])
+    rows.append([enum2btn(BotButtons.BACKWARD)])
+    return Menu(message=messages.CHOOSE_TARIFF, keyboard=InlineKeyboardMarkup(rows))

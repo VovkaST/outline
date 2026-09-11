@@ -34,8 +34,8 @@ async def on_shutdown(_app: Application) -> None:
     await BaseHTTPService.close_all()
 
 
-def build_app(token: str):
-    return (
+def build_app(token: str, proxy: str | None = None):
+    builder = (
         ApplicationBuilder()
         .token(token)
         .concurrent_updates(True)
@@ -43,14 +43,17 @@ def build_app(token: str):
         .write_timeout(30)
         .get_updates_read_timeout(42)
         .post_shutdown(on_shutdown)
-        .build()
     )
+    if proxy:
+        logger.info("🌐 Бот использует прокси: %s", proxy)
+        builder = builder.proxy(proxy).get_updates_proxy(proxy)
+    return builder.build()
 
 
-async def run_bot(token: str):
+async def run_bot(token: str, proxy: str | None = None):
     logger.info("🚀 Запуск бота...")
     nest_asyncio.apply()
-    app = build_app(token)
+    app = build_app(token, proxy=proxy)
 
     app.add_handler(CommandHandler(BotCommands.START, commands.start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), user_message_handler))

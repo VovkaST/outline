@@ -101,7 +101,8 @@ async def get_token_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def pay_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
         return
-    await update.callback_query.edit_message_text(**menus.PayMenu.to_message())
+    user: User = update.effective_user  # type: ignore [attr-not-none]
+    await update.callback_query.edit_message_text(**menus.build_pay_menu(user.id).to_message())
 
 
 @registry.handler(BotButtons.PAY_1MON, BotButtons.PAY_3MON, BotButtons.PAY_6MON, BotButtons.PAY_12MON)

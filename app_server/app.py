@@ -70,6 +70,7 @@ def init_app(service_name: str, version: str, description: str) -> FastAPI:
     app.include_router(routes.subscription_routes, prefix="/api")
     app.include_router(routes.tasks_routes, prefix="/api")
     app.include_router(bot_routes, prefix="/api")
+    app.include_router(routes.redirect_routes)  # /tg/go, /tg/go/run — верхнеуровневые, без /api
 
     @app.get("/openapi.json/", include_in_schema=False)
     async def openapi_trailing_slash():

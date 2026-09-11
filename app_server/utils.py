@@ -1,8 +1,27 @@
 from __future__ import annotations
 
 from app_server.config import t_bank_config
+from app_server.enums import PaymentSystems
+from root.config import settings
 
 TASK_ID_REDIRECT_PLACEHOLDER = "{task_id}"
+
+DEFAULT_PAYMENT_AGENT = PaymentSystems(settings.DEFAULT_PAYMENT_AGENT)
+
+
+def get_payment_service(payment_agent: PaymentSystems):
+    """Платёжный сервис по идентификатору системы, либо `None`, если он не сконфигурирован.
+
+    Импорт `services` — внутри функции: `services.yookassa`/`services.wata` сами импортируют
+    `apply_task_id_to_redirect_url` из этого модуля, и импорт на уровне модуля дал бы цикл.
+    """
+    from services import wata, yookassa
+
+    services_map = {
+        PaymentSystems.YOOKASSA: yookassa,
+        PaymentSystems.WATA: wata,
+    }
+    return services_map.get(payment_agent)
 
 
 def apply_task_id_to_redirect_url(url: str, task_id: str) -> str:

@@ -4,20 +4,13 @@ from starlette.requests import Request
 
 from app_server import responses
 from app_server.enums import PaymentSystems
-from root.config import settings
+from app_server.utils import DEFAULT_PAYMENT_AGENT, get_payment_service
 from root.utils.others import get_route_name
-from services import wata, yookassa
 
 routes = APIRouter(tags=["Payments v2"], prefix="/v2/payment", generate_unique_id_function=get_route_name)
 
 
-services_map = {
-    PaymentSystems.YOOKASSA: yookassa,
-    PaymentSystems.WATA: wata,
-}
-
-_DEFAULT_PAYMENT_AGENT = PaymentSystems(settings.DEFAULT_PAYMENT_AGENT)
-_PAYMENT_AGENT_QUERY = Query(default=_DEFAULT_PAYMENT_AGENT, description="Платежная система")
+_PAYMENT_AGENT_QUERY = Query(default=DEFAULT_PAYMENT_AGENT, description="Платежная система")
 
 
 @routes.get("/init/", response_model=responses.InitPaymentResponseV2)
@@ -32,7 +25,7 @@ async def init_payment_v2(
 ):
     """Инициализировать платеж."""
 
-    service = services_map.get(payment_agent)
+    service = get_payment_service(payment_agent)
 
     if not service:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неизвестная платежная система")
