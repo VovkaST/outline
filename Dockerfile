@@ -1,6 +1,5 @@
-FROM python:3.10.17-bullseye
+FROM python:3.10.17-bookworm
 COPY ./ /app
 WORKDIR /app
 
-RUN apt-get update -y && \
-    pip install -r requirements/base.txt
+RUN pip install -r requirements/base.txt
