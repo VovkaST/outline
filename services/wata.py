@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from app_server.dtos import InitWataPaymentDTO
 from app_server.utils import apply_task_id_to_redirect_url
 from services import wata_config
@@ -40,6 +42,15 @@ class WataService(BaseHTTPService):
             "orderId": task_id,
             "successRedirectUrl": success_redirect_url,
             "failRedirectUrl": return_url or wata_config.USE_FAIL_PAYMENT_REDIRECT_URL,
+            "expirationDateTime": self.make_deadline_time(datetime.now(), days=1),
         }
         response = await self.make_request(url_name="links", method="post", json=payload)
         return InitWataPaymentDTO(**response)
+
+    def make_deadline_time(self, since: datetime, *, days: float = 0, minutes: float = 0, hours: float = 0) -> str:
+        deadline = (
+            (since + timedelta(days=days, minutes=minutes, hours=hours))
+            .astimezone(timezone.utc)
+            .strftime("%Y-%m-%dT%H:%M:%S.%s%z")
+        )
+        return f"{deadline[:23]}Z"
