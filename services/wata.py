@@ -1,5 +1,8 @@
+from datetime import datetime, timedelta, timezone
+
 from app_server.dtos import InitWataPaymentDTO
 from app_server.utils import apply_task_id_to_redirect_url
+from root.config import settings
 from services import wata_config
 from services.http_service import BaseHTTPService
 
@@ -17,6 +20,7 @@ class WataService(BaseHTTPService):
     def get_headers(self, url_name: str, method: str) -> dict:
         headers = super().get_headers(url_name, method)
         headers["Authorization"] = f"Bearer {self.token}"
+        headers["Referer"] = settings.SITE_URL
         return headers
 
     async def init_payment(
@@ -27,6 +31,7 @@ class WataService(BaseHTTPService):
         return_url: str = "",
         **kwargs,
     ):
+        kwargs.setdefault("deadline", settings.DEFAULT_PAYMENT_DEADLINE)
         success_redirect_url = (
             return_url
             if return_url
@@ -40,6 +45,15 @@ class WataService(BaseHTTPService):
             "orderId": task_id,
             "successRedirectUrl": success_redirect_url,
             "failRedirectUrl": return_url or wata_config.USE_FAIL_PAYMENT_REDIRECT_URL,
+            "expirationDateTime": self.make_deadline_time(datetime.now(), days=kwargs["deadline"]),
         }
         response = await self.make_request(url_name="links", method="post", json=payload)
         return InitWataPaymentDTO(**response)
+
+    def make_deadline_time(self, since: datetime, *, days: float = 0, minutes: float = 0, hours: float = 0) -> str:
+        deadline = (
+            (since + timedelta(days=days, minutes=minutes, hours=hours))
+            .astimezone(timezone.utc)
+            .strftime("%Y-%m-%dT%H:%M:%S.%s%z")
+        )
+        return f"{deadline[:23]}Z"

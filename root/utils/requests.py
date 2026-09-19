@@ -40,8 +40,9 @@ class LoggingClientSession(aiohttp.ClientSession):
         logger.debug("Starting request <%s %r>", method, self._build_url(url))
         json = kwargs.get("json")
         data = kwargs.get("data")
+        headers = kwargs.get("headers")
         logger.debug(
-            f"Request <{method} {url}> started: {json=}, {data=}",
+            f"Request <{method} {url}> started: {headers=}, {json=}, {data=}",
         )
         response = await super()._request(method, url, **kwargs)
         data = await response_to_str(response)
