@@ -21,6 +21,7 @@ class WataService(BaseHTTPService):
         headers = super().get_headers(url_name, method)
         headers["Authorization"] = f"Bearer {self.token}"
         headers["Referer"] = settings.SITE_URL
+        headers["Referer-Policy"] = "No-strict-origin"
         return headers
 
     async def init_payment(
