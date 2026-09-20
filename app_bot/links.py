@@ -51,7 +51,8 @@ def build(action: str, ttl_days: int = LINK_TTL_DAYS, **params: str | int) -> st
         query_parts.append(params_str)
     query_parts.extend([f"e={expires_ts}", f"s={sig}"])
 
-    return f"{settings.SITE_URL}{PATH}?{'&'.join(query_parts)}"
+    base_url = settings.BOT_DISPATCHER_URL or settings.SITE_URL
+    return f"{base_url}{PATH}?{'&'.join(query_parts)}"
 
 
 def verify(query: Mapping[str, str]) -> dict[str, str] | None:
