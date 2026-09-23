@@ -14,6 +14,7 @@ export const DEFAULT_SITE_CONFIG = {
     theme: 'classic',
     copyrightSuffix: '',
     tariffsHeader: 'Выберите тариф',
+    showFooter: true,
   },
   publicOffer: {
     representativeBasis: 'Устава',
@@ -31,7 +32,7 @@ export const DEFAULT_SITE_CONFIG = {
   Partial<SiteConfig>,
   'supportItems' | 'subscriptionAddUrl' | 'tariffNote'
 > & {
-  site: Pick<SiteConfigSite, 'theme' | 'copyrightSuffix' | 'tariffsHeader'>;
+  site: Pick<SiteConfigSite, 'theme' | 'copyrightSuffix' | 'tariffsHeader' | 'showFooter'>;
   publicOffer: Pick<SiteConfigPublicOffer, 'representativeBasis'>;
   supportItems: readonly SiteConfigSupportItem[];
   subscriptionButton: SiteConfigSubscriptionButton;
@@ -104,6 +105,7 @@ export function mergeSiteConfig(raw: SiteConfigInput): SiteConfig {
     theme: resolveSiteTheme(raw.site.theme),
     copyrightSuffix: raw.site.copyrightSuffix ?? DEFAULT_SITE_CONFIG.site.copyrightSuffix,
     tariffsHeader: raw.site.tariffsHeader ?? DEFAULT_SITE_CONFIG.site.tariffsHeader,
+    showFooter: raw.site.showFooter ?? DEFAULT_SITE_CONFIG.site.showFooter,
   };
 
   const publicOffer = {

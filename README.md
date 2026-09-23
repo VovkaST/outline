@@ -1,11 +1,14 @@
 # Общие требования
+
 Работать лучше через SSH. Для этого нужно создать ключ.
 Процесс создания описан в [документации GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent). Кратко:
 
 1. В терминале выполнить, заменив указанный в примере адрес электронной почты:
+
 ```commandline
 ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
+
 В результате будет создан новый ключ SSH, где в качестве метки будет использоваться указанный адрес электронной почты.
 
 Когда появится запрос "Ввести файл, в котором сохранить ключ", можно нажать клавишу ВВОД , чтобы принять расположение файла по умолчанию. Обратите внимание, что если вы создали ключи SSH ранее, ssh-keygen может попросить переписать другой ключ, в этом случае рекомендуется создать пользовательский ключ SSH. Для этого введите расположение файла по умолчанию и замените id_ALGORITHM на имя пользовательского ключа.
@@ -14,13 +17,17 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 Enter a file in which to save the key (/home/YOU/.ssh/id_ALGORITHM):[Press enter]
 ```
 
-2. В командной строке введите безопасную парольную фразу (можно оставить пустой):
+1. В командной строке введите безопасную парольную фразу (можно оставить пустой):
+
 ```commandline
 Enter passphrase (empty for no passphrase): [Type a passphrase]
 Enter same passphrase again: [Type passphrase again]
 ```
 
+
+
 ### Добавление ключа SSH в ssh-agent
+
 Перед добавлением нового ключа SSH в ssh-agent для управления ключами необходимо проверить наличие существующих ключей SSH и создать новый ключ SSH.
 
 1. Запустите агент SSH в фоновом режиме.
@@ -28,9 +35,10 @@ Enter same passphrase again: [Type passphrase again]
 ```commandline
 eval "$(ssh-agent -s)"
 ```
+
 В зависимости от среды может потребоваться использовать другую команду. Например, вам может потребоваться доступ с правами root, для чего необходимо выполнить `sudo -s -H` перед запуском агента SSH. Может также потребоваться использовать `exec ssh-agent bash` или `exec ssh-agent zsh` для запуска агента SSH.
 
-2. Добавьте закрытый ключ SSH в ssh-agent.
+1. Добавьте закрытый ключ SSH в ssh-agent.
 
 Если вы создали ключ с другим именем или добавляете существующий ключ с другим именем, замените id_ed25519 в команде именем файла закрытого ключа.
 
@@ -38,19 +46,26 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 ```
 
-3. Добавьте открытый ключ SSH в учетную запись на GitHub. Дополнительные сведения см. в разделе [Добавление нового SSH-ключа в ваш аккаунт GitHub](https://docs.github.com/ru/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+1. Добавьте открытый ключ SSH в учетную запись на GitHub. Дополнительные сведения см. в разделе [Добавление нового SSH-ключа в ваш аккаунт GitHub](https://docs.github.com/ru/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+
+
 
 ## Клонирование проекта
+
 Клонировать репозиторий лучше в общий, доступный для всех пользователей ОС, каталог, например `/opt`, чтобы не было проблем доступа для nginx. Для этого нужно просто перейти в него:
+
 ```commandline
 cd /opt
 ```
-_**Не размещать код в домашней директории `root`!!!**_
+
+***Не размещать код в домашней директории*** `root`***!!!***
 
 Далее создаем каталог проекта 
+
 ```commandline
 mkdir projectName
 ```
+
 и клонируем в него репозиторий:
 
 ```commandline
@@ -58,11 +73,15 @@ git clone git@github.com:VovkaST/outline.git projectName
 cd projectName
 ```
 
+
+
 ## Настройка
+
 **Все команды выполняются из корневого каталога приложения.**
 Для большинства необходимы права суперпользователя (sudo).
 
 ### Docker
+
 ```commandline
 sudo apt update
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -84,28 +103,41 @@ sudo usermod -aG docker "$USER"
 docker compose version
 ```
 
+
+
 ### Nginx:
+
 Установка nginx:
+
 ```commandline
 sudo apt update && sudo apt install nginx -y
 ```
+
 Закинуть файл настроек nginx для сайта.
+
 ```commandline
 sudo cp nginx/api-server /etc/nginx/sites-available/api-server
 ```
+
 **В целевом файле необходимо изменить**:
-* `HOST_NAME_OR_IP` &ndash; ip-адрес или имя домена (при наличии, _обязательно для HTTPS_).
-* `PATH_TO_APP` &ndash; путь до рабочего каталога приложения (`/opt/projectName` - см.выше).
+
+- `HOST_NAME_OR_IP` &ndash; ip-адрес или имя домена (при наличии, *обязательно для HTTPS*).
+- `PATH_TO_APP` &ndash; путь до рабочего каталога приложения (`/opt/projectName` - см.выше).
 
 И создать символическую ссылку на него в каталоге доступных сайтов:
+
 ```commandline
 sudo ln -s /etc/nginx/sites-available/api-server /etc/nginx/sites-enabled/
 ```
+
 Проверить корректность настроек:
+
 ```commandline
 sudo nginx -t
 ```
+
 Если все ок, перезапускаем службу Nginx:
+
 ```commandline
 sudo systemctl restart nginx.service
 ```
@@ -125,54 +157,74 @@ location /installation/ {
 Сборка: `docker compose up assets-installation` (см. раздел «Запуск приложения»).
 
 ### Certbot (только при наличии доменного имени)
+
 Установить зависимости:
+
 ```commandline
 apt update && apt install python3 python3-dev python3-venv libaugeas-dev gcc -y
 ```
+
 Создадим виртуальное окружение:
+
 ```commandline
 python3 -m venv /opt/certbot/
 /opt/certbot/bin/pip install --upgrade pip
 ```
+
 И установим Certbot:
+
 ```commandline
 /opt/certbot/bin/pip install certbot certbot-nginx
 ```
+
 Создадим символическую ссылку для корректного запуска:
+
 ```commandline
 ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 ```
+
 Запросим сертификат:
+
 ```commandline
 certbot --nginx
 ```
+
 Настроим автоматическое обновление сертификата:
+
 ```commandline
 echo "0 0,12 * * * root /opt/certbot/bin/python -c 'import random; import time; time.sleep(random.random() * 3600)' && sudo certbot renew -q" | sudo tee -a /etc/crontab > /dev/null
 ```
+
 Обновление до актуальной версии (опционально с течением времени):
+
 ```commandline
 /opt/certbot/bin/pip install --upgrade certbot certbot-nginx
 ```
 
+
+
 ### Несколько сайтов на одном сервере
+
 Для каждого дополнительного сайта повторить шаги из раздела «Nginx»:
 
 1. Скопировать конфиг под новое имя (например, второй сайт — `api-server-second`):
-   ```commandline
+  ```commandline
    cp nginx/api-server /etc/nginx/sites-available/api-server-second
-   ```
+  ```
 2. В новом файле заменить `HOST_NAME_OR_IP` на домен/IP второго сайта и `PATH_TO_APP` на путь к каталогу приложения этого сайта (отдельная копия приложения со своим `.env` и `app_server/assets/site-config.json`).
 3. Включить сайт и перезапустить Nginx:
-   ```commandline
+  ```commandline
    ln -s /etc/nginx/sites-available/api-server-second /etc/nginx/sites-enabled/
    nginx -t && systemctl restart nginx.service
-   ```
+  ```
 4. Для настройки HTTPS по новому домену просто запросить сертификат и выбрать нужный домен из списка:
+
 ```commandline
 certbot --nginx
 ```
-5. Для каждого приложения на одном хосте запускаются свои Docker-контейнеры. Т.к. используются одинаковые по структуре `docker-compose.yaml`, **необходимо задать уникальные имена контейнеров и порты**:
+
+1. Для каждого приложения на одном хосте запускаются свои Docker-контейнеры. Т.к. используются одинаковые по структуре `docker-compose.yaml`, **необходимо задать уникальные имена контейнеров и порты**:
+
 ```yaml
 services:
   server:
@@ -193,26 +245,28 @@ services:
 
 Для передачи настроек в API и бот создайте файл `.env` в корне проекта по образцу `.env.example`:
 
-| Переменная | Назначение |
-|------------|------------|
-| `SITE_URL` | URL сайта для генерации внутренних ссылок (например, `https://example.ru`) |
-| `REQUEST_TOKEN` | Токен для защищённых эндпоинтов (Telegram-бот, рекуррентные платежи Т-Банк); если не используется — можно не задавать |
-| `YOOKASSA_ACCOUNT_ID`, `YOOKASSA_TOKEN` | Учётные данные ЮKassa (основная платёжная интеграция по умолчанию) |
-| `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` | URL редиректа после успешной оплаты; поддерживается плейсхолдер `{task_id}` |
-| `TBANK_TERMINAL_ID`, `TBANK_TERMINAL_PASSWORD` | Учётные данные Т-Банк |
-| `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `TBANK_USE_FAIL_PAYMENT_REDIRECT_URL` | URL редиректов Т-Банк; в success-URL — плейсхолдер `{task_id}` |
-| `WATA_TOKEN` | Токен WATA |
-| `WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `WATA_USE_FAIL_PAYMENT_REDIRECT_URL` | URL редиректов WATA; в success-URL — плейсхолдер `{task_id}` |
-| `PLANFIX_ACCOUNT`, `PLANFIX_TOKEN` | Интеграция с PlanFix |
-| `DEFAULT_PAYMENT_DEADLINE` | Время жизни ссылки на оплату в минутах (по умолчанию `30`) |
-| `DEFAULT_RATE_LIMIT` | Лимит запросов к API (по умолчанию `50/minute`) |
-| `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_BUCKET_NAME`, `S3_ENDPOINT_URL` | Хранилище S3 (Yandex Object Storage и аналоги) |
-| `BOT_TOKEN` | Токен Telegram-бота (для контейнера `bot`) |
-| `BOT_PROXY_URL` | Прокси для Telegram-бота (`socks5://…` или `http://…`); если не нужен — не задавать |
-| `BOT_USERNAME` | Username бота без `@` — для кнопки «Вернуться в бота» на страницах редиректа оплаты |
-| `BOT_LINK_SECRET` | Секрет HMAC-подписи ссылок кнопок оплаты (`/tg/go`). **Обязателен**: без него кнопки тарифов в боте не строятся |
-| `BOT_DISPATCHER_URL` | URL стороннего сервиса-распределителя запросов; если задан, ссылки кнопок оплаты в боте ведут на него вместо `SITE_URL`. Требует совпадения `BOT_LINK_SECRET` на всех хостах, участвующих в цепочке |
-| `BOT_TARIFFS_CONFIG` | Путь к JSON со списком тарифов (по умолчанию `app_bot/tariffs.json`) |
+
+| Переменная                                                                      | Назначение                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SITE_URL`                                                                      | URL сайта для генерации внутренних ссылок (например, `https://example.ru`)                                                                                                                          |
+| `REQUEST_TOKEN`                                                                 | Токен для защищённых эндпоинтов (Telegram-бот, рекуррентные платежи Т-Банк); если не используется — можно не задавать                                                                               |
+| `YOOKASSA_ACCOUNT_ID`, `YOOKASSA_TOKEN`                                         | Учётные данные ЮKassa (основная платёжная интеграция по умолчанию)                                                                                                                                  |
+| `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL`                                     | URL редиректа после успешной оплаты; поддерживается плейсхолдер `{task_id}`                                                                                                                         |
+| `TBANK_TERMINAL_ID`, `TBANK_TERMINAL_PASSWORD`                                  | Учётные данные Т-Банк                                                                                                                                                                               |
+| `TBANK_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `TBANK_USE_FAIL_PAYMENT_REDIRECT_URL` | URL редиректов Т-Банк; в success-URL — плейсхолдер `{task_id}`                                                                                                                                      |
+| `WATA_TOKEN`                                                                    | Токен WATA                                                                                                                                                                                          |
+| `WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `WATA_USE_FAIL_PAYMENT_REDIRECT_URL`   | URL редиректов WATA; в success-URL — плейсхолдер `{task_id}`                                                                                                                                        |
+| `PLANFIX_ACCOUNT`, `PLANFIX_TOKEN`                                              | Интеграция с PlanFix                                                                                                                                                                                |
+| `DEFAULT_PAYMENT_DEADLINE`                                                      | Время жизни ссылки на оплату в минутах (по умолчанию `30`)                                                                                                                                          |
+| `DEFAULT_RATE_LIMIT`                                                            | Лимит запросов к API (по умолчанию `50/minute`)                                                                                                                                                     |
+| `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_BUCKET_NAME`, `S3_ENDPOINT_URL`           | Хранилище S3 (Yandex Object Storage и аналоги)                                                                                                                                                      |
+| `BOT_TOKEN`                                                                     | Токен Telegram-бота (для контейнера `bot`)                                                                                                                                                          |
+| `BOT_PROXY_URL`                                                                 | Прокси для Telegram-бота (`socks5://…` или `http://…`); если не нужен — не задавать                                                                                                                 |
+| `BOT_USERNAME`                                                                  | Username бота без `@` — для кнопки «Вернуться в бота» на страницах редиректа оплаты                                                                                                                 |
+| `BOT_LINK_SECRET`                                                               | Секрет HMAC-подписи ссылок кнопок оплаты (`/tg/go`). **Обязателен**: без него кнопки тарифов в боте не строятся                                                                                     |
+| `BOT_DISPATCHER_URL`                                                            | URL стороннего сервиса-распределителя запросов; если задан, ссылки кнопок оплаты в боте ведут на него вместо `SITE_URL`. Требует совпадения `BOT_LINK_SECRET` на всех хостах, участвующих в цепочке |
+| `BOT_TARIFFS_CONFIG`                                                            | Путь к JSON со списком тарифов (по умолчанию `app_bot/tariffs.json`)                                                                                                                                |
+
 
 Рекомендуемый URL успешной оплаты для всех платёжных систем: `https://example.ru/task/{task_id}/success/`.
 
@@ -225,10 +279,12 @@ services:
 
 Допустимые значения и что нужно предварительно настроить для каждого:
 
-| Значение | Что настроить |
-|----------|---------------|
-| `yookassa` (по умолчанию) | `YOOKASSA_ACCOUNT_ID`, `YOOKASSA_TOKEN`, `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` — см. [«Переменные окружения (backend)»](#переменные-окружения-backend) |
-| `wata` | `WATA_TOKEN`, `WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `WATA_USE_FAIL_PAYMENT_REDIRECT_URL` — см. [«Переменные окружения (backend)»](#переменные-окружения-backend) |
+
+| Значение                  | Что настроить                                                                                                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `yookassa` (по умолчанию) | `YOOKASSA_ACCOUNT_ID`, `YOOKASSA_TOKEN`, `YOOKASSA_USE_SUCCESS_PAYMENT_REDIRECT_URL` — см. [«Переменные окружения (backend)»](#переменные-окружения-backend)        |
+| `wata`                    | `WATA_TOKEN`, `WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL`, `WATA_USE_FAIL_PAYMENT_REDIRECT_URL` — см. [«Переменные окружения (backend)»](#переменные-окружения-backend) |
+
 
 Если для выбранного значения не заданы обязательные переменные — сервис не будет создан (см. `services/__init__.py`), и запросы, зависящие от `DEFAULT_PAYMENT_AGENT` (кнопки бота, Happ, `/api/v2/payment/init/` без явного `payment_agent`), будут завершаться ошибкой «платёжная система не сконфигурирована» / «Неизвестная платежная система».
 
@@ -246,24 +302,26 @@ services:
 Настройка:
 
 - **Список тарифов** — файл `app_bot/tariffs.json` (путь переопределяется `BOT_TARIFFS_CONFIG`).
-  Каждый тариф: `{ "id": string, "title": string, "price": number }`, где `id` — стабильный ключ
-  (уходит в подписанную ссылку), `title` — **готовый** текст кнопки (эмодзи и «₽/мес» пишутся
-  прямо в строке, в коде ничего не вычисляется), `price` — цена в рублях (уходит в ЮKassa).
-  Файл читается лениво один раз при первом показе экрана выбора тарифа и кэшируется в памяти
-  процесса. Файл вшивается в образ на этапе `docker build` (`COPY ./ /app`) и не монтируется
-  volume'ом — **после правки `tariffs.json` нужна пересборка образа и перезапуск контейнеров
-  `bot` и `server`** (либо переопределите `BOT_TARIFFS_CONFIG` на примонтированный путь).
-- **`BOT_LINK_SECRET`** — общий секрет для бота и сервера. Без него `build()` возвращает пустую
-  строку и кнопки тарифов не отображаются.
-- **`BOT_DISPATCHER_URL`** — опциональный URL стороннего сервиса-распределителя запросов. Если
-  задан, ссылки строятся на его основе вместо `SITE_URL`; сама подпись при этом не зависит от
-  хоста, поэтому распределитель (или сервер, куда он проксирует/редиректит запрос) должен
-  проверять подпись тем же `BOT_LINK_SECRET`, что и бот, — секрет обязан совпадать на всех
-  участвующих хостах.
+Каждый тариф: `{ "id": string, "title": string, "price": number }`, где `id` — стабильный ключ
+(уходит в подписанную ссылку), `title` — **готовый** текст кнопки (эмодзи и «₽/мес» пишутся
+прямо в строке, в коде ничего не вычисляется), `price` — цена в рублях (уходит в ЮKassa).
+Файл читается лениво один раз при первом показе экрана выбора тарифа и кэшируется в памяти
+процесса. Файл вшивается в образ на этапе `docker build` (`COPY ./ /app`) и не монтируется
+volume'ом — **после правки** `tariffs.json` **нужна пересборка образа и перезапуск контейнеров**
+`bot` **и** `server` (либо переопределите `BOT_TARIFFS_CONFIG` на примонтированный путь).
+- `BOT_LINK_SECRET` — общий секрет для бота и сервера. Без него `build()` возвращает пустую
+строку и кнопки тарифов не отображаются.
+- `BOT_DISPATCHER_URL` — опциональный URL стороннего сервиса-распределителя запросов. Если
+задан, ссылки строятся на его основе вместо `SITE_URL`; сама подпись при этом не зависит от
+хоста, поэтому распределитель (или сервер, куда он проксирует/редиректит запрос) должен
+проверять подпись тем же `BOT_LINK_SECRET`, что и бот, — секрет обязан совпадать на всех
+участвующих хостах.
 - **nginx** — путь `/tg/` должен проксироваться на `127.0.0.1:8000` (см. `nginx/api-server`),
-  иначе `try_files` отдаст SPA вместо страницы редиректа.
+иначе `try_files` отдаст SPA вместо страницы редиректа.
 - Информационный текст экрана выбора тарифа (`CHOOSE_TARIFF` в `app_bot/interaction/messages.py`)
-  с ценами — это витрина, синхронизируется с `tariffs.json` вручную.
+с ценами — это витрина, синхронизируется с `tariffs.json` вручную.
+
+
 
 ### Оплата из приложения Happ (`GET /tg/go/happy`)
 
@@ -271,7 +329,7 @@ services:
 может использовать подписанную ссылку бота. Для него — отдельный открытый (без HMAC-подписи)
 эндпоинт `{SITE_URL}/tg/go/happy?task_id=<id>`: резолвит задачу по `task_id`
 (`services.planfix.utils.get_task`, как и `GET /api/tasks/{task_guid}/`), создаёт платёж на
-**первый тариф из `app_bot/tariffs.json`** (самый короткий период — Happ не выбирает тариф и не
+**первый тариф из** `app_bot/tariffs.json` (самый короткий период — Happ не выбирает тариф и не
 передаёт сумму) через `DEFAULT_PAYMENT_AGENT` и сразу (`302`) редиректит на форму оплаты — без
 промежуточной HTML-страницы, она нужна только из-за webview-ограничений Telegram.
 
@@ -279,16 +337,19 @@ services:
 
 Создайте по образцу `app_server/assets/.env.example`. Значения **вшиваются при сборке** контейнера `assets` — после изменения нужна пересборка фронта.
 
-| Переменная | По умолчанию | Назначение |
-|------------|--------------|------------|
-| `VITE_USE_DUMMY_CONFIG` | `false` | Dummy-режим: подменная страница успешной оплаты и текст публичной оферты (см. ниже) |
-| `VITE_BASE_URL` | `http://127.0.0.1:8000` | Базовый URL API (для локальной разработки) |
-| `VITE_APP_POOLING_INTERVAL` | `1500` | Интервал опроса статуса платежа, мс |
-| `VITE_APP_LINK_ANDROID` | см. `.env.example` | Ссылка на Google Play |
-| `VITE_APP_LINK_IPHONE_US`, `VITE_APP_LINK_IPHONE_RU` | см. `.env.example` | Ссылки на App Store |
-| `VITE_APP_LINK_WINDOWS` | см. `.env.example` | Ссылка на установщик Windows |
-| `VITE_APP_LINK_MAC_US`, `VITE_APP_LINK_MAC_RU` | см. `.env.example` | Ссылки на App Store для macOS |
-| `VITE_SUBSCRIPTION_URL` | см. `.env.example` | URL страницы подписки |
+
+| Переменная                                           | По умолчанию            | Назначение                                                                          |
+| ---------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------- |
+| `VITE_USE_DUMMY_CONFIG`                              | `false`                 | Dummy-режим: подменная страница успешной оплаты и текст публичной оферты (см. ниже) |
+| `VITE_BASE_URL`                                      | `http://127.0.0.1:8000` | Базовый URL API (для локальной разработки)                                          |
+| `VITE_APP_POOLING_INTERVAL`                          | `1500`                  | Интервал опроса статуса платежа, мс                                                 |
+| `VITE_APP_LINK_ANDROID`                              | см. `.env.example`      | Ссылка на Google Play                                                               |
+| `VITE_APP_LINK_IPHONE_US`, `VITE_APP_LINK_IPHONE_RU` | см. `.env.example`      | Ссылки на App Store                                                                 |
+| `VITE_APP_LINK_WINDOWS`                              | см. `.env.example`      | Ссылка на установщик Windows                                                        |
+| `VITE_APP_LINK_MAC_US`, `VITE_APP_LINK_MAC_RU`       | см. `.env.example`      | Ссылки на App Store для macOS                                                       |
+
+
+
 
 #### Dummy-режим (white-label)
 
@@ -317,45 +378,55 @@ VITE_USE_DUMMY_CONFIG=true
 docker compose up assets
 ```
 
+
+
 ### Страницы фронтенда
 
-| Маршрут | Назначение |
-|---------|------------|
-| `/task/{task_id}/` | Выбор тарифа и оплата |
-| `/task/{task_id}/success/` | Страница успешной оплаты (VPN или dummy — по флагу `VITE_USE_DUMMY_CONFIG`) |
-| `/payment/app/tariffs/?task={id}` | Редирект на `/task/{id}/` (обратная совместимость) |
+
+| Маршрут                           | Назначение                                                                  |
+| --------------------------------- | --------------------------------------------------------------------------- |
+| `/task/{task_id}/`                | Выбор тарифа и оплата                                                       |
+| `/task/{task_id}/success/`        | Страница успешной оплаты (VPN или dummy — по флагу `VITE_USE_DUMMY_CONFIG`) |
+| `/payment/app/tariffs/?task={id}` | Редирект на `/task/{id}/` (обратная совместимость)                          |
+
+
+
 
 ### site-config.json
 
 В нем хранятся настройки владельца сайта, отображаемые на фронте. Файл не в репозитории. Создать вручную: скопировать `app_server/assets/site-config.json.example` в `site-config.json` в каталоге `app_server/assets/` и заполнить. При сборке фронта настройки **вшиваются в JavaScript-бандл**. Поэтому **после изменения на продуктовом стенде необходимо пересобрать фронт** (см. ниже).
 
-Значения по умолчанию для необязательных полей задаются в коде — [`app_server/assets/src/config/siteConfig.defaults.ts`](app_server/assets/src/config/siteConfig.defaults.ts), а не дублируются в JSON.
+Значения по умолчанию для необязательных полей задаются в коде — `[app_server/assets/src/config/siteConfig.defaults.ts](app_server/assets/src/config/siteConfig.defaults.ts)`, а не дублируются в JSON.
 
 **Обязательные поля** (должны быть в JSON):
 
-| Блок | Поля | Примечание |
-|------|------|------------|
-| `site` | `name`, `url`, `title` | Название сайта, URL и заголовок страницы |
-| `organization` | `fullName`, `inn`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты |
-| `publicOffer` | `city`, `representativeName` | Город и ФИО представителя в род. падеже |
-| `tariffs` | минимум 1 элемент | Список тарифов `{ "period": string, "price": number, "featured?": boolean }`. `period` — подпись тарифа (период подписки или, в dummy-режиме, объём: `"100 ГБ"`, `"300 ГБ"`). Первый тариф (`tariffs[0].price`) используется на подменной странице успешной оплаты при `VITE_USE_DUMMY_CONFIG=true` |
+
+| Блок           | Поля                                                                                                      | Примечание                                                                                                                                                                                                                                                                                          |
+| -------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `site`         | `name`, `url`, `title`                                                                                    | Название сайта, URL и заголовок страницы                                                                                                                                                                                                                                                            |
+| `organization` | `fullName`, `inn`, `legalAddress`, `bank`, `bankAccount`, `correspondentAccount`, `bik`, `phone`, `email` | Реквизиты ИП/ООО для футера и оферты                                                                                                                                                                                                                                                                |
+| `publicOffer`  | `city`, `representativeName`                                                                              | Город и ФИО представителя в род. падеже                                                                                                                                                                                                                                                             |
+| `tariffs`      | минимум 1 элемент                                                                                         | Список тарифов `{ "period": string, "price": number, "featured?": boolean }`. `period` — подпись тарифа (период подписки или, в dummy-режиме, объём: `"100 ГБ"`, `"300 ГБ"`). Первый тариф (`tariffs[0].price`) используется на подменной странице успешной оплаты при `VITE_USE_DUMMY_CONFIG=true` |
+
 
 **Необязательные поля** (есть значения по умолчанию в коде):
 
-| Поле | Значение по умолчанию | Примечание |
-|------|----------------------|------------|
-| `site.copyrightSuffix` | `''` | Суффикс копирайта в футере |
-| `site.tariffsHeader` | `'Выберите тариф'` | Заголовок блока выбора тарифа |
-| `site.theme` | `'classic'` | Тема оформления: `classic` или `babochki`. Неизвестное значение заменяется на `classic` |
-| `publicOffer.representativeBasis` | `'Устава'` | Основание полномочий представителя |
-| `organization.ogrn` | — | ОГРН (не задаётся по умолчанию) |
-| `supportItems` | `[]` | Ссылки поддержки (кнопки в блоке «Напишите нам»), массив `{ "url", "text" }` |
-| `subscriptionAddUrl` | `''` | Legacy-поле: URL для кнопки пробной подписки. Предпочтительно задавать через `subscriptionButton.url` — при наличии обоих приоритет у `subscriptionButton.url`. Логика показа кнопки: если URL задан в конфиге — кнопка на любой теме с этим URL; иначе берётся `subscription_add_url` из API и кнопка показывается только для WhatsApp |
-| `subscriptionButton` | см. ниже | URL и тексты кнопки пробной подписки на странице тарифов |
-| `tariffNote` | `'<strong>1 ключ</strong> можно использовать <strong>только на одном устройстве</strong>.'` | Текст инфо-карточки под списком тарифов. Выводится **как есть** через `v-html` — можно использовать HTML-теги (`<strong>`, `<a>` и т.п.), они не экранируются |
-| `announcement` | не задан | Настройки баннера на странице тарифов |
+
+| Поле                              | Значение по умолчанию                                                                       | Примечание                                                                                                                                                                                                                                                                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `site.tariffsHeader`              | `'Выберите тариф'`                                                                          | Заголовок блока выбора тарифа                                                                                                                                                                                                                                                                                                           |
+| `site.showFooter`                 | `true`                                                                                      | Показывать футер со ссылками на оферту, пользовательское соглашение и политику конфиденциальности на странице выбора тарифа|
+| `site.theme`                      | `'classic'`                                                                                 | Тема оформления: `classic` или `babochki`. Неизвестное значение заменяется на `classic`                                                                                                                                                                                                                                                 |
+| `publicOffer.representativeBasis` | `'Устава'`                                                                                  | Основание полномочий представителя                                                                                                                                                                                                                                                                                                      |
+| `organization.ogrn`               | —                                                                                           | ОГРН (не задаётся по умолчанию)                                                                                                                                                                                                                                                                                                         |
+| `subscriptionAddUrl`              | `''`                                                                                        | Legacy-поле: URL для кнопки пробной подписки. Предпочтительно задавать через `subscriptionButton.url` — при наличии обоих приоритет у `subscriptionButton.url`. Логика показа кнопки: если URL задан в конфиге — кнопка на любой теме с этим URL; иначе берётся `subscription_add_url` из API и кнопка показывается только для WhatsApp |
+| `subscriptionButton`              | см. ниже                                                                                    | URL и тексты кнопки пробной подписки на странице тарифов                                                                                                                                                                                                                                                                                |
+| `tariffNote`                      | `'<strong>1 ключ</strong> можно использовать <strong>только на одном устройстве</strong>.'` | Текст инфо-карточки под списком тарифов. Выводится **как есть** через `v-html` — можно использовать HTML-теги (`<strong>`, `<a>` и т.п.), они не экранируются                                                                                                                                                                           |
+| `announcement`                    | не задан                                                                                    | Настройки баннера на странице тарифов                                                                                                                                                                                                                                                                                                   |
+
 
 Настройки `subscriptionButton`:
+
 - `url` — URL кнопки (поддерживает подстановку `{task_id}`). Если не задан, используется legacy-поле `subscriptionAddUrl`.
 - `title` — заголовок кнопки. По умолчанию `'Получить пробную подписку'`. Выводится через `v-html` — HTML-теги не экранируются.
 - `hint` — подсказка под заголовком. По умолчанию `'если это не ваш номер'`. Выводится через `v-html`. Если задать пустую строку (`""`) — подсказка скрывается.
@@ -363,12 +434,14 @@ docker compose up assets
 Общее оформление кнопки (иконка, вёрстка) не настраивается; иконка выбирается по `site.theme`.
 
 Настройки `announcement`:
+
 - `title` — заголовок баннера.
 - `paragraphs` — массив строк с основным текстом баннера.
 - `cta` — выделенная строка призыва к действию (опционально).
 - `deadline` — ISO дата-время, до которого показывается таймер и сам баннер (опционально).
 
 Логика отображения баннера:
+
 - Если `announcement` отсутствует — баннер не отображается.
 - Если `deadline` не задан — баннер отображается всегда, таймер не показывается.
 - Если `deadline` задан и текущее время меньше него — показываются баннер и таймер.
@@ -377,12 +450,15 @@ docker compose up assets
 
 
 ### Запуск приложения
+
 Перед первым запуском необходимо дать права на исполнение файлу скрипта:
+
 ```commandline
 chmod +x run_server.sh
 ```
 
 Затем запустить его:
+
 ```commandline
 ./run_server.sh
 ```
@@ -395,24 +471,33 @@ chmod +x run_server.sh
 docker compose up assets-installation
 ```
 
+
+
 ### Перезапуск и пересборка после изменений
 
-| Что изменилось | Команда |
-|----------------|---------|
-| Корневой `.env` (backend) | `docker compose up -d server` и/или `docker compose up -d bot` |
-| `app_server/assets/.env` или `site-config.json` | `docker compose up assets` |
-| Приложение установки | `docker compose up assets-installation` |
+
+| Что изменилось                                  | Команда                                                        |
+| ----------------------------------------------- | -------------------------------------------------------------- |
+| Корневой `.env` (backend)                       | `docker compose up -d server` и/или `docker compose up -d bot` |
+| `app_server/assets/.env` или `site-config.json` | `docker compose up assets`                                     |
+| Приложение установки                            | `docker compose up assets-installation`                        |
+
 
 Для one-shot сборки фронта (`assets`, `assets-installation`) предпочтительно `docker compose up` **без** `-d` — контейнер завершится после сборки.
 
-## _Только для локальной разработки. Для доступа на продуктовом сервере необходима соответствующая настройка Nginx._
-По умолчанию приложение будет доступно в браузере по адресу: http://127.0.0.1:8000/.
+## *Только для локальной разработки. Для доступа на продуктовом сервере необходима соответствующая настройка Nginx.*
+
+По умолчанию приложение будет доступно в браузере по адресу: [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
 API-документация:
-* Swagger: http://127.0.0.1:8000/docs/
-* Redoc: http://127.0.0.1:8000/redoc/
+
+- Swagger: [http://127.0.0.1:8000/docs/](http://127.0.0.1:8000/docs/)
+- Redoc: [http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/)
+
 
 
 ## Проверка состояния сервисов
+
+
 
 ### Healthcheck API
 
@@ -422,29 +507,38 @@ API-документация:
 curl http://127.0.0.1:8000/api/health/
 ```
 
+
+
 ### Состояние контейнеров
+
 ```commandline
 docker ps
 CONTAINER ID   IMAGE                            COMMAND                  CREATED         STATUS         PORTS                      NAMES
 fdbda06e0bbb   outline-app-python-3.10:latest   "python -m server --…"   5 minutes ago   Up 5 minutes   127.0.0.1:8000->8000/tcp   outline-api-server
 0820cabc2512   outline-app-python-3.10:latest   "python -m bot run"      5 minutes ago   Up 5 minutes                              outline-bot
 ```
+
 В зависимости от целевого решения, должны быть запущены контейнеры `outline-bot` (Telegram-бот) и/или `outline-api-server` (API платёжного сервиса). Контейнеры `outline-assets` и `outline-assets-installation` — одноразовые: запускаются для сборки фронта и завершаются. Имена контейнеров могут отличаться при настройке нескольких сайтов (см. раздел **Несколько сайтов на одном сервере**).
 Для вывода всех, даже остановленных контейнеров, добавить ключ `-a`.
 
 ### Просмотр логов контейнера
+
 Вывод всех логов контейнера `outline-api-server` (имя указано в последнем столбце вывода команды `docker ps` выше)
+
 ```commandline
 docker logs outline-api-server
 ```
 
 Вывод последних 100 строк логов контейнера `outline-api-server`:
+
 ```commandline
 docker logs outline-api-server --tail 100
 ```
 
 Вывод последних 100 строк логов контейнера `outline-api-server` и дальнейшее "живое" их отслеживание:
+
 ```commandline
 docker logs outline-api-server --tail 100 --follow
 ```
+
 Остановка отслеживания: `Ctrl+C`.

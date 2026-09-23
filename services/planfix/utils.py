@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from services import planfix_api
 from services.planfix.api.rest.responses import GetTaskResponse, TaskFilterResponse, TaskResponse
-from services.planfix.exceptions import TaskNotFoundError
+from services.planfix.exceptions import PlanfixApiError, TaskNotFoundError
 from services.planfix.filters import (
     BASE_TELEGRAM_OBJECT_ID,
     LEAD_SOURCE_ID_TELEGRAM,
@@ -48,6 +48,17 @@ def get_key_link(task: TaskResponse) -> str | None:
     return task.vpn_key_link_2.stringValue if task.vpn_key_link_2 else None
 
 
+def check_task_response(response: dict) -> None:
+    """Проверить ответ Планфикса на ошибку: `{"result": "fail", "code": ..., "error": "..."}`."""
+    if response.get("status") == "404":
+        raise TaskNotFoundError()
+    if response.get("result") == "fail":
+        error = response.get("error") or ""
+        if "not found" in error.lower():
+            raise TaskNotFoundError(error)
+        raise PlanfixApiError(error)
+
+
 async def get_task(
     task_guid: str | None = None, request_key: str | None = None, telegram_id: int | None = None
 ) -> TaskResponse:
@@ -66,6 +77,7 @@ async def get_task(
             args.append(LeadSourceF(value=LEAD_SOURCE_ID_TELEGRAM))
 
         response = await planfix_api.task.get_list(*args)
+        check_task_response(response)
         response = TaskFilterResponse(**response)
 
         if not response.tasks:
@@ -74,7 +86,6 @@ async def get_task(
         return response.tasks[0]
 
     response = await planfix_api.task.get(int(task_guid))
-    if "status" in response and response["status"] == "404":
-        raise TaskNotFoundError()
+    check_task_response(response)
     task_response = GetTaskResponse(**response)
     return task_response.task
