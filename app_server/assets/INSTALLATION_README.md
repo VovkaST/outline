@@ -72,7 +72,6 @@ cp .env.example .env
 - `VITE_APP_LINK_WINDOWS` - ссылка на скачивание для Windows
 - `VITE_APP_LINK_MAC_US` - ссылка на App Store (US) для macOS
 - `VITE_APP_LINK_MAC_RU` - ссылка на App Store (RU) для macOS
-- `VITE_SUBSCRIPTION_URL` - ссылка на страницу подписки
 
 Переменная `VITE_USE_DUMMY_CONFIG` относится только к **основному** приложению (страница `/task/{id}/success/` и текст публичной оферты) и на приложение установки не влияет.
 

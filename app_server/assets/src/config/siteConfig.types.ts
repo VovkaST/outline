@@ -7,6 +7,7 @@ export interface SiteConfigSite {
   url: string;
   title: string;
   tariffsHeader: string;
+  showFooter: boolean;
 }
 
 export interface SiteConfigOrganization {
@@ -81,6 +82,7 @@ export interface SiteConfigSiteInput {
   title: string;
   copyrightSuffix?: string;
   tariffsHeader?: string;
+  showFooter?: boolean;
 }
 
 export interface SiteConfigOrganizationInput {

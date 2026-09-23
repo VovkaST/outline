@@ -176,7 +176,7 @@ onMounted(() => {
       />
     </Transition>
 
-    <Footer />
+    <Footer v-if="config.site.showFooter" />
   </div>
 </template>
 
