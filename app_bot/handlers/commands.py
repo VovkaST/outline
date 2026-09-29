@@ -31,17 +31,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     is_key_generated = False
 
     try:
-        task = get_task_from_context(context) if not is_command else None
+        task = await get_task_from_context(update) if not is_command else None
         if not task or not get_key_link(task):
             task = await get_task(telegram_id=telegram_id)
-            store_task_to_context(context, task)
+            await store_task_to_context(update, task)
         is_key_generated = bool(get_key_link(task))
     except TaskNotFoundError:
         task = None
 
     is_first_visit = not task
 
-    clear_or_init_history(context)
+    await clear_or_init_history(update)
     utm = context.args[0] if context.args else ""
 
     if is_command and not is_first_visit:

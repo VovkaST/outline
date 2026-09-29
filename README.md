@@ -266,9 +266,29 @@ services:
 | `BOT_LINK_SECRET`                                                               | Секрет HMAC-подписи ссылок кнопок оплаты (`/tg/go`). **Обязателен**: без него кнопки тарифов в боте не строятся                                                                                     |
 | `BOT_DISPATCHER_URL`                                                            | URL стороннего сервиса-распределителя запросов; если задан, ссылки кнопок оплаты в боте ведут на него вместо `SITE_URL`. Требует совпадения `BOT_LINK_SECRET` на всех хостах, участвующих в цепочке |
 | `BOT_TARIFFS_CONFIG`                                                            | Путь к JSON со списком тарифов (по умолчанию `app_bot/tariffs.json`)                                                                                                                                |
+| `BOT_UPDATE_MODE`                                                               | Способ получения обновлений ботом: `polling` (по умолчанию) или `webhook`. Переопределяется `python -m bot run --mode`                                                                                 |
+| `BOT_WEBHOOK_URL`                                                               | Публичный URL (без пути), на который Telegram шлёт апдейты. **Обязателен** в режиме `webhook`                                                                                                          |
+| `BOT_WEBHOOK_PATH`                                                              | Путь вебхука (по умолчанию `bot/webhook`); итоговый адрес — `BOT_WEBHOOK_URL/BOT_WEBHOOK_PATH`                                                                                                         |
+| `BOT_WEBHOOK_LISTEN`, `BOT_WEBHOOK_PORT`                                        | Адрес и порт встроенного сервера вебхука (по умолчанию `0.0.0.0:8443`)                                                                                                                                 |
+| `BOT_WEBHOOK_SECRET`                                                            | Секрет, который Telegram передаёт в заголовке `X-Telegram-Bot-Api-Secret-Token`; запросы без него отклоняются                                                                                          |
+| `REDIS_URL`                                                                     | Redis для состояния бота (`redis://[:password@]host:6379/0`). Если не задан — состояние в памяти процесса (одна реплика, теряется при перезапуске)                                                     |
+| `BOT_STATE_KEY_PREFIX`, `BOT_STATE_TTL`                                         | Префикс ключей бота в Redis (по умолчанию `bot`, разделяет стенды в общем Redis) и время жизни состояния в секундах (по умолчанию `86400`)                                                             |
 
 
 Рекомендуемый URL успешной оплаты для всех платёжных систем: `https://example.ru/task/{task_id}/success/`.
+
+### Режим вебхука и Redis (K8s, несколько реплик)
+
+По умолчанию бот получает обновления long polling'ом и хранит состояние пользователя (задачу Planfix и историю
+навигации по меню) в памяти процесса — так он работает в docker-compose. Для запуска нескольких реплик (K8s):
+
+- `BOT_UPDATE_MODE=webhook` (или `python -m bot run --mode webhook`) — бот поднимает встроенный HTTP-сервер на
+  `BOT_WEBHOOK_LISTEN:BOT_WEBHOOK_PORT` и при старте регистрирует вебхук `BOT_WEBHOOK_URL/BOT_WEBHOOK_PATH`.
+  Снаружи нужен Service + Ingress с TLS на этот порт и путь. Каждая реплика вызывает `setWebhook` с одним и тем же
+  адресом — это безопасно; при остановке пода вебхук не удаляется. Polling с несколькими репликами невозможен
+  (Telegram отвечает `Conflict`).
+- `REDIS_URL` — **обязателен** при нескольких репликах, иначе история «Назад» и кэш задачи будут у каждого пода свои.
+  Ключи: `<BOT_STATE_KEY_PREFIX>:user:<telegram_id>:task|history`, с TTL `BOT_STATE_TTL`.
 
 ### Смена платёжного оператора по умолчанию (`DEFAULT_PAYMENT_AGENT`)
 

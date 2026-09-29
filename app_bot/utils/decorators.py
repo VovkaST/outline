@@ -1,9 +1,9 @@
 from collections.abc import Callable
 from functools import wraps
 
-from telegram import User
+from telegram import Update, User
 
-from app_bot.const import CONTEXT_TASK_KEY
+from app_bot.state import get_user_state
 from app_bot.utils.dialogs import clear_username, extract_update_and_context
 from services import planfix_webchat
 from services.planfix.api.rest.responses import TaskResponse
@@ -30,30 +30,25 @@ def planfix_log_querydata(func: Callable):
     return decorator
 
 
-def store_task_to_context(context, task) -> None:
-    context.user_data[CONTEXT_TASK_KEY] = task
+async def store_task_to_context(update: Update, task: TaskResponse | None) -> None:
+    await get_user_state().set_task(update.effective_user.id, task)  # type: ignore [union-attr]
 
 
-def is_task_in_context(context) -> bool:
-    return bool(CONTEXT_TASK_KEY in context.user_data and context.user_data[CONTEXT_TASK_KEY])
-
-
-def get_task_from_context(context) -> TaskResponse:
-    return context.user_data[CONTEXT_TASK_KEY]
+async def get_task_from_context(update: Update) -> TaskResponse | None:
+    return await get_user_state().get_task(update.effective_user.id)  # type: ignore [union-attr]
 
 
 def planfix_task_context(func: Callable):
     @wraps(func)
     async def decorator(*args, **kwargs):
         update, context = extract_update_and_context(*args, **kwargs)
-        if context and not is_task_in_context(context):
+        if update and context and not await get_task_from_context(update):
             user: User = update.effective_user  # type: ignore [attr-not-none]
-            telegram_id = user.id
             try:
-                task = await get_task(telegram_id=telegram_id)
+                task = await get_task(telegram_id=user.id)
             except TaskNotFoundError:
                 task = None
-            store_task_to_context(context, task)
+            await store_task_to_context(update, task)
         return await func(*args, **kwargs)
 
     return decorator
