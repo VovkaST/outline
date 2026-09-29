@@ -1,6 +1,10 @@
+import asyncio
 import logging
+from collections.abc import Awaitable, Callable
+from typing import TypeVar
 
 from telegram import BotCommand
+from telegram.error import NetworkError
 from telegram.ext import (
     ApplicationBuilder,
     CallbackQueryHandler,
@@ -22,6 +26,10 @@ from services.http_service import BaseHTTPService
 
 logger = logging.getLogger("bot")
 
+T = TypeVar("T")
+
+STARTUP_ATTEMPTS = 5
+
 
 async def add_commands(app: Application):
     commands = []
@@ -30,9 +38,24 @@ async def add_commands(app: Application):
     await app.bot.set_my_commands(commands)
 
 
+async def with_retries(action: Callable[[], Awaitable[T]], description: str) -> T:
+    for attempt in range(1, STARTUP_ATTEMPTS + 1):
+        try:
+            return await action()
+        except NetworkError as error:
+            if attempt == STARTUP_ATTEMPTS:
+                raise
+            logger.warning("⏳ %s: %s, попытка %s из %s", description, error, attempt, STARTUP_ATTEMPTS)
+            await asyncio.sleep(attempt)
+    raise AssertionError("unreachable")
+
+
 async def on_startup(app: Application) -> None:
+    # PTB помечает бота инициализированным до вызова get_me и при таймауте повторно его не вызывает,
+    # после чего start() падает на `bot.id`. Явный get_me гарантирует, что данные бота загружены.
+    await with_retries(app.bot.get_me, "Получение данных бота")
     logger.info("🗄 Хранилище состояния бота: %s", get_user_state().name)
-    await add_commands(app)
+    await with_retries(lambda: add_commands(app), "Регистрация команд бота")
 
 
 async def on_shutdown(_app: Application) -> None:
@@ -48,6 +71,9 @@ def build_app(token: str, proxy: str | None = None):
         .read_timeout(30)
         .write_timeout(30)
         .get_updates_read_timeout(42)
+        # Подключение через прокси (TLS-рукопожатие) может занимать больше стандартных 5 секунд
+        .connect_timeout(15)
+        .get_updates_connect_timeout(15)
         .post_init(on_startup)
         .post_shutdown(on_shutdown)
     )
