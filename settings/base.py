@@ -129,7 +129,7 @@ LOGGING = {
     },
     "loggers": {
         "HTTPClient": {
-            "level": "DEBUG",
+            "level": "INFO",
             "handlers": ["console", "file"],
         },
         "middleware.requests": {
