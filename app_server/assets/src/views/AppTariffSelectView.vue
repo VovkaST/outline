@@ -50,7 +50,6 @@ const addSubscriptionUrl = computed<string>(
 );
 
 const hasAddSubscriptionUrl = computed<boolean>(() => Boolean(addSubscriptionUrl.value));
-const hasConfigSubscriptionUrl = computed(() => Boolean(config.value.subscriptionAddUrl));
 const isWhatsappSubscriptionUrl = computed(() => {
   const url = addSubscriptionUrlFromTask.value.toLowerCase();
   return url.includes('whatsapp') || url.includes('wa.me');
@@ -166,11 +165,7 @@ onMounted(() => {
 
     <Transition v-if="!AppConfig.useDummyConfig" name="content-fade">
       <AddSubscriptionButton
-        v-if="
-          !taskInfoLoading &&
-          hasAddSubscriptionUrl &&
-          (hasConfigSubscriptionUrl || isWhatsappSubscriptionUrl)
-        "
+        v-if="!taskInfoLoading && hasAddSubscriptionUrl"
         :url="addSubscriptionUrl"
         :task-id="taskId"
       />
