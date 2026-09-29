@@ -14,6 +14,15 @@ class BotAppConfig(BaseAppConfig):
     APP_URL_ANDROID: str
     APP_NAME: str
 
+    UPDATE_MODE: str = "polling"
+    WEBHOOK_URL: str = ""
+    WEBHOOK_PATH: str = "bot/webhook"
+    WEBHOOK_LISTEN: str = "0.0.0.0"
+    WEBHOOK_PORT: int = 8443
+    WEBHOOK_SECRET: str = ""
+    STATE_KEY_PREFIX: str = "bot"
+    STATE_TTL: int = 86400
+
     HOOK_REQUEST_DATA_PREFIX: str = "HOOK_"
 
 

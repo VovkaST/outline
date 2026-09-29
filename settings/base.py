@@ -81,6 +81,17 @@ BOT_APP_URL_IOS_EU = env.get("BOT_APP_URL_IOS_EU", default="https://apps.apple.c
 BOT_APP_URL_IOS_RU = env.get("BOT_APP_URL_IOS_RU", default="https://apps.apple.com/ru/")
 BOT_APP_URL_ANDROID = env.get("BOT_APP_URL_ANDROID", default="https://play.google.com/store/apps/")
 BOT_APP_NAME = env.get("BOT_APP_NAME", default="Some app name")
+BOT_UPDATE_MODE = env.get("BOT_UPDATE_MODE", default="polling")
+BOT_WEBHOOK_URL = env.get("BOT_WEBHOOK_URL", default="")
+BOT_WEBHOOK_PATH = env.get("BOT_WEBHOOK_PATH", default="bot/webhook")
+BOT_WEBHOOK_LISTEN = env.get("BOT_WEBHOOK_LISTEN", default="0.0.0.0")
+BOT_WEBHOOK_PORT = env.as_int("BOT_WEBHOOK_PORT", default=8443)
+BOT_WEBHOOK_SECRET = env.get("BOT_WEBHOOK_SECRET", default="")
+BOT_STATE_KEY_PREFIX = env.get("BOT_STATE_KEY_PREFIX", default="bot")
+BOT_STATE_TTL = env.as_int("BOT_STATE_TTL", default=86400)
+
+# Redis: если задан, состояние бота хранится в нём (общее для всех реплик)
+REDIS_URL = env.get("REDIS_URL", default="")
 
 
 # Настройка S3-хранилища
@@ -118,7 +129,7 @@ LOGGING = {
     },
     "loggers": {
         "HTTPClient": {
-            "level": "INFO",
+            "level": "DEBUG",
             "handlers": ["console", "file"],
         },
         "middleware.requests": {

@@ -4,10 +4,10 @@ from telegram.error import BadRequest
 from telegram.ext import ContextTypes
 
 from app_bot.config import bot_config
-from app_bot.const import CONTEXT_HISTORY_KEY
 from app_bot.handlers.commands import start
 from app_bot.interaction import menus, messages
 from app_bot.interaction.buttons import BotButtons
+from app_bot.state import get_user_state
 from app_bot.utils.callback_registry import registry
 from app_bot.utils.context_history import context_history
 from app_bot.utils.decorators import get_task_from_context, planfix_log_querydata, planfix_task_context
@@ -19,11 +19,12 @@ from services.planfix.utils import get_key_link, get_task
 async def backward_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
         return
-    if CONTEXT_HISTORY_KEY in context.user_data:
-        history: list[str] = context.user_data[CONTEXT_HISTORY_KEY]
+    if update.effective_user:
+        state = get_user_state()
+        history = await state.get_history(update.effective_user.id)
         if len(history) >= 2:
             *__, prev, current = history
-            history.pop()
+            await state.pop_history(update.effective_user.id)
             handler = registry.get_handler(prev)
             if handler:
                 modified_update = update.to_dict()
@@ -122,7 +123,7 @@ async def tariff_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 async def referal_create_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
         return
-    task = get_task_from_context(context)
+    task = await get_task_from_context(update)
     link = make_ref_link(context.bot, task)
     await update.callback_query.edit_message_text(**menus.ReferalMenu.to_message(ref_link=link))
 
