@@ -59,6 +59,16 @@ WATA_DEFAULT_CURRENCY = env.get("WATA_DEFAULT_CURRENCY", default="RUB")
 WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL = env.get("WATA_USE_SUCCESS_PAYMENT_REDIRECT_URL")
 WATA_USE_FAIL_PAYMENT_REDIRECT_URL = env.get("WATA_USE_FAIL_PAYMENT_REDIRECT_URL")
 
+# Настройки Platega
+PLATEGA_MERCHANT_ID = env.get("PLATEGA_MERCHANT_ID", default="")
+PLATEGA_SECRET = env.get("PLATEGA_SECRET", default="")
+PLATEGA_DEFAULT_CURRENCY = env.get("PLATEGA_DEFAULT_CURRENCY", default="RUB")
+# Метод оплаты Platega (2 — СБП, 3 — ЕРИП, 11 — карты, 12 — международная оплата, 13 — криптовалюта, 14 — SberPay).
+# 0/не задан — клиент выбирает способ оплаты на странице Platega
+PLATEGA_PAYMENT_METHOD = env.as_int("PLATEGA_PAYMENT_METHOD", default=0)
+PLATEGA_USE_SUCCESS_PAYMENT_REDIRECT_URL = env.get("PLATEGA_USE_SUCCESS_PAYMENT_REDIRECT_URL")
+PLATEGA_USE_FAIL_PAYMENT_REDIRECT_URL = env.get("PLATEGA_USE_FAIL_PAYMENT_REDIRECT_URL")
+
 # Настройки Planfix
 PLANFIX_XML_API_URL = env.get("PLANFIX_XML_API_URL", default="https://apiru.planfix.ru/xml")
 PLANFIX_REST_API_URL = env.get("PLANFIX_REST_API_URL", default="https://aspectgroup.planfix.ru/rest")

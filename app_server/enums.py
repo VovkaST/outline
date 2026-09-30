@@ -29,3 +29,4 @@ class PaymentStatus(str, Enum):
 class PaymentSystems(str, Enum):
     YOOKASSA = "yookassa"
     WATA = "wata"
+    PLATEGA = "platega"
