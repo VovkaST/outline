@@ -68,7 +68,7 @@ class PlategaService(BaseHTTPService):
             "failedUrl": platega_config.USE_FAIL_PAYMENT_REDIRECT_URL,
             "orderId": task_id,
             "payload": task_id,
-            "meta": {
+            "metadata": {
                 "userId": task_id,
             },
         }
