@@ -12,14 +12,15 @@ DEFAULT_PAYMENT_AGENT = PaymentSystems(settings.DEFAULT_PAYMENT_AGENT)
 def get_payment_service(payment_agent: PaymentSystems):
     """Платёжный сервис по идентификатору системы, либо `None`, если он не сконфигурирован.
 
-    Импорт `services` — внутри функции: `services.yookassa`/`services.wata` сами импортируют
+    Импорт `services` — внутри функции: `services.yookassa`/`services.wata`/`services.platega` сами импортируют
     `apply_task_id_to_redirect_url` из этого модуля, и импорт на уровне модуля дал бы цикл.
     """
-    from services import wata, yookassa
+    from services import platega, wata, yookassa
 
     services_map = {
         PaymentSystems.YOOKASSA: yookassa,
         PaymentSystems.WATA: wata,
+        PaymentSystems.PLATEGA: platega,
     }
     return services_map.get(payment_agent)
 

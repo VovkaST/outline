@@ -3,18 +3,22 @@ __all__ = [
     "payment_api",
     "planfix_webchat",
     "yookassa",
+    "wata",
+    "platega",
 ]
 
-from app_server.config import planfix_config, t_bank_config, wata_config, yookassa_config
+from app_server.config import planfix_config, platega_config, t_bank_config, wata_config, yookassa_config
 
 from .payment import Payment
 from .planfix.client import PlanfixRestAPI, PlanfixWebchatAPI
+from .platega import PlategaService
 from .wata import WataService
 from .yookassa import YooKassaService
 
 payment_api = None
 yookassa = None
 wata = None
+platega = None
 
 planfix_api = PlanfixRestAPI(token=planfix_config.TOKEN)
 planfix_webchat = PlanfixWebchatAPI(token=planfix_config.WEBCHAT_TOKEN, provider_id=planfix_config.PROVIDER_ID)
@@ -31,3 +35,10 @@ if yookassa_config.ACCOUNT_ID and yookassa_config.TOKEN:
 
 if wata_config.TOKEN:
     wata = WataService(token=wata_config.TOKEN)
+
+if platega_config.MERCHANT_ID and platega_config.SECRET:
+    platega = PlategaService(
+        merchant_id=platega_config.MERCHANT_ID,
+        secret=platega_config.SECRET,
+        payment_method=platega_config.PAYMENT_METHOD,
+    )

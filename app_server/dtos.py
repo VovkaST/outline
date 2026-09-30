@@ -1,6 +1,6 @@
 from contextlib import suppress
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, model_validator
 
 from root.config import settings
 from root.dtos import ErrorResponse
@@ -122,6 +122,17 @@ class InitWataPaymentDTO(BaseModel):
 
     payment_id: str = Field(description="Уникальный идентификатор транзакции в системе Wata", alias="id")
     confirmation_url: str = Field(description="Ссылка на страницу подтверждения платежа", alias="url")
+
+
+class InitPlategaPaymentDTO(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    payment_id: str = Field(description="Уникальный идентификатор транзакции в системе Platega", alias="transactionId")
+    # `url` — в ответе без заданного метода оплаты, `redirect` — с заданным
+    confirmation_url: str = Field(
+        description="Ссылка на страницу оплаты",
+        validation_alias=AliasChoices("url", "redirect", "confirmation_url"),
+    )
 
 
 class StoreTaskKeyRequest(BaseModel):

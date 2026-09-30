@@ -12,7 +12,7 @@ class InitPaymentResponse(BaseModel):
 
 
 class InitPaymentResponseV2(BaseModel):
-    payment_id: str = Field(description="Уникальный идентификатор транзакции в системе YooKassa")
+    payment_id: str = Field(description="Уникальный идентификатор транзакции в системе платежного шлюза")
     confirmation_url: str = Field(description="Ссылка на страницу подтверждения платежа")
 
 

@@ -40,6 +40,17 @@ class WataConfig(BaseAppConfig):
     USE_FAIL_PAYMENT_REDIRECT_URL: str
 
 
+class PlategaConfig(BaseAppConfig):
+    PREFIX = "PLATEGA"
+
+    MERCHANT_ID: str
+    SECRET: str
+    PAYMENT_METHOD: int
+    DEFAULT_CURRENCY: str = "RUB"
+    USE_SUCCESS_PAYMENT_REDIRECT_URL: str
+    USE_FAIL_PAYMENT_REDIRECT_URL: str
+
+
 class PlanfixConfig(BaseAppConfig):
     PREFIX = "PLANFIX"
 
@@ -56,5 +67,6 @@ class PlanfixConfig(BaseAppConfig):
 server_config = ServerAppConfig()
 t_bank_config = TBankConfig()
 wata_config = WataConfig()
+platega_config = PlategaConfig()
 planfix_config = PlanfixConfig()
 yookassa_config = YookassaConfig()
