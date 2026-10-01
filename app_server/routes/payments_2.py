@@ -5,7 +5,6 @@ from starlette.requests import Request
 from app_server import responses
 from app_server.dependencies import verify_api_client
 from app_server.enums import PaymentSystems
-from app_server.limiter import limiter
 from app_server.utils import DEFAULT_PAYMENT_AGENT, get_payment_service
 from root.config import settings
 from root.utils.others import get_route_name
@@ -19,9 +18,8 @@ _PAYMENT_AGENT_QUERY = Query(default=DEFAULT_PAYMENT_AGENT, description="Пла�
 @routes.get(
     "/init/",
     response_model=responses.InitPaymentResponseV2,
-    dependencies=[Depends(verify_api_client)],
+    dependencies=[Depends(verify_api_client(browser_rate_limit=settings.PAYMENT_INIT_RATE_LIMIT))],
 )
-@limiter.limit(settings.PAYMENT_INIT_RATE_LIMIT)
 async def init_payment_v2(
     request: Request,
     task_id: str = Query(description="Идентификатор задачи"),
