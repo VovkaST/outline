@@ -6,16 +6,23 @@ env = Environ()
 
 ROOT_DIR = Path(__file__).parent.parent
 
+SITE_URL = env.get("SITE_URL", default="http://127.0.0.1:8000")
+SITE_URL_PAYMENT = SITE_URL + "/payment"
+
+# Источники, которым разрешено обращаться к API из браузера (CORS и проверка Origin/Referer)
+ALLOWED_ORIGINS = [
+    origin.strip().rstrip("/") for origin in env.get("ALLOWED_ORIGINS", default=SITE_URL).split(",") if origin.strip()
+]
+# Ключи для серверных клиентов (Планфикс), передаются в заголовке X-API-Key
+API_KEYS = [key.strip() for key in env.get("API_KEYS", default="").split(",") if key.strip()]
+
 MIDDLEWARE = [
     (
         "starlette.middleware.cors.CORSMiddleware",
-        {"allow_credentials": True, "allow_headers": ["*"], "allow_origins": ["*"], "allow_methods": ["*"]},
+        {"allow_credentials": False, "allow_headers": ["*"], "allow_origins": ALLOWED_ORIGINS, "allow_methods": ["*"]},
     ),
     "root.middleware.requests.request",
 ]
-
-SITE_URL = env.get("SITE_URL", default="http://127.0.0.1:8000")
-SITE_URL_PAYMENT = SITE_URL + "/payment"
 
 MEDIA_DIR = env.get("MEDIA_DIR", default="media")
 MEDIA_DIR = ROOT_DIR / MEDIA_DIR
@@ -28,6 +35,7 @@ SERVER_VERSION = env.get("SERVER_VERSION", default="1.0")
 SERVER_DESCRIPTION = env.get("SERVER_DESCRIPTION")
 REQUEST_TOKEN = env.get("REQUEST_TOKEN", default="")
 DEFAULT_RATE_LIMIT = env.get("DEFAULT_RATE_LIMIT", default="50/minute")
+PAYMENT_INIT_RATE_LIMIT = env.get("PAYMENT_INIT_RATE_LIMIT", default="20/minute")
 
 # Таймауты и лимиты исходящих HTTP-запросов (aiohttp)
 HTTP_CLIENT_TIMEOUT_TOTAL = env.as_int("HTTP_CLIENT_TIMEOUT_TOTAL", default=15)

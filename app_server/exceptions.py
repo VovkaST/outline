@@ -18,6 +18,18 @@ class PaymentGatewayError(Exception):
         super().__init__(message)
 
 
+class AccessDeniedError(AppError):
+    error_code = 1001
+    message = "Доступ запрещён"
+    status_code = 403
+
+
+class TooManyRequestsError(AppError):
+    error_code = 1002
+    message = "Слишком много запросов"
+    status_code = 429
+
+
 class TokenError(AppError):
     error_code = 1000
     message = "Ошибка токена"
