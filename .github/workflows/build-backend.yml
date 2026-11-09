@@ -1,0 +1,50 @@
+name: Build and publish backend
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-backend-master
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out the triggering commit
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Build backend image
+        shell: bash
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}-backend"
+          # The Dockerfile copies its full context. Exclude .git and untracked files.
+          git archive --format=tar "$GITHUB_SHA" | docker build \
+            --pull \
+            --platform linux/amd64 \
+            --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --tag "$image:sha-$GITHUB_SHA" \
+            -
+
+      - name: Publish to GitHub Container Registry
+        shell: bash
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}-backend"
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io \
+            --username "$GITHUB_ACTOR" --password-stdin
+          docker push "$image:sha-$GITHUB_SHA"
+          docker tag "$image:sha-$GITHUB_SHA" "$image:master"
+          docker push "$image:master"
