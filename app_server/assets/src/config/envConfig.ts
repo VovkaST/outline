@@ -1,6 +1,47 @@
 import { str2bool } from '@/utils';
 import { getEnvVar } from "./utils";
 
+const PAYMENT_GATEWAYS = ['yookassa', 'wata', 'platega'] as const;
+const DEFAULT_PAYMENT_SOURCE_MAP = 'vk:platega,wa:wata,pf:platega,tg:wata';
+const DEFAULT_DEPRECATED_URL_SOURCE = 'pf';
+
+export type PaymentGateway = (typeof PAYMENT_GATEWAYS)[number];
+
+const PAYMENT_GATEWAY_SET: ReadonlySet<string> = new Set(PAYMENT_GATEWAYS);
+
+function isPaymentGateway(value: string): value is PaymentGateway {
+  return PAYMENT_GATEWAY_SET.has(value);
+}
+
+function parsePaymentSourceMap(raw: string): Readonly<Record<string, PaymentGateway>> {
+  const map: Record<string, PaymentGateway> = {};
+  for (const chunk of raw.split(',')) {
+    const pair = chunk.trim();
+    if (!pair) continue;
+    const separator = pair.indexOf(':');
+    // Пустой ключ (нет двоеточия или оно в начале) и неизвестный шлюз пропускаются.
+    if (separator <= 0) continue;
+    const key = pair.slice(0, separator).trim().toLowerCase();
+    const gateway = pair.slice(separator + 1).trim().toLowerCase();
+    if (!key || !isPaymentGateway(gateway)) continue;
+    map[key] = gateway;
+  }
+  return map;
+}
+
+function readDeprecatedUrlSource(): string {
+  const source = getEnvVar('VITE_DEPRECATED_URL_SOURCE', DEFAULT_DEPRECATED_URL_SOURCE)
+    .trim()
+    .toLowerCase();
+  return source || DEFAULT_DEPRECATED_URL_SOURCE;
+}
+
+export const paymentSourceMap = parsePaymentSourceMap(
+  getEnvVar('VITE_PAYMENT_SOURCE_MAP', DEFAULT_PAYMENT_SOURCE_MAP),
+);
+
+export const deprecatedUrlSource = readDeprecatedUrlSource();
+
 export interface AppConfigType {
   android: {
     url: string;
