@@ -19,6 +19,7 @@ import { useConfig } from '@/composables/useConfig';
 import { AppConfig } from '@/config/envConfig';
 import { usePaymentStore } from '@/stores/payment';
 import { useTasksStore } from '@/stores/tasks';
+import { buildCheckoutSuccessUrl, paymentAgentBySource } from '@/utils/checkoutUrl';
 import NotFoundView from '@/views/NotFoundView.vue';
 import { useToggle } from '@vueuse/core';
 import { computed, onMounted, ref } from 'vue';
@@ -31,12 +32,27 @@ const tasksStore = useTasksStore();
 
 const props = defineProps<{
   taskId: string;
+  source?: string;
 }>();
 
-const returnUrl = computed<string>(() => (route.query['returnUrl'] as string) || '');
-const paymentAgent = computed<PaymentSystems>(
-  () => (route.query['paymentAgent'] as PaymentSystems) || null,
+const sourceUnknown = computed<boolean>(
+  () => Boolean(props.source) && !paymentAgentBySource(props.source),
 );
+
+const returnUrl = computed<string>(() => {
+  const explicit = (route.query['returnUrl'] as string) || '';
+  if (explicit) return explicit;
+  if (props.source && !sourceUnknown.value) {
+    return buildCheckoutSuccessUrl(props.source, props.taskId);
+  }
+  return '';
+});
+const paymentAgent = computed<PaymentSystems>(() => {
+  if (props.source) {
+    return (paymentAgentBySource(props.source) as PaymentSystems) || null;
+  }
+  return (route.query['paymentAgent'] as PaymentSystems) || null;
+});
 
 const addSubscriptionUrlFromTask = ref<string>('');
 const clientPhone = ref<string>('');
@@ -58,6 +74,7 @@ const isWhatsappSubscriptionUrl = computed(() => {
 const [formSubmitting, formSubmittingToggle] = useToggle(false);
 
 const onActionClick = (price: number) => {
+  if (sourceUnknown.value) return;
   formSubmitting.value = true;
   paymentStore
     .initPaymentV2({
@@ -76,6 +93,7 @@ const onActionClick = (price: number) => {
 };
 
 onMounted(() => {
+  if (sourceUnknown.value) return;
   tasksStore
     .getTaskInfo({ taskGuid: props.taskId })
     .then((response: SubscriptionTaskResponse) => {
@@ -90,7 +108,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <NotFoundView v-if="taskNotFound" />
+  <NotFoundView v-if="sourceUnknown || taskNotFound" />
 
   <div v-else class="page">
     <Announcement v-if="config.announcement">

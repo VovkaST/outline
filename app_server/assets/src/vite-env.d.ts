@@ -15,6 +15,8 @@ interface ImportMetaEnv {
   readonly VITE_APP_LINK_MAC_RU?: string;
   readonly VITE_SUBSCRIPTION_URL?: string;
   readonly VITE_USE_DUMMY_CONFIG?: string;
+  readonly VITE_PAYMENT_SOURCE_MAP?: string;
+  readonly VITE_DEPRECATED_URL_SOURCE?: string;
 }
 
 interface ImportMeta {
