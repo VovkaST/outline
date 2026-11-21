@@ -16,9 +16,8 @@ class BotButtons(TextChoices):
     REFERAL = "REFERAL", "👥 Поделиться и получить дни"
     HELP = "HELP", "🛠 Помощь"
 
+    IPHONE = "IPHONE", "🍏 iOS/Айфон"
+    # Сохраняем старые callback-значения для уже отправленных сообщений.
     IOS_EU = "IOS_EU", "🍏 iOS/Айфон (🇪🇺 EU)"
     IOS_RU = "IOS_RU", "🍏 iOS/Айфон (🇷🇺 RU)"
     ANDROID = "ANDROID", "🤖 Android"
-    DOWNLOAD_APP = "DOWNLOAD_APP", "⬇️ Скачать приложение"
-    IOS_DOWNLOAD = "IOS_DOWNLOAD", "⬇️ iOS"
-    ANDROID_DOWNLOAD = "ANDROID_DOWNLOAD", "⬇️ Android"

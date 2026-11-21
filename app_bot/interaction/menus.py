@@ -1,7 +1,7 @@
 import logging
 
 from pydantic import BaseModel, ConfigDict, Field
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, LinkPreviewOptions
 from telegram.constants import ParseMode
 
 from app_bot.interaction import messages
@@ -21,6 +21,7 @@ class Menu(BaseModel):
 
     message: str
     keyboard: InlineKeyboardMarkup | None = Field(default_factory=lambda: InlineKeyboardMarkup([]))
+    link_preview_options: LinkPreviewOptions | None = None
 
     def format_message(self, **kwargs) -> str:
         return self.message.format(**kwargs)
@@ -30,6 +31,7 @@ class Menu(BaseModel):
             "text": self.format_message(**format_message_kwargs) if format_message_kwargs else self.message or "",
             "reply_markup": self.keyboard,
             "parse_mode": parse_mode,
+            "link_preview_options": self.link_preview_options,
         }
 
 
@@ -58,8 +60,7 @@ OSMenu = Menu(
     message=messages.CHOOSE_PLATFORM,
     keyboard=InlineKeyboardMarkup(
         [
-            [enum2btn(BotButtons.IOS_RU)],
-            [enum2btn(BotButtons.IOS_EU)],
+            [enum2btn(BotButtons.IPHONE)],
             [enum2btn(BotButtons.ANDROID)],
             [enum2btn(BotButtons.BACKWARD)],
         ]
@@ -67,13 +68,25 @@ OSMenu = Menu(
 )
 
 InstallMenu = Menu(
-    message=messages.CONNECTION_INSTRUCTION,
+    message="",
     keyboard=InlineKeyboardMarkup(
         [
             [enum2btn(BotButtons.GET_TOKEN)],
             [enum2btn(BotButtons.BACKWARD)],
         ]
     ),
+)
+
+IPhoneInstallMenu = Menu(
+    message=messages.IPHONE_CONNECTION_INSTRUCTION,
+    keyboard=InstallMenu.keyboard,
+    link_preview_options=LinkPreviewOptions(is_disabled=True),
+)
+
+AndroidInstallMenu = Menu(
+    message=messages.ANDROID_CONNECTION_INSTRUCTION,
+    keyboard=InstallMenu.keyboard,
+    link_preview_options=LinkPreviewOptions(is_disabled=True),
 )
 
 KeyInfoMenu = Menu(
