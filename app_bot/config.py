@@ -9,9 +9,6 @@ class BotAppConfig(BaseAppConfig):
     USERNAME: str = ""
     LINK_SECRET: str = ""
     TARIFFS_CONFIG: str = ""
-    APP_URL_IOS_EU: str
-    APP_URL_IOS_RU: str
-    APP_URL_ANDROID: str
     APP_NAME: str
 
     UPDATE_MODE: str = "polling"

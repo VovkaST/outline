@@ -1,9 +1,8 @@
-from telegram import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Update, User
+from telegram import CallbackQuery, Update, User
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import ContextTypes
 
-from app_bot.config import bot_config
 from app_bot.handlers.commands import start
 from app_bot.interaction import menus, messages
 from app_bot.interaction.buttons import BotButtons
@@ -49,29 +48,23 @@ async def connect_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await query.edit_message_text(**menus.OSMenu.to_message())
 
 
-@registry.handler(BotButtons.IOS_RU, BotButtons.IOS_EU, BotButtons.ANDROID)
+@registry.handler(BotButtons.IPHONE, BotButtons.IOS_RU, BotButtons.IOS_EU, BotButtons.ANDROID)
 @planfix_log_querydata
 @context_history()
 async def os_select_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.callback_query:
         return
 
-    urls_map = {
-        BotButtons.IOS_RU: bot_config.APP_URL_IOS_RU,
-        BotButtons.IOS_EU: bot_config.APP_URL_IOS_EU,
-        BotButtons.ANDROID: bot_config.APP_URL_ANDROID,
+    menus_map = {
+        BotButtons.IPHONE: menus.IPhoneInstallMenu,
+        BotButtons.IOS_RU: menus.IPhoneInstallMenu,
+        BotButtons.IOS_EU: menus.IPhoneInstallMenu,
+        BotButtons.ANDROID: menus.AndroidInstallMenu,
     }
 
     query: CallbackQuery = update.callback_query
-    base_menu = menus.InstallMenu
-    buttons = []
-    url = urls_map[query.data]  # pyright: ignore[reportArgumentType]
-    buttons.append([InlineKeyboardButton(BotButtons.DOWNLOAD_APP.label, url=url)])
-    if base_menu.keyboard:
-        buttons.extend(base_menu.keyboard.inline_keyboard)
-    await query.edit_message_text(
-        text=base_menu.message, reply_markup=InlineKeyboardMarkup(buttons), parse_mode=ParseMode.HTML
-    )
+    selected_menu = menus_map[BotButtons(query.data)]
+    await query.edit_message_text(**selected_menu.to_message())
 
 
 @registry.handler(BotButtons.GET_TOKEN)

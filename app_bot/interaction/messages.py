@@ -1,4 +1,4 @@
-from app_bot.config import bot_config
+from app_bot.const import ANDROID_APP_LINKS, IPHONE_APP_LINKS
 
 MAIN_MENU = (
     "🕌 Халяль VPN — создан с заботой о мусульманах.\n\n"
@@ -19,12 +19,14 @@ WELCOME = f"Ассаламу алейкум! 👋\n\n{MAIN_MENU}\n\n👉 Наж�
 
 CHOOSE_PLATFORM = "🔰 <b>Выберите вашу платформу</b>"
 
-CONNECTION_INSTRUCTION = (
-    "📖 <b>Инструкция по подключению:</b>\n\n"
-    '1️⃣ Нажмите кнопку "Скачать приложение" пройдите по ссылке и установите приложение.\n\n'
-    '2️⃣ Нажмите на кнопку "Получить ключ" пройдите по ссылке, подождите пока ключ установится в приложение.\n\n'
-    f'3️⃣ Откройте приложение "{bot_config.APP_NAME}" и нажмите на большую кнопку посередине.'
-)
+
+def _app_links_message(app_links: tuple[tuple[str, str], ...]) -> str:
+    links = "\n".join(f"{number}. {name} - \n{url}\n" for number, (name, url) in enumerate(app_links, start=1))
+    return f"Скачайте приложение и затем получите ключ.\n\n{links}"
+
+
+IPHONE_CONNECTION_INSTRUCTION = _app_links_message(IPHONE_APP_LINKS)
+ANDROID_CONNECTION_INSTRUCTION = _app_links_message(ANDROID_APP_LINKS)
 CHOOSE_TARIFF = (
     "💰 <b>Выбери свой тариф:</b>\n\n"
     "1️⃣ месяц\n<b>299 ₽</b>\n\n"

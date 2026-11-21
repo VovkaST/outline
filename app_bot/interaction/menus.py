@@ -58,8 +58,7 @@ OSMenu = Menu(
     message=messages.CHOOSE_PLATFORM,
     keyboard=InlineKeyboardMarkup(
         [
-            [enum2btn(BotButtons.IOS_RU)],
-            [enum2btn(BotButtons.IOS_EU)],
+            [enum2btn(BotButtons.IPHONE)],
             [enum2btn(BotButtons.ANDROID)],
             [enum2btn(BotButtons.BACKWARD)],
         ]
@@ -67,13 +66,23 @@ OSMenu = Menu(
 )
 
 InstallMenu = Menu(
-    message=messages.CONNECTION_INSTRUCTION,
+    message="",
     keyboard=InlineKeyboardMarkup(
         [
             [enum2btn(BotButtons.GET_TOKEN)],
             [enum2btn(BotButtons.BACKWARD)],
         ]
     ),
+)
+
+IPhoneInstallMenu = Menu(
+    message=messages.IPHONE_CONNECTION_INSTRUCTION,
+    keyboard=InstallMenu.keyboard,
+)
+
+AndroidInstallMenu = Menu(
+    message=messages.ANDROID_CONNECTION_INSTRUCTION,
+    keyboard=InstallMenu.keyboard,
 )
 
 KeyInfoMenu = Menu(
