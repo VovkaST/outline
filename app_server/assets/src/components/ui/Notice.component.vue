@@ -9,7 +9,12 @@ const props = withDefaults(
 
 <template>
   <div :class="['notice', props.notificationType]" role="alert">
-    <i class="fas fa-exclamation-circle"></i>
+    <svg class="notice-icon" viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1-64 0z"
+      />
+    </svg>
     <slot></slot>
   </div>
 </template>
@@ -52,8 +57,12 @@ const props = withDefaults(
     animation: pulse-yellow 2s infinite;
   }
 
-  .fas {
+  .notice-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
     margin-right: 0.5rem;
+    vertical-align: -0.125em;
   }
 }
 
